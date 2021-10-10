@@ -56,3 +56,9 @@ RPG extension for Minecraft
    versionRange="[1.17.1,1.18)"
    ordering="NONE"
    side="BOTH"
+[[dependencies.otherlivingbeings]]
+  modId="cloth_config"
+  mandatory=true
+  versionRange="[5.0.38,)"
+  ordering="BEFORE"
+  side="BOTH"

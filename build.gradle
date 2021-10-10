@@ -107,7 +107,7 @@ repositories {
 dependencies {
     minecraft 'net.minecraftforge:forge:1.17.1-37.0.84'
     annotationProcessor 'org.spongepowered:mixin:0.8:processor'
-    implementation 'me.shedaniel.cloth:cloth-config-forge:5.0.38'
+    implementation fg.deobf('me.shedaniel.cloth:cloth-config-forge:5.0.38')
 }
 
 // Example for how to get properties into the manifest for reading at runtime.
