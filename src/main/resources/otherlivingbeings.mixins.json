@@ -1,0 +1,14 @@
+{
+  "required": true,
+  "minVersion": "0.8",
+  "package": "de.blutmondgilde.otherlivingbeings.mixin",
+  "compatibilityLevel": "JAVA_8",
+  "refmap": "otherlivingbeings.refmap.json",
+  "mixins": [
+  ],
+  "client": [
+  ],
+  "injectors": {
+    "defaultRequire": 1
+  }
+}
