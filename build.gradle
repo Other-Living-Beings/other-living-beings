@@ -3,7 +3,7 @@ buildscript {
         // These repositories are only for Gradle plugins, put any other repositories in the repository block further below
         maven { url = 'https://maven.minecraftforge.net' }
         maven { url = 'https://repo.spongepowered.org/repository/maven-public/' }
-        maven {url "https://plugins.gradle.org/m2/"}
+        maven { url "https://plugins.gradle.org/m2/" }
         maven { url = 'https://maven.parchmentmc.org' }
         mavenCentral()
     }
@@ -12,6 +12,7 @@ buildscript {
         classpath 'org.spongepowered:mixingradle:0.7-SNAPSHOT'
         classpath "io.freefair.gradle:lombok-plugin:6.2.0"
         classpath 'org.parchmentmc:librarian:1.+'
+        classpath "gradle.plugin.com.matthewprenger:CurseGradle:1.4.0"
     }
 }
 
@@ -19,9 +20,26 @@ apply plugin: 'net.minecraftforge.gradle'
 apply plugin: 'org.spongepowered.mixin'
 apply plugin: "io.freefair.lombok"
 apply plugin: 'org.parchmentmc.librarian.forgegradle'
+apply plugin: "com.matthewprenger.cursegradle"
 
 group = 'de.blutmondgilde'
-version = '1.0.0.0'
+/*
+MAJORMOD
+    Removing items, blocks, tile entities, etc.
+    Changing or removing previously existing mechanics.
+    Updating to a new Minecraft version.
+MAJORAPI
+    Changing the order or variables of enums.
+    Changing return types of methods.
+    Removing public methods altogether.
+MINOR
+    Adding items, blocks, tile entities, etc.
+    Adding new mechanics.
+    Deprecating public methods. (This is not a MAJORAPI increment since it doesn’t break an API.)
+PATCH
+    Bugfixes.
+ */
+version = "1.0.0.0-Alpha"
 
 java {
     archivesBaseName = 'otherlivingbeings'
@@ -29,7 +47,7 @@ java {
 }
 
 minecraft {
-    mappings channel: 'parchment', version: '2021.09.05-1.17.1'
+    mappings channel: 'parchment', version: "2021.09.05-${minecraftVersion}"
 
     // accessTransformer = file('src/main/resources/META-INF/accesstransformer.cfg')
 
@@ -87,6 +105,22 @@ minecraft {
                 }
             }
         }
+    }
+}
+
+curseforge {
+    apiKey = curseforge_apikey
+    project {
+        id = '519914'
+        releaseType = 'alpha'
+        changelogType = 'html'
+        changelog = '<a></a>'
+        mainArtifact(jar) {
+            relations {
+                requiredDependency 'cloth-config-forge'
+            }
+        }
+        addGameVersion minecraftVersion
     }
 }
 
