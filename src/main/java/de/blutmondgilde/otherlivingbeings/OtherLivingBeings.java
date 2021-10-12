@@ -3,11 +3,17 @@ package de.blutmondgilde.otherlivingbeings;
 import de.blutmondgilde.otherlivingbeings.capability.OtherLivingBeingsCapManager;
 import de.blutmondgilde.otherlivingbeings.client.OtherLivingBeingsClient;
 import de.blutmondgilde.otherlivingbeings.config.OtherLivingBeingsConfig;
+import de.blutmondgilde.otherlivingbeings.handler.SkillHandler;
 import de.blutmondgilde.otherlivingbeings.network.OtherLivingBeingNetwork;
 import de.blutmondgilde.otherlivingbeings.registry.SkillRegistry;
 import lombok.Getter;
 import me.shedaniel.autoconfig.AutoConfig;
-import me.shedaniel.autoconfig.serializer.Toml4jConfigSerializer;
+import me.shedaniel.autoconfig.ConfigHolder;
+import me.shedaniel.autoconfig.annotation.Config;
+import me.shedaniel.autoconfig.serializer.JanksonConfigSerializer;
+import me.shedaniel.cloth.clothconfig.shadowed.blue.endless.jankson.Jankson;
+import net.minecraft.resources.ResourceLocation;
+import net.minecraft.world.level.block.Block;
 import net.minecraftforge.api.distmarker.Dist;
 import net.minecraftforge.common.MinecraftForge;
 import net.minecraftforge.eventbus.api.IEventBus;
@@ -15,6 +21,7 @@ import net.minecraftforge.fml.DistExecutor;
 import net.minecraftforge.fml.common.Mod;
 import net.minecraftforge.fml.event.lifecycle.FMLCommonSetupEvent;
 import net.minecraftforge.fml.javafmlmod.FMLJavaModLoadingContext;
+import net.minecraftforge.fmllegacy.common.registry.GameRegistry;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
@@ -24,22 +31,26 @@ public class OtherLivingBeings {
     private static final Logger LOGGER = LogManager.getLogger();
     @Getter
     private static OtherLivingBeings instance;
+    @Getter
+    private static ConfigHolder<OtherLivingBeingsConfig> config;
 
     public OtherLivingBeings() {
         instance = this;
+        config = AutoConfig.register(OtherLivingBeingsConfig.class, OtherLivingBeings::configSerializer);
 
         final IEventBus modBus = FMLJavaModLoadingContext.get().getModEventBus();
         modBus.addListener(this::setup);
+        modBus.addListener(OtherLivingBeingsClient::registerConfigGUI);
         SkillRegistry.init(modBus);
 
         final IEventBus forgeBus = MinecraftForge.EVENT_BUS;
+        SkillHandler.init(forgeBus);
         OtherLivingBeingsCapManager.init(modBus, forgeBus);
 
         DistExecutor.safeRunWhenOn(Dist.CLIENT, () -> OtherLivingBeingsClient::init);
     }
 
     private void setup(final FMLCommonSetupEvent event) {
-        AutoConfig.register(OtherLivingBeingsConfig.class, Toml4jConfigSerializer::new);
         OtherLivingBeingNetwork.registerPackets();
     }
 
@@ -47,7 +58,14 @@ public class OtherLivingBeings {
         return LOGGER;
     }
 
-    public static OtherLivingBeingsConfig getConfig() {
-        return AutoConfig.getConfigHolder(OtherLivingBeingsConfig.class).getConfig();
+    private static JanksonConfigSerializer<OtherLivingBeingsConfig> configSerializer(Config config, Class<OtherLivingBeingsConfig> aClass) {
+        Jankson.Builder builder = Jankson.builder()
+                .registerSerializer(Block.class, (block, marshaller) -> {
+                    String id = block.getRegistryName().toString();
+                    return marshaller.serialize(id);
+                })
+                .registerDeserializer(String.class, Block.class, (s, marshaller) -> GameRegistry.findRegistry(Block.class).getValue(new ResourceLocation(s)));
+
+        return new JanksonConfigSerializer<>(config, aClass, builder.build());
     }
 }

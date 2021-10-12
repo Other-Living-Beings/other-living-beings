@@ -1,4 +1,13 @@
 {
   "text.autoconfig.otherlivingbeings.title": "Other Living Beings - Config",
-  "text.autoconfig.otherlivingbeings.option.test": "Test"
+  "text.autoconfig.otherlivingbeings.option.jobConfig": "Jobs",
+  "text.autoconfig.otherlivingbeings.option.jobConfig.lumberjack": "Lumberjack",
+  "text.autoconfig.otherlivingbeings.option.jobConfig.lumberjack.breakSpeedPerLevel": "Break speed per Level",
+  "text.autoconfig.otherlivingbeings.option.jobConfig.lumberjack.breakSpeedPerLevel.@Tooltip": "Additional break speed per level",
+  "text.autoconfig.otherlivingbeings.option.jobConfig.lumberjack.unbreakingChance": "Unbreaking chance per level",
+  "text.autoconfig.otherlivingbeings.option.jobConfig.lumberjack.unbreakingChance.@Tooltip": "Chance per level to not use a durability point",
+  "text.autoconfig.otherlivingbeings.option.jobConfig.lumberjack.treeBlocks": "Tree Blocks - EXP",
+  "text.autoconfig.otherlivingbeings.option.FloatWithStringList": "Entry",
+  "text.autoconfig.otherlivingbeings.option.FloatWithStringList.value": "Value",
+  "text.autoconfig.otherlivingbeings.option.FloatWithStringList.list": "Keys"
 }
