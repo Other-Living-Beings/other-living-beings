@@ -47,7 +47,7 @@ java {
 }
 
 minecraft {
-    mappings channel: 'parchment', version: "2021.09.05-${minecraftVersion}"
+    mappings channel: 'parchment', version: "2021.10.10-${minecraftVersion}"
 
     // accessTransformer = file('src/main/resources/META-INF/accesstransformer.cfg')
 
@@ -139,7 +139,7 @@ repositories {
 }
 
 dependencies {
-    minecraft 'net.minecraftforge:forge:1.17.1-37.0.84'
+    minecraft 'net.minecraftforge:forge:1.17.1-37.0.85'
     annotationProcessor 'org.spongepowered:mixin:0.8:processor'
     implementation fg.deobf('me.shedaniel.cloth:cloth-config-forge:5.0.38')
 }
