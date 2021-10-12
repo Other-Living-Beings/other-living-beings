@@ -28,6 +28,6 @@ public class BlockTextField extends StringListEntry {
                 .filter(item -> item instanceof BlockItem)
                 .filter(item -> item.getRegistryName().toString().equals(textFieldWidget.getValue()))
                 .findFirst();
-        optionalItem.ifPresent(item -> Minecraft.getInstance().getItemRenderer().renderGuiItem(new ItemStack(item), x + entryWidth - 148 - 18, y));
+        optionalItem.ifPresent(item -> Minecraft.getInstance().getItemRenderer().renderGuiItem(new ItemStack(item), x + entryWidth - 148 - 18, y + 1));
     }
 }

@@ -3,14 +3,12 @@ package de.blutmondgilde.otherlivingbeings.client;
 import de.blutmondgilde.otherlivingbeings.OtherLivingBeings;
 import de.blutmondgilde.otherlivingbeings.api.capability.OtherLivingBeingsCapability;
 import de.blutmondgilde.otherlivingbeings.config.OtherLivingBeingsConfig;
-import de.blutmondgilde.otherlivingbeings.config.widget.BlockWidget;
+import de.blutmondgilde.otherlivingbeings.config.widget.BlockTextField;
 import me.shedaniel.autoconfig.AutoConfig;
 import me.shedaniel.autoconfig.annotation.ConfigEntry;
 import me.shedaniel.autoconfig.gui.registry.GuiRegistry;
 import me.shedaniel.autoconfig.util.Utils;
 import me.shedaniel.clothconfig2.api.ConfigEntryBuilder;
-import me.shedaniel.clothconfig2.gui.entries.StringListEntry;
-import me.shedaniel.clothconfig2.impl.builders.TextFieldBuilder;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.multiplayer.ClientLevel;
 import net.minecraft.nbt.CompoundTag;
@@ -24,8 +22,14 @@ import net.minecraftforge.fml.event.lifecycle.FMLClientSetupEvent;
 import net.minecraftforge.fmlclient.ConfigGuiHandler;
 import net.minecraftforge.fmllegacy.common.registry.GameRegistry;
 
+import java.lang.reflect.Field;
+import java.lang.reflect.ParameterizedType;
+import java.lang.reflect.Type;
 import java.util.List;
+import java.util.Objects;
 import java.util.Optional;
+import java.util.function.Predicate;
+import java.util.stream.Stream;
 
 public class OtherLivingBeingsClient {
     private static final ConfigEntryBuilder ENTRY_BUILDER = ConfigEntryBuilder.create();
@@ -42,29 +46,26 @@ public class OtherLivingBeingsClient {
         GuiRegistry registry = AutoConfig.getGuiRegistry(OtherLivingBeingsConfig.class);
         registry.registerTypeProvider((translationKey, configField, blockObject, defaultBlockObject, guiRegistryAccess) -> {
             Block fieldValue = Utils.getUnsafely(configField, blockObject, Blocks.AIR);
-
-            TextFieldBuilder blockEntry = ENTRY_BUILDER.startTextField(new TranslatableComponent(translationKey), fieldValue.getRegistryName().toString())
-                    .setDefaultValue(() -> {
+            BlockTextField blockWidget = new BlockTextField(
+                    new TranslatableComponent(translationKey),
+                    fieldValue.getRegistryName().toString(),
+                    new TranslatableComponent("text.cloth-config.reset_value"),
+                    () -> {
                         Block block = Utils.getUnsafely(configField, defaultBlockObject, Blocks.AIR);
                         return block.getRegistryName().toString();
-                    })
-                    .setSaveConsumer(s -> Utils.setUnsafely(configField, blockObject, GameRegistry.findRegistry(Block.class).getValue(new ResourceLocation(s))));
-            //Allow require restart
-            if (configField.isAnnotationPresent(ConfigEntry.Gui.RequiresRestart.class)) {
-                blockEntry.requireRestart();
-            }
-            //Allow Tooltips
-            if (configField.isAnnotationPresent(ConfigEntry.Gui.Tooltip.class)) {
-                int count = configField.getAnnotation(ConfigEntry.Gui.Tooltip.class).count();
-                TranslatableComponent[] tooltips = new TranslatableComponent[count];
-                for (int i = 0; i < count; i++) {
-                    tooltips[i] = new TranslatableComponent(translationKey + "." + i);
-                }
-                blockEntry.setTooltip(Optional.of(tooltips));
-            }
-
-            StringListEntry textEntry = blockEntry.build();
-            BlockWidget blockWidget = new BlockWidget(textEntry);
+                    }, s -> Utils.setUnsafely(configField, blockObject, GameRegistry.findRegistry(Block.class).getValue(new ResourceLocation(s))),
+                    () -> {
+                        if (configField.isAnnotationPresent(ConfigEntry.Gui.Tooltip.class)) {
+                            int count = configField.getAnnotation(ConfigEntry.Gui.Tooltip.class).count();
+                            TranslatableComponent[] tooltips = new TranslatableComponent[count];
+                            for (int i = 0; i < count; i++) {
+                                tooltips[i] = new TranslatableComponent(translationKey + "." + i);
+                            }
+                            return Optional.of(tooltips);
+                        } else {
+                            return Optional.empty();
+                        }
+                    }, configField.isAnnotationPresent(ConfigEntry.Gui.RequiresRestart.class));
 
             return List.of(blockWidget);
         }, Block.class);
@@ -84,5 +85,16 @@ public class OtherLivingBeingsClient {
         target.ifPresent(entity -> entity.getCapability(OtherLivingBeingsCapability.PLAYER_SKILLS).ifPresent(playerSkills -> playerSkills.deserializeNBT(tag)));
 
         OtherLivingBeings.getLogger().debug("Applied Player Skill Sync Packet in {} ms", System.currentTimeMillis() - startTime);
+    }
+
+    private static Predicate<Field> isListOfType(Type... types) {
+        return (field) -> {
+            if (List.class.isAssignableFrom(field.getType()) && field.getGenericType() instanceof ParameterizedType) {
+                Type[] args = ((ParameterizedType)field.getGenericType()).getActualTypeArguments();
+                return args.length == 1 && Stream.of(types).anyMatch((type) -> Objects.equals(args[0], type));
+            } else {
+                return false;
+            }
+        };
     }
 }
