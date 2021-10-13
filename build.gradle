@@ -137,7 +137,7 @@ repositories {
 }
 
 dependencies {
-    minecraft 'net.minecraftforge:forge:1.17.1-37.0.85'
+    minecraft 'net.minecraftforge:forge:1.17.1-37.0.86'
     annotationProcessor 'org.spongepowered:mixin:0.8:processor'
     implementation fg.deobf("me.shedaniel.cloth:cloth-config-forge:${clothConfig}")
 }
