@@ -7,6 +7,9 @@ import me.shedaniel.autoconfig.annotation.ConfigEntry;
 import net.minecraft.world.level.block.Block;
 import net.minecraft.world.level.block.Blocks;
 
+import java.util.ArrayList;
+import java.util.List;
+
 @Config(name = OtherLivingBeings.MOD_ID)
 public class OtherLivingBeingsConfig implements ConfigData {
     @ConfigEntry.Gui.RequiresRestart
@@ -22,7 +25,7 @@ public class OtherLivingBeingsConfig implements ConfigData {
             public float breakSpeedPerLevel = 0.05F;
             @ConfigEntry.Gui.Tooltip
             public float unbreakingChance = 0.05F;
-            public Block woodBlock = Blocks.ACACIA_LOG;
+            public List<Block> treeBlocks = new ArrayList<>(List.of(Blocks.ACACIA_LOG, Blocks.BIRCH_LOG));
         }
     }
 

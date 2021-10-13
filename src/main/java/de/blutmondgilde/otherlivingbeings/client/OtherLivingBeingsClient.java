@@ -3,11 +3,14 @@ package de.blutmondgilde.otherlivingbeings.client;
 import de.blutmondgilde.otherlivingbeings.OtherLivingBeings;
 import de.blutmondgilde.otherlivingbeings.api.capability.OtherLivingBeingsCapability;
 import de.blutmondgilde.otherlivingbeings.config.OtherLivingBeingsConfig;
+import de.blutmondgilde.otherlivingbeings.config.widget.BlockListWidget;
 import de.blutmondgilde.otherlivingbeings.config.widget.BlockTextField;
 import me.shedaniel.autoconfig.AutoConfig;
 import me.shedaniel.autoconfig.annotation.ConfigEntry;
 import me.shedaniel.autoconfig.gui.registry.GuiRegistry;
+import me.shedaniel.autoconfig.gui.registry.api.GuiRegistryAccess;
 import me.shedaniel.autoconfig.util.Utils;
+import me.shedaniel.clothconfig2.api.AbstractConfigListEntry;
 import me.shedaniel.clothconfig2.api.ConfigEntryBuilder;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.multiplayer.ClientLevel;
@@ -25,10 +28,14 @@ import net.minecraftforge.fmllegacy.common.registry.GameRegistry;
 import java.lang.reflect.Field;
 import java.lang.reflect.ParameterizedType;
 import java.lang.reflect.Type;
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.Collection;
 import java.util.List;
 import java.util.Objects;
 import java.util.Optional;
 import java.util.function.Predicate;
+import java.util.stream.Collectors;
 import java.util.stream.Stream;
 
 public class OtherLivingBeingsClient {
@@ -69,6 +76,37 @@ public class OtherLivingBeingsClient {
 
             return List.of(blockWidget);
         }, Block.class);
+
+        registry.registerPredicateProvider((translationKey, configField, fieldObject, defaultFieldObject, guiRegistryAccess) -> {
+            List<Block> fieldValue = Utils.getUnsafely(configField, fieldObject, List.of(Blocks.AIR));
+
+            return List.of(new BlockListWidget(
+                    new TranslatableComponent(translationKey),
+                    new ArrayList<>(fieldValue.stream()
+                            .map(Block::getRegistryName).filter(Objects::nonNull)
+                            .map(ResourceLocation::toString)
+                            .distinct()
+                            .toList()),
+                    false,
+                    null,
+                    strings -> Utils.setUnsafely(configField, fieldObject, new ArrayList<>(strings
+                            .stream()
+                            .map(s -> GameRegistry.findRegistry(Block.class).getValue(new ResourceLocation(s)))
+                            .distinct()
+                            .toList())),
+                    () -> {
+                        List<Block> defaultBlockList = Utils.getUnsafely(configField, defaultFieldObject, List.of(Blocks.AIR));
+                        return new ArrayList<>(defaultBlockList.stream()
+                                .map(Block::getRegistryName)
+                                .filter(Objects::nonNull)
+                                .map(ResourceLocation::toString)
+                                .distinct()
+                                .toList());
+                    },
+                    ENTRY_BUILDER.getResetButtonKey(),
+                    configField.isAnnotationPresent(ConfigEntry.Gui.RequiresRestart.class)
+            ));
+        }, isListOfType(Block.class));
     }
 
     public static void syncSkills(final CompoundTag tag, final int targetId) {
@@ -90,11 +128,19 @@ public class OtherLivingBeingsClient {
     private static Predicate<Field> isListOfType(Type... types) {
         return (field) -> {
             if (List.class.isAssignableFrom(field.getType()) && field.getGenericType() instanceof ParameterizedType) {
-                Type[] args = ((ParameterizedType)field.getGenericType()).getActualTypeArguments();
+                Type[] args = ((ParameterizedType) field.getGenericType()).getActualTypeArguments();
                 return args.length == 1 && Stream.of(types).anyMatch((type) -> Objects.equals(args[0], type));
             } else {
                 return false;
             }
         };
+    }
+
+    @SuppressWarnings({"rawtypes"})
+    private static List<AbstractConfigListEntry> getChildren(String translationKey, Class<?> fieldType, Object iConfig, Object iDefaults, GuiRegistryAccess guiProvider) {
+        return Arrays.stream(fieldType.getDeclaredFields()).map((iField) -> {
+            String iI13n = String.format("%s.%s", translationKey, iField.getName());
+            return guiProvider.getAndTransform(iI13n, iField, iConfig, iDefaults, guiProvider);
+        }).filter(Objects::nonNull).flatMap(Collection::stream).collect(Collectors.toList());
     }
 }
