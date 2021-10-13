@@ -49,7 +49,7 @@ public class OtherLivingBeingsClient {
             BlockTextField blockWidget = new BlockTextField(
                     new TranslatableComponent(translationKey),
                     fieldValue.getRegistryName().toString(),
-                    new TranslatableComponent("text.cloth-config.reset_value"),
+                    ENTRY_BUILDER.getResetButtonKey(),
                     () -> {
                         Block block = Utils.getUnsafely(configField, defaultBlockObject, Blocks.AIR);
                         return block.getRegistryName().toString();
