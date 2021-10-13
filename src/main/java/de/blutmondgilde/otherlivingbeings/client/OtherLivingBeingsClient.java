@@ -3,6 +3,7 @@ package de.blutmondgilde.otherlivingbeings.client;
 import de.blutmondgilde.otherlivingbeings.OtherLivingBeings;
 import de.blutmondgilde.otherlivingbeings.api.capability.OtherLivingBeingsCapability;
 import de.blutmondgilde.otherlivingbeings.config.OtherLivingBeingsConfig;
+import de.blutmondgilde.otherlivingbeings.config.elements.TreeListEntry;
 import de.blutmondgilde.otherlivingbeings.config.widget.BlockListWidget;
 import de.blutmondgilde.otherlivingbeings.config.widget.BlockTextField;
 import me.shedaniel.autoconfig.AutoConfig;
@@ -107,6 +108,51 @@ public class OtherLivingBeingsClient {
                     configField.isAnnotationPresent(ConfigEntry.Gui.RequiresRestart.class)
             ));
         }, isListOfType(Block.class));
+
+        registry.registerTypeProvider((translationKey, configField, fieldObject, defaultFieldObject, guiRegistryAccess) -> {
+            TreeListEntry fieldValue = Utils.getUnsafely(configField, fieldObject, new TreeListEntry());
+            TreeListEntry defaultValue = Utils.getUnsafely(configField, defaultFieldObject, new TreeListEntry());
+
+            return List.of(ENTRY_BUILDER
+                            .startFloatField(new TranslatableComponent(translationKey + ".exp"), fieldValue.exp)
+                            .setDefaultValue(() -> defaultValue.exp)
+                            .setSaveConsumer((newValue) -> {
+                                try {
+                                    Field field = TreeListEntry.class.getField("exp");
+                                    Utils.setUnsafely(field, fieldValue.exp, newValue);
+                                } catch (NoSuchFieldException ex) {
+                                    ex.printStackTrace();
+                                }
+                            })
+                            .build(),
+                    new BlockListWidget(
+                            new TranslatableComponent(translationKey + ".blocks"),
+                            new ArrayList<>(fieldValue.blocks.stream()
+                                    .map(Block::getRegistryName).filter(Objects::nonNull)
+                                    .map(ResourceLocation::toString)
+                                    .distinct()
+                                    .toList()),
+                            false,
+                            null,
+                            strings -> Utils.setUnsafely(configField, fieldValue, new TreeListEntry(fieldValue.exp, new ArrayList<>(strings
+                                    .stream()
+                                    .map(s -> GameRegistry.findRegistry(Block.class).getValue(new ResourceLocation(s)))
+                                    .distinct()
+                                    .toList()))),
+                            () -> {
+                                List<Block> defaultBlockList = defaultValue.blocks;
+                                return new ArrayList<>(defaultBlockList.stream()
+                                        .map(Block::getRegistryName)
+                                        .filter(Objects::nonNull)
+                                        .map(ResourceLocation::toString)
+                                        .distinct()
+                                        .toList());
+                            },
+                            ENTRY_BUILDER.getResetButtonKey(),
+                            configField.isAnnotationPresent(ConfigEntry.Gui.RequiresRestart.class)
+                    )
+            );
+        }, TreeListEntry.class);
     }
 
     public static void syncSkills(final CompoundTag tag, final int targetId) {
