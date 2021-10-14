@@ -46,7 +46,6 @@ public class SkillHandler {
     public static void onBlockBroken(BlockEvent.BreakEvent e) {
         final IPlayerSkills skills = e.getPlayer().getCapability(OtherLivingBeingsCapability.PLAYER_SKILLS).orElseThrow(() -> new IllegalStateException("No Skill Capablility present!"));
         AtomicBoolean isCanceled = new AtomicBoolean(false);
-        OtherLivingBeings.getLogger().info("Got skills: {}", skills.getSkills());
         skills.getSkills()
                 .stream()
                 .filter(iSkill -> iSkill instanceof BlockBrokenListener)
