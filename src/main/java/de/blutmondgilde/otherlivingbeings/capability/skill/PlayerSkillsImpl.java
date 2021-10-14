@@ -56,10 +56,9 @@ public class PlayerSkillsImpl implements IPlayerSkills {
         GameRegistry.findRegistry(ISkill.class)
                 .getEntries()
                 .forEach(resourceKeyISkillEntry -> {
-                    if (nbt.contains(resourceKeyISkillEntry.getKey().getRegistryName().toString())) {
+                    if (nbt.contains(resourceKeyISkillEntry.getValue().getRegistryName().toString())) {
                         ISkill skill = resourceKeyISkillEntry.getValue();
-                        CompoundTag tag = (CompoundTag) nbt.get(resourceKeyISkillEntry.getKey().getRegistryName().toString());
-                        assert tag != null;
+                        CompoundTag tag = (CompoundTag) nbt.get(resourceKeyISkillEntry.getValue().getRegistryName().toString());
                         skill.deserializeNBT(tag);
                         skills.add(skill);
                     }
