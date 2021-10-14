@@ -3,6 +3,8 @@ package de.blutmondgilde.otherlivingbeings;
 import de.blutmondgilde.otherlivingbeings.capability.OtherLivingBeingsCapManager;
 import de.blutmondgilde.otherlivingbeings.client.OtherLivingBeingsClient;
 import de.blutmondgilde.otherlivingbeings.config.OtherLivingBeingsConfig;
+import de.blutmondgilde.otherlivingbeings.data.DataPackHandler;
+import de.blutmondgilde.otherlivingbeings.data.jobs.lumberjack.LumberjackDataGenerator;
 import de.blutmondgilde.otherlivingbeings.handler.SkillHandler;
 import de.blutmondgilde.otherlivingbeings.network.OtherLivingBeingNetwork;
 import de.blutmondgilde.otherlivingbeings.registry.SkillRegistry;
@@ -22,6 +24,7 @@ import net.minecraftforge.fml.common.Mod;
 import net.minecraftforge.fml.event.lifecycle.FMLCommonSetupEvent;
 import net.minecraftforge.fml.javafmlmod.FMLJavaModLoadingContext;
 import net.minecraftforge.fmllegacy.common.registry.GameRegistry;
+import net.minecraftforge.forge.event.lifecycle.GatherDataEvent;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
@@ -40,11 +43,13 @@ public class OtherLivingBeings {
 
         final IEventBus modBus = FMLJavaModLoadingContext.get().getModEventBus();
         modBus.addListener(this::setup);
+        modBus.addListener(this::dataGen);
         modBus.addListener(OtherLivingBeingsClient::registerConfigGUI);
         SkillRegistry.init(modBus);
 
         final IEventBus forgeBus = MinecraftForge.EVENT_BUS;
         SkillHandler.init(forgeBus);
+        DataPackHandler.init(forgeBus);
         OtherLivingBeingsCapManager.init(modBus, forgeBus);
 
         DistExecutor.safeRunWhenOn(Dist.CLIENT, () -> OtherLivingBeingsClient::init);
@@ -67,5 +72,11 @@ public class OtherLivingBeings {
                 .registerDeserializer(String.class, Block.class, (s, marshaller) -> GameRegistry.findRegistry(Block.class).getValue(new ResourceLocation(s)));
 
         return new JanksonConfigSerializer<>(config, aClass, builder.build());
+    }
+
+    private void dataGen(final GatherDataEvent e) {
+        if (e.includeServer()) {
+            e.getGenerator().addProvider(new LumberjackDataGenerator(MOD_ID, e.getGenerator().getOutputFolder()));
+        }
     }
 }

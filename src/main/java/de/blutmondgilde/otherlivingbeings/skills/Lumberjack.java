@@ -1,9 +1,13 @@
 package de.blutmondgilde.otherlivingbeings.skills;
 
 import de.blutmondgilde.otherlivingbeings.OtherLivingBeings;
+import de.blutmondgilde.otherlivingbeings.api.capability.OtherLivingBeingsCapability;
 import de.blutmondgilde.otherlivingbeings.api.skill.AbstractLevelSkill;
 import de.blutmondgilde.otherlivingbeings.api.skill.listener.BlockBreakListener;
 import de.blutmondgilde.otherlivingbeings.api.skill.listener.BlockBrokenListener;
+import de.blutmondgilde.otherlivingbeings.capability.skill.IPlayerSkills;
+import de.blutmondgilde.otherlivingbeings.capability.skill.PlayerSkillsImpl;
+import de.blutmondgilde.otherlivingbeings.data.jobs.lumberjack.LumberjackDataProvider;
 import de.blutmondgilde.otherlivingbeings.util.TranslationUtils;
 import net.minecraft.core.BlockPos;
 import net.minecraft.network.chat.MutableComponent;
@@ -44,7 +48,14 @@ public class Lumberjack extends AbstractLevelSkill implements BlockBreakListener
     public boolean onBlockBroken(Player player, BlockState state, BlockPos pos, LevelAccessor world) {
         final ItemStack item = player.getMainHandItem();
         if (item.getItem() instanceof AxeItem) {
-            //TODO increase EXP with value from Config
+            if (LumberjackDataProvider.getExpMap().containsKey(state.getBlock())) {
+                IPlayerSkills playerSkills = player.getCapability(OtherLivingBeingsCapability.PLAYER_SKILLS).orElse(new PlayerSkillsImpl());
+                playerSkills.getSkills()
+                        .stream()
+                        .filter(iSkill -> iSkill instanceof Lumberjack)
+                        .forEach(iSkill -> iSkill.increaseExp(LumberjackDataProvider.getExpMap().get(state.getBlock())));
+                playerSkills.sync(player);
+            }
         }
         return false;
     }
