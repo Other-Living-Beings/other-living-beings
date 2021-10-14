@@ -23,6 +23,7 @@ public class SyncSkillsPacket {
 
     public static void encode(SyncSkillsPacket packet, FriendlyByteBuf buffer) {
         buffer.writeNbt(packet.tag);
+        buffer.writeInt(packet.targetId);
     }
 
     public static SyncSkillsPacket decode(FriendlyByteBuf buffer) {
@@ -30,7 +31,7 @@ public class SyncSkillsPacket {
     }
 
     public static void handle(final SyncSkillsPacket packet, Supplier<NetworkEvent.Context> context) {
-        context.get().enqueueWork(() -> DistExecutor.safeRunWhenOn(Dist.CLIENT, () -> () -> OtherLivingBeingsClient.syncSkills(packet.tag, packet.targetId)));
+        context.get().enqueueWork(() -> DistExecutor.unsafeRunWhenOn(Dist.CLIENT, () -> () -> OtherLivingBeingsClient.syncSkills(packet.tag, packet.targetId)));
         context.get().setPacketHandled(true);
     }
 }

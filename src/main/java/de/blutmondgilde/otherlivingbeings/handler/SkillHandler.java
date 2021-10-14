@@ -2,6 +2,7 @@ package de.blutmondgilde.otherlivingbeings.handler;
 
 import de.blutmondgilde.otherlivingbeings.OtherLivingBeings;
 import de.blutmondgilde.otherlivingbeings.api.capability.OtherLivingBeingsCapability;
+import de.blutmondgilde.otherlivingbeings.api.skill.ISkill;
 import de.blutmondgilde.otherlivingbeings.api.skill.listener.BlockBreakListener;
 import de.blutmondgilde.otherlivingbeings.api.skill.listener.BlockBrokenListener;
 import de.blutmondgilde.otherlivingbeings.capability.skill.IPlayerSkills;
@@ -24,7 +25,7 @@ public class SkillHandler {
     }
 
     public static void onBreakBlock(PlayerEvent.BreakSpeed e) {
-        final IPlayerSkills skills = e.getPlayer().getCapability(OtherLivingBeingsCapability.PLAYER_SKILLS).orElse(new PlayerSkillsImpl());
+        final IPlayerSkills skills = e.getPlayer().getCapability(OtherLivingBeingsCapability.PLAYER_SKILLS).orElseThrow(() -> new IllegalStateException("No Skill Capablility present!"));
         AtomicReference<Float> breakSpeed = new AtomicReference<>(e.getNewSpeed());
 
         skills.getSkills()
@@ -43,15 +44,15 @@ public class SkillHandler {
     }
 
     public static void onBlockBroken(BlockEvent.BreakEvent e) {
-        final IPlayerSkills skills = e.getPlayer().getCapability(OtherLivingBeingsCapability.PLAYER_SKILLS).orElse(new PlayerSkillsImpl());
+        final IPlayerSkills skills = e.getPlayer().getCapability(OtherLivingBeingsCapability.PLAYER_SKILLS).orElseThrow(() -> new IllegalStateException("No Skill Capablility present!"));
         AtomicBoolean isCanceled = new AtomicBoolean(false);
-        OtherLivingBeings.getLogger().debug("Block Break Event");
+        OtherLivingBeings.getLogger().info("Got skills: {}", skills.getSkills());
         skills.getSkills()
                 .stream()
                 .filter(iSkill -> iSkill instanceof BlockBrokenListener)
                 .map(iSkill -> (BlockBrokenListener) iSkill)
                 .forEach(blockBrokenListener -> {
-                    OtherLivingBeings.getLogger().debug("Firing onBlockBroken");
+                    OtherLivingBeings.getLogger().info("Firing onBlockBroken for {}", ((ISkill) blockBrokenListener).getRegistryName());
                     blockBrokenListener.onBlockBroken(e.getPlayer(), e.getState(), e.getPos(), e.getWorld());
                 });
 

@@ -15,6 +15,7 @@ import net.minecraftforge.fmllegacy.common.registry.GameRegistry;
 
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
+import java.util.ArrayList;
 import java.util.List;
 import java.util.stream.Collectors;
 
@@ -25,11 +26,13 @@ public class PlayerSkillsImpl implements IPlayerSkills {
     private final LazyOptional<IPlayerSkills> holder = LazyOptional.of(() -> this);
 
     public PlayerSkillsImpl() {
-        skills = GameRegistry.findRegistry(ISkill.class)
+        skills = new ArrayList<>();
+        skills.addAll(GameRegistry
+                .findRegistry(ISkill.class)
                 .getValues()
                 .stream()
                 .filter(iSkill -> !iSkill.isUnlockable())
-                .collect(Collectors.toList());
+                .collect(Collectors.toList()));
     }
 
     @Override
