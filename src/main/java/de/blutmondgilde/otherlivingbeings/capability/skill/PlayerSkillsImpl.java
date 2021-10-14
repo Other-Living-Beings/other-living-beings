@@ -38,15 +38,13 @@ public class PlayerSkillsImpl implements IPlayerSkills {
     @Override
     public CompoundTag serializeNBT() {
         CompoundTag tag = new CompoundTag();
-        skills.stream()
-                .filter(iSkill -> !iSkill.isUnlockable())
-                .forEach(iSkill -> {
-                    if (iSkill.getRegistryName() == null) {
-                        OtherLivingBeings.getLogger().fatal("Exception while serializing PlayerSkills. A Skill had no RegistryName!");
-                    } else {
-                        tag.put(iSkill.getRegistryName().toString(), iSkill.serializeNBT());
-                    }
-                });
+        skills.forEach(iSkill -> {
+            if (iSkill.getRegistryName() == null) {
+                OtherLivingBeings.getLogger().fatal("Exception while serializing PlayerSkills. A Skill had no RegistryName!");
+            } else {
+                tag.put(iSkill.getRegistryName().toString(), iSkill.serializeNBT());
+            }
+        });
         return tag;
     }
 
