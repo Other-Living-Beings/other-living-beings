@@ -1,6 +1,7 @@
 package de.blutmondgilde.otherlivingbeings.network;
 
 import de.blutmondgilde.otherlivingbeings.OtherLivingBeings;
+import de.blutmondgilde.otherlivingbeings.network.packet.SyncDataPack;
 import de.blutmondgilde.otherlivingbeings.network.packet.SyncSkillsPacket;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraftforge.fmllegacy.network.NetworkRegistry;
@@ -13,6 +14,7 @@ public class OtherLivingBeingNetwork {
     public static void registerPackets() {
         int messageId = 1;
         getInstance().registerMessage(messageId++, SyncSkillsPacket.class, SyncSkillsPacket::encode, SyncSkillsPacket::decode, SyncSkillsPacket::handle);
+        getInstance().registerMessage(messageId++, SyncDataPack.class, SyncDataPack::encode, SyncDataPack::decode, SyncDataPack::handle);
     }
 
     public static SimpleChannel getInstance() {

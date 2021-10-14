@@ -31,5 +31,6 @@ public class SyncSkillsPacket {
 
     public static void handle(final SyncSkillsPacket packet, Supplier<NetworkEvent.Context> context) {
         context.get().enqueueWork(() -> DistExecutor.safeRunWhenOn(Dist.CLIENT, () -> () -> OtherLivingBeingsClient.syncSkills(packet.tag, packet.targetId)));
+        context.get().setPacketHandled(true);
     }
 }

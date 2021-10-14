@@ -3,7 +3,7 @@ package de.blutmondgilde.otherlivingbeings;
 import de.blutmondgilde.otherlivingbeings.capability.OtherLivingBeingsCapManager;
 import de.blutmondgilde.otherlivingbeings.client.OtherLivingBeingsClient;
 import de.blutmondgilde.otherlivingbeings.config.OtherLivingBeingsConfig;
-import de.blutmondgilde.otherlivingbeings.data.DataPackHandler;
+import de.blutmondgilde.otherlivingbeings.handler.DataPackHandler;
 import de.blutmondgilde.otherlivingbeings.data.jobs.lumberjack.LumberjackDataGenerator;
 import de.blutmondgilde.otherlivingbeings.handler.SkillHandler;
 import de.blutmondgilde.otherlivingbeings.network.OtherLivingBeingNetwork;
@@ -48,7 +48,7 @@ public class OtherLivingBeings {
         SkillRegistry.init(modBus);
 
         final IEventBus forgeBus = MinecraftForge.EVENT_BUS;
-        SkillHandler.init(forgeBus);
+        SkillHandler.init();
         DataPackHandler.init(forgeBus);
         OtherLivingBeingsCapManager.init(modBus, forgeBus);
 

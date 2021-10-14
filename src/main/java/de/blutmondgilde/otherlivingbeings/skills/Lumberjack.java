@@ -47,14 +47,20 @@ public class Lumberjack extends AbstractLevelSkill implements BlockBreakListener
     @Override
     public boolean onBlockBroken(Player player, BlockState state, BlockPos pos, LevelAccessor world) {
         final ItemStack item = player.getMainHandItem();
+        OtherLivingBeings.getLogger().debug("Breaking Block");
         if (item.getItem() instanceof AxeItem) {
+            OtherLivingBeings.getLogger().debug("Item is AxeItem");
             if (LumberjackDataProvider.getExpMap().containsKey(state.getBlock())) {
+                OtherLivingBeings.getLogger().debug("Block is valid Log Block");
                 IPlayerSkills playerSkills = player.getCapability(OtherLivingBeingsCapability.PLAYER_SKILLS).orElse(new PlayerSkillsImpl());
+                //Increase EXP
                 playerSkills.getSkills()
                         .stream()
                         .filter(iSkill -> iSkill instanceof Lumberjack)
                         .forEach(iSkill -> iSkill.increaseExp(LumberjackDataProvider.getExpMap().get(state.getBlock())));
+                //Sync Client
                 playerSkills.sync(player);
+                OtherLivingBeings.getLogger().debug("Increased Lumberjack exp from player {}", player.getDisplayName().getString());
             }
         }
         return false;
