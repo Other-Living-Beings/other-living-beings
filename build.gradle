@@ -17,7 +17,9 @@ buildscript {
 apply plugin: 'net.minecraftforge.gradle'
 apply plugin: 'org.spongepowered.mixin'
 apply plugin: 'org.parchmentmc.librarian.forgegradle'
-apply plugin: "com.matthewprenger.cursegradle"
+if (project.hasProperty("curseforge_apikey")) {
+    apply plugin: "com.matthewprenger.cursegradle"
+}
 
 group = 'de.blutmondgilde'
 /*
@@ -105,19 +107,21 @@ minecraft {
     }
 }
 
-curseforge {
-    apiKey = curseforge_apikey
-    project {
-        id = '519914'
-        releaseType = 'alpha'
-        changelogType = 'html'
-        changelog = '<a></a>'
-        mainArtifact(jar) {
-            relations {
-                requiredDependency 'cloth-config-forge'
+if (project.hasProperty("curseforge_apikey")) {
+    curseforge {
+        apiKey = curseforge_apikey
+        project {
+            id = '519914'
+            releaseType = 'alpha'
+            changelogType = 'html'
+            changelog = '<a></a>'
+            mainArtifact(jar) {
+                relations {
+                    requiredDependency 'cloth-config-forge'
+                }
             }
+            addGameVersion minecraftVersion
         }
-        addGameVersion minecraftVersion
     }
 }
 
