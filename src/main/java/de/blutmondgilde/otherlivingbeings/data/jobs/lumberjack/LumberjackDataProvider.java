@@ -21,6 +21,6 @@ public class LumberjackDataProvider extends ReloadableJobDataProvider {
     protected void apply(ResourceLocation fileLocation, JsonElement jsonElement) {
         LumberjackPojo data = GSON.fromJson(jsonElement, LumberjackPojo.class);
         OtherLivingBeings.getLogger().debug("Applying {} with {} blocks to Lumberjack", fileLocation, data.getBlocks().size());
-        //data.getBlocks().forEach(block -> expMap.put(block, exp));
+        data.getBlocks().forEach(block -> expMap.put(block, data.exp));
     }
 }
