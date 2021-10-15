@@ -6,8 +6,9 @@
   "text.autoconfig.otherlivingbeings.option.jobConfig.lumberjack.breakSpeedPerLevel.@Tooltip": "Additional break speed per level",
   "text.autoconfig.otherlivingbeings.option.jobConfig.lumberjack.unbreakingChance": "Unbreaking chance per level",
   "text.autoconfig.otherlivingbeings.option.jobConfig.lumberjack.unbreakingChance.@Tooltip": "Chance per level to not use a durability point",
-  "text.autoconfig.otherlivingbeings.option.jobConfig.lumberjack.treeBlocks": "Tree Blocks",
-  "text.autoconfig.otherlivingbeings.option.TreeListEntry": "Exp per Block - Entry",
-  "text.autoconfig.otherlivingbeings.option.TreeListEntry.exp": "Experience",
-  "text.autoconfig.otherlivingbeings.option.TreeListEntry.blocks": "Blocklist"
+  "text.autoconfig.otherlivingbeings.option.jobConfig.miner": "Miner",
+  "text.autoconfig.otherlivingbeings.option.jobConfig.miner.breakSpeedPerLevel": "Break speed per Level",
+  "text.autoconfig.otherlivingbeings.option.jobConfig.miner.breakSpeedPerLevel.@Tooltip": "Additional break speed per level",
+  "text.autoconfig.otherlivingbeings.option.jobConfig.miner.unbreakingChance": "Unbreaking chance per level",
+  "text.autoconfig.otherlivingbeings.option.jobConfig.miner.unbreakingChance.@Tooltip": "Chance per level to not use a durability point"
 }
