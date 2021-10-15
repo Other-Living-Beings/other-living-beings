@@ -14,8 +14,17 @@ public class OtherLivingBeingsConfig implements ConfigData {
     public static class JobConfig {
         @ConfigEntry.Gui.CollapsibleObject
         public Lumberjack lumberjack = new Lumberjack();
+        @ConfigEntry.Gui.CollapsibleObject
+        public Miner miner = new Miner();
 
         public static class Lumberjack {
+            @ConfigEntry.Gui.Tooltip
+            public float breakSpeedPerLevel = 0.05F;
+            @ConfigEntry.Gui.Tooltip
+            public float unbreakingChance = 0.05F;
+        }
+
+        public static class Miner{
             @ConfigEntry.Gui.Tooltip
             public float breakSpeedPerLevel = 0.05F;
             @ConfigEntry.Gui.Tooltip
