@@ -15,17 +15,11 @@ import java.util.function.Supplier;
 
 public class RequestOpenSkillContainer {
 
-    public RequestOpenSkillContainer() {
+    public RequestOpenSkillContainer() {}
 
-    }
+    public RequestOpenSkillContainer(FriendlyByteBuf buf) {}
 
-    public RequestOpenSkillContainer(FriendlyByteBuf buf) {
-
-    }
-
-    public void toBytes(FriendlyByteBuf buf) {
-
-    }
+    public void toBytes(FriendlyByteBuf buf) {}
 
     public void handle(Supplier<NetworkEvent.Context> ctx) {
         ctx.get().enqueueWork(() -> NetworkHooks.openGui(ctx.get().getSender(), new MenuProvider() {
