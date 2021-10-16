@@ -1,8 +1,10 @@
 package de.blutmondgilde.otherlivingbeings.network;
 
 import de.blutmondgilde.otherlivingbeings.OtherLivingBeings;
-import de.blutmondgilde.otherlivingbeings.network.packet.SyncDataPack;
-import de.blutmondgilde.otherlivingbeings.network.packet.SyncSkillsPacket;
+import de.blutmondgilde.otherlivingbeings.network.packet.toclient.OpenInventoryPacket;
+import de.blutmondgilde.otherlivingbeings.network.packet.toclient.SyncDataPack;
+import de.blutmondgilde.otherlivingbeings.network.packet.toclient.SyncSkillsPacket;
+import de.blutmondgilde.otherlivingbeings.network.packet.toserver.RequestInventoryOpening;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraftforge.fmllegacy.network.NetworkRegistry;
 import net.minecraftforge.fmllegacy.network.simple.SimpleChannel;
@@ -15,6 +17,8 @@ public class OtherLivingBeingNetwork {
         int messageId = 1;
         getInstance().registerMessage(messageId++, SyncSkillsPacket.class, SyncSkillsPacket::encode, SyncSkillsPacket::decode, SyncSkillsPacket::handle);
         getInstance().registerMessage(messageId++, SyncDataPack.class, SyncDataPack::encode, SyncDataPack::decode, SyncDataPack::handle);
+        getInstance().registerMessage(messageId++, OpenInventoryPacket.class, OpenInventoryPacket::toBytes, OpenInventoryPacket::new, OpenInventoryPacket::handle);
+        getInstance().registerMessage(messageId++, RequestInventoryOpening.class, RequestInventoryOpening::toBytes, RequestInventoryOpening::new, RequestInventoryOpening::handle);
     }
 
     public static SimpleChannel getInstance() {

@@ -2,17 +2,21 @@ package de.blutmondgilde.otherlivingbeings.client;
 
 import de.blutmondgilde.otherlivingbeings.OtherLivingBeings;
 import de.blutmondgilde.otherlivingbeings.api.capability.OtherLivingBeingsCapability;
+import de.blutmondgilde.otherlivingbeings.api.gui.inventory.tabs.AbstractInventoryTab;
 import de.blutmondgilde.otherlivingbeings.config.OtherLivingBeingsConfig;
 import de.blutmondgilde.otherlivingbeings.config.widget.BlockListWidget;
 import de.blutmondgilde.otherlivingbeings.config.widget.BlockTextField;
+import de.blutmondgilde.otherlivingbeings.network.OtherLivingBeingNetwork;
+import de.blutmondgilde.otherlivingbeings.network.packet.toserver.RequestInventoryOpening;
+import de.blutmondgilde.otherlivingbeings.network.packet.toserver.RequestOpenSkillContainer;
+import de.blutmondgilde.otherlivingbeings.registry.InventoryTabRegistry;
 import me.shedaniel.autoconfig.AutoConfig;
 import me.shedaniel.autoconfig.annotation.ConfigEntry;
 import me.shedaniel.autoconfig.gui.registry.GuiRegistry;
-import me.shedaniel.autoconfig.gui.registry.api.GuiRegistryAccess;
 import me.shedaniel.autoconfig.util.Utils;
-import me.shedaniel.clothconfig2.api.AbstractConfigListEntry;
 import me.shedaniel.clothconfig2.api.ConfigEntryBuilder;
 import net.minecraft.client.Minecraft;
+import net.minecraft.client.gui.screens.inventory.InventoryScreen;
 import net.minecraft.client.multiplayer.ClientLevel;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.network.chat.TranslatableComponent;
@@ -24,19 +28,16 @@ import net.minecraftforge.fml.ModLoadingContext;
 import net.minecraftforge.fml.event.lifecycle.FMLClientSetupEvent;
 import net.minecraftforge.fmlclient.ConfigGuiHandler;
 import net.minecraftforge.fmllegacy.common.registry.GameRegistry;
+import net.minecraftforge.fmllegacy.network.PacketDistributor;
 
 import java.lang.reflect.Field;
 import java.lang.reflect.ParameterizedType;
 import java.lang.reflect.Type;
 import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.Collection;
 import java.util.List;
-import java.util.Map;
 import java.util.Objects;
 import java.util.Optional;
 import java.util.function.Predicate;
-import java.util.stream.Collectors;
 import java.util.stream.Stream;
 
 public class OtherLivingBeingsClient {
@@ -48,6 +49,24 @@ public class OtherLivingBeingsClient {
         ModLoadingContext.get()
                 .registerExtensionPoint(ConfigGuiHandler.ConfigGuiFactory.class, () -> new ConfigGuiHandler.ConfigGuiFactory((client, parent) -> AutoConfig.getConfigScreen(OtherLivingBeingsConfig.class, parent)
                         .get()));
+        //Create Inventory Tab for Skills
+        createSkillInventoryTab();
+    }
+
+    private static void createSkillInventoryTab() {
+        InventoryTabRegistry.register(new AbstractInventoryTab() {
+            @Override
+            public void sendOpenContainerPacket() {
+                OtherLivingBeingNetwork.getInstance().send(PacketDistributor.SERVER.noArg(), new RequestInventoryOpening());
+            }
+        });
+
+        InventoryTabRegistry.register(new AbstractInventoryTab() {
+            @Override
+            public void sendOpenContainerPacket() {
+                OtherLivingBeingNetwork.getInstance().send(PacketDistributor.SERVER.noArg(), new RequestOpenSkillContainer());
+            }
+        });
     }
 
     public static void registerConfigGUI(FMLClientSetupEvent e) {
@@ -137,20 +156,7 @@ public class OtherLivingBeingsClient {
         };
     }
 
-    @SuppressWarnings({"rawtypes"})
-    private static List<AbstractConfigListEntry> getChildren(String translationKey, Class<?> fieldType, Object iConfig, Object iDefaults, GuiRegistryAccess guiProvider) {
-        return Arrays.stream(fieldType.getDeclaredFields()).map((iField) -> {
-            String iI13n = String.format("%s.%s", translationKey, iField.getName());
-            return guiProvider.getAndTransform(iI13n, iField, iConfig, iDefaults, guiProvider);
-        }).filter(Objects::nonNull).flatMap(Collection::stream).collect(Collectors.toList());
-    }
-
-    private static Predicate<Field> isMapWithSupportedTypes(Type keyType, Type valueType) {
-        return field -> {
-            Type[] types = {String.class, Float.TYPE, Integer.TYPE, Double.TYPE, Long.TYPE, Block.class, float.class};
-            return Map.class.isAssignableFrom(field.getType()) &&
-                    Arrays.stream(types).anyMatch(type -> type == keyType) &&
-                    (Arrays.stream(types).anyMatch(type -> type == valueType) || valueType == List.class);
-        };
+    public static void openInventory() {
+        Minecraft.getInstance().setScreen(new InventoryScreen(Minecraft.getInstance().player));
     }
 }

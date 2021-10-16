@@ -5,7 +5,7 @@ import de.blutmondgilde.otherlivingbeings.api.capability.OtherLivingBeingsCapabi
 import de.blutmondgilde.otherlivingbeings.capability.skill.IPlayerSkills;
 import de.blutmondgilde.otherlivingbeings.capability.skill.PlayerSkillsImpl;
 import de.blutmondgilde.otherlivingbeings.network.OtherLivingBeingNetwork;
-import de.blutmondgilde.otherlivingbeings.network.packet.SyncSkillsPacket;
+import de.blutmondgilde.otherlivingbeings.network.packet.toclient.SyncSkillsPacket;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.entity.Entity;
 import net.minecraftforge.common.capabilities.RegisterCapabilitiesEvent;

@@ -2,7 +2,7 @@ package de.blutmondgilde.otherlivingbeings.capability.skill;
 
 import de.blutmondgilde.otherlivingbeings.api.skill.ISkill;
 import de.blutmondgilde.otherlivingbeings.network.OtherLivingBeingNetwork;
-import de.blutmondgilde.otherlivingbeings.network.packet.SyncSkillsPacket;
+import de.blutmondgilde.otherlivingbeings.network.packet.toclient.SyncSkillsPacket;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.world.entity.Entity;
 import net.minecraftforge.common.capabilities.ICapabilitySerializable;

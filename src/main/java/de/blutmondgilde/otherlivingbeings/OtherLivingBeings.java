@@ -6,8 +6,10 @@ import de.blutmondgilde.otherlivingbeings.config.OtherLivingBeingsConfig;
 import de.blutmondgilde.otherlivingbeings.data.jobs.miner.MinerDataGenerator;
 import de.blutmondgilde.otherlivingbeings.handler.DataPackHandler;
 import de.blutmondgilde.otherlivingbeings.data.jobs.lumberjack.LumberjackDataGenerator;
+import de.blutmondgilde.otherlivingbeings.handler.InventoryTabHandler;
 import de.blutmondgilde.otherlivingbeings.handler.SkillHandler;
 import de.blutmondgilde.otherlivingbeings.network.OtherLivingBeingNetwork;
+import de.blutmondgilde.otherlivingbeings.registry.InventoryTabRegistry;
 import de.blutmondgilde.otherlivingbeings.registry.SkillRegistry;
 import lombok.Getter;
 import me.shedaniel.autoconfig.AutoConfig;
@@ -51,6 +53,7 @@ public class OtherLivingBeings {
         final IEventBus forgeBus = MinecraftForge.EVENT_BUS;
         SkillHandler.init();
         DataPackHandler.init(forgeBus);
+        InventoryTabHandler.init(forgeBus);
         OtherLivingBeingsCapManager.init(modBus, forgeBus);
 
         DistExecutor.safeRunWhenOn(Dist.CLIENT, () -> OtherLivingBeingsClient::init);

@@ -1,4 +1,4 @@
-package de.blutmondgilde.otherlivingbeings.network.packet;
+package de.blutmondgilde.otherlivingbeings.network.packet.toclient;
 
 import de.blutmondgilde.otherlivingbeings.data.jobs.lumberjack.LumberjackDataProvider;
 import lombok.AllArgsConstructor;
