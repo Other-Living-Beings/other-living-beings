@@ -3,13 +3,13 @@ package de.blutmondgilde.otherlivingbeings;
 import de.blutmondgilde.otherlivingbeings.capability.OtherLivingBeingsCapManager;
 import de.blutmondgilde.otherlivingbeings.client.OtherLivingBeingsClient;
 import de.blutmondgilde.otherlivingbeings.config.OtherLivingBeingsConfig;
+import de.blutmondgilde.otherlivingbeings.data.jobs.lumberjack.LumberjackDataGenerator;
 import de.blutmondgilde.otherlivingbeings.data.jobs.miner.MinerDataGenerator;
 import de.blutmondgilde.otherlivingbeings.handler.DataPackHandler;
-import de.blutmondgilde.otherlivingbeings.data.jobs.lumberjack.LumberjackDataGenerator;
 import de.blutmondgilde.otherlivingbeings.handler.InventoryTabHandler;
 import de.blutmondgilde.otherlivingbeings.handler.SkillHandler;
 import de.blutmondgilde.otherlivingbeings.network.OtherLivingBeingNetwork;
-import de.blutmondgilde.otherlivingbeings.registry.InventoryTabRegistry;
+import de.blutmondgilde.otherlivingbeings.registry.OtherLivingBeingRegistry;
 import de.blutmondgilde.otherlivingbeings.registry.SkillRegistry;
 import lombok.Getter;
 import me.shedaniel.autoconfig.AutoConfig;
@@ -48,6 +48,7 @@ public class OtherLivingBeings {
         modBus.addListener(this::setup);
         modBus.addListener(this::dataGen);
         modBus.addListener(OtherLivingBeingsClient::registerConfigGUI);
+        OtherLivingBeingRegistry.init();
         SkillRegistry.init(modBus);
 
         final IEventBus forgeBus = MinecraftForge.EVENT_BUS;
