@@ -19,8 +19,14 @@ public class InventoryTabSwitcherWidget extends GuiComponent implements Widget, 
     private final List<AbstractInventoryTab> tabs = new ArrayList<>();
 
     public InventoryTabSwitcherWidget(AbstractContainerScreen parent, int maxPages) {
-        this.prevButton = new Button(0, 0, 20, 20, new TextComponent("<"), b -> page = Math.max(page - 1, 0));
-        this.nextButton = new Button(parent.getGuiLeft() + parent.imageWidth - 20, parent.getGuiTop() - 50, 20, 20, new TextComponent(">"), b -> page = Math.min(page + 1, maxPages));
+        this.prevButton = new Button(0, 0, 20, 20, new TextComponent("<"), b -> {
+            page = Math.max(page - 1, 0);
+            updateTabs();
+        });
+        this.nextButton = new Button(parent.getGuiLeft() + parent.imageWidth - 20, parent.getGuiTop() - 50, 20, 20, new TextComponent(">"), b -> {
+            page = Math.min(page + 1, maxPages);
+            updateTabs();
+        });
         this.maxPages = maxPages;
     }
 
@@ -32,14 +38,15 @@ public class InventoryTabSwitcherWidget extends GuiComponent implements Widget, 
             this.nextButton.render(poseStack, mouseX, mouseY, partialTicks);
         }
 
-        this.tabs.stream().filter(AbstractInventoryTab::isActive).forEach(abstractInventoryTab -> abstractInventoryTab.render(poseStack, mouseX, mouseY, partialTicks));
+        this.tabs.stream()
+                .filter(AbstractInventoryTab::isVisible)
+                .forEach(abstractInventoryTab -> abstractInventoryTab.render(poseStack, mouseX, mouseY, partialTicks));
     }
 
     public void updateTabs() {
         for (int i = 0; i < this.tabs.size(); i++) {
             AbstractInventoryTab currentTab = tabs.get(i);
-            currentTab.setActive(Math.ceil((i + 1) / 12F) == this.page);
-            currentTab.setVisible(currentTab.isActive());
+            currentTab.setVisible(Math.ceil((i + 1) / 12F) == this.page);
         }
     }
 

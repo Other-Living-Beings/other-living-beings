@@ -3,6 +3,7 @@ package de.blutmondgilde.otherlivingbeings.client;
 import de.blutmondgilde.otherlivingbeings.OtherLivingBeings;
 import de.blutmondgilde.otherlivingbeings.api.capability.OtherLivingBeingsCapability;
 import de.blutmondgilde.otherlivingbeings.api.gui.inventory.tabs.AbstractInventoryTab;
+import de.blutmondgilde.otherlivingbeings.api.gui.inventory.tabs.AbstractTabContainerScreen;
 import de.blutmondgilde.otherlivingbeings.config.OtherLivingBeingsConfig;
 import de.blutmondgilde.otherlivingbeings.config.widget.BlockListWidget;
 import de.blutmondgilde.otherlivingbeings.config.widget.BlockTextField;
@@ -16,6 +17,7 @@ import me.shedaniel.autoconfig.gui.registry.GuiRegistry;
 import me.shedaniel.autoconfig.util.Utils;
 import me.shedaniel.clothconfig2.api.ConfigEntryBuilder;
 import net.minecraft.client.Minecraft;
+import net.minecraft.client.gui.screens.Screen;
 import net.minecraft.client.gui.screens.inventory.InventoryScreen;
 import net.minecraft.client.multiplayer.ClientLevel;
 import net.minecraft.nbt.CompoundTag;
@@ -59,12 +61,22 @@ public class OtherLivingBeingsClient {
             public void sendOpenContainerPacket() {
                 OtherLivingBeingNetwork.getInstance().send(PacketDistributor.SERVER.noArg(), new RequestInventoryOpening());
             }
+
+            @Override
+            public Predicate<Screen> isCurrentScreen() {
+                return screen -> screen instanceof InventoryScreen;
+            }
         });
 
         InventoryTabRegistry.register(new AbstractInventoryTab() {
             @Override
             public void sendOpenContainerPacket() {
                 OtherLivingBeingNetwork.getInstance().send(PacketDistributor.SERVER.noArg(), new RequestOpenSkillContainer());
+            }
+
+            @Override
+            public Predicate<Screen> isCurrentScreen() {
+                return screen -> screen instanceof AbstractTabContainerScreen;
             }
         });
     }

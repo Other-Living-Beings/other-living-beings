@@ -11,10 +11,6 @@ import net.minecraft.world.entity.player.Inventory;
 
 public class AbstractTabContainerScreen extends EffectRenderingInventoryScreen<AbstractTabContainer> {
     public static final ResourceLocation INVENTORY_LOCATION = new ResourceLocation(OtherLivingBeings.MOD_ID, "textures/gui/inventory.png");
-    private float xMouse;
-    private float yMouse;
-    private boolean widthTooNarrow;
-    private boolean buttonClicked;
 
     public AbstractTabContainerScreen(AbstractTabContainer menu, Inventory inventory, Component title) {
         super(menu, inventory, title);

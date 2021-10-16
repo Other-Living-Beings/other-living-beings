@@ -13,10 +13,8 @@ public abstract class AbstractInventoryTab extends Button implements IInventoryT
     private static final int TAB_WIDTH = 28;
     private static final int TAB_HEIGHT = 32;
     @Setter
-    private boolean isVisible = false;
-    @Setter
     @Getter
-    private boolean isActive = false;
+    private boolean isVisible = false;
     @Setter
     private TabPosition position;
 
@@ -51,7 +49,11 @@ public abstract class AbstractInventoryTab extends Button implements IInventoryT
     protected void renderBg(PoseStack pPoseStack, Minecraft pMinecraft, int pMouseX, int pMouseY) {
         RenderSystem.setShader(GameRenderer::getPositionTexShader);
         position.bindTexture();
-        float yOffset = this.isHovered() ? TAB_HEIGHT : 0F;
+        float yOffset = this.isActive() ? TAB_HEIGHT : 0F;
         blit(pPoseStack, this.x, this.y, TAB_WIDTH, TAB_HEIGHT, 0F, yOffset, TAB_WIDTH, TAB_HEIGHT - 1, TAB_WIDTH, TAB_HEIGHT * 2);
+    }
+
+    public boolean isActive() {
+        return isCurrentScreen().test(Minecraft.getInstance().screen);
     }
 }
