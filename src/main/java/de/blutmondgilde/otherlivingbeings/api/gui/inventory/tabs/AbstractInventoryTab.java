@@ -27,6 +27,7 @@ public abstract class AbstractInventoryTab extends Button implements IInventoryT
     public AbstractInventoryTab(OnTooltip pOnTooltip) {
         super(0, 0, TAB_WIDTH, TAB_HEIGHT, new TextComponent(""), button -> {
             AbstractInventoryTab tab = (AbstractInventoryTab) button;
+            tab.sendOpenContainerPacket();
         }, pOnTooltip);
     }
 
