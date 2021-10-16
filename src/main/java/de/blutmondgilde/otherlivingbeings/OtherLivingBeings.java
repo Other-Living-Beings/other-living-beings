@@ -47,7 +47,7 @@ public class OtherLivingBeings {
         final IEventBus modBus = FMLJavaModLoadingContext.get().getModEventBus();
         modBus.addListener(this::setup);
         modBus.addListener(this::dataGen);
-        modBus.addListener(OtherLivingBeingsClient::registerConfigGUI);
+        modBus.addListener(OtherLivingBeingsClient::clientSetup);
         OtherLivingBeingRegistry.init();
         SkillRegistry.init(modBus);
 
@@ -60,8 +60,8 @@ public class OtherLivingBeings {
         DistExecutor.safeRunWhenOn(Dist.CLIENT, () -> OtherLivingBeingsClient::init);
     }
 
-    private void setup(final FMLCommonSetupEvent event) {
-        OtherLivingBeingNetwork.registerPackets();
+    private void setup(final FMLCommonSetupEvent e) {
+        e.enqueueWork(OtherLivingBeingNetwork::registerPackets);
     }
 
     public static Logger getLogger() {
