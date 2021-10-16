@@ -13,8 +13,6 @@ import java.util.Map;
 public class InventoryTabHandler {
     public static void init(IEventBus forgeBus) {
         forgeBus.addListener(InventoryTabHandler::onPlayerInventory);
-
-
     }
 
     public static void onPlayerInventory(GuiScreenEvent.InitGuiEvent e) {

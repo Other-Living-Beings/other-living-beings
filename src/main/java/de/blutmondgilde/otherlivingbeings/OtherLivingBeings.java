@@ -6,7 +6,6 @@ import de.blutmondgilde.otherlivingbeings.config.OtherLivingBeingsConfig;
 import de.blutmondgilde.otherlivingbeings.data.jobs.lumberjack.LumberjackDataGenerator;
 import de.blutmondgilde.otherlivingbeings.data.jobs.miner.MinerDataGenerator;
 import de.blutmondgilde.otherlivingbeings.handler.DataPackHandler;
-import de.blutmondgilde.otherlivingbeings.handler.InventoryTabHandler;
 import de.blutmondgilde.otherlivingbeings.handler.SkillHandler;
 import de.blutmondgilde.otherlivingbeings.network.OtherLivingBeingNetwork;
 import de.blutmondgilde.otherlivingbeings.registry.OtherLivingBeingRegistry;
@@ -47,17 +46,16 @@ public class OtherLivingBeings {
         final IEventBus modBus = FMLJavaModLoadingContext.get().getModEventBus();
         modBus.addListener(this::setup);
         modBus.addListener(this::dataGen);
-        modBus.addListener(OtherLivingBeingsClient::clientSetup);
+        DistExecutor.unsafeRunWhenOn(Dist.CLIENT, () -> () -> modBus.addListener(OtherLivingBeingsClient::clientSetup));
         OtherLivingBeingRegistry.init();
         SkillRegistry.init(modBus);
 
         final IEventBus forgeBus = MinecraftForge.EVENT_BUS;
         SkillHandler.init();
         DataPackHandler.init(forgeBus);
-        InventoryTabHandler.init(forgeBus);
         OtherLivingBeingsCapManager.init(modBus, forgeBus);
 
-        DistExecutor.safeRunWhenOn(Dist.CLIENT, () -> OtherLivingBeingsClient::init);
+        DistExecutor.unsafeRunWhenOn(Dist.CLIENT, () -> OtherLivingBeingsClient::init);
     }
 
     private void setup(final FMLCommonSetupEvent e) {

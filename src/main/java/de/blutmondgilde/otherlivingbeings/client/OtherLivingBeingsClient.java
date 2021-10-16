@@ -8,6 +8,7 @@ import de.blutmondgilde.otherlivingbeings.api.gui.inventory.tabs.DefaultTabConta
 import de.blutmondgilde.otherlivingbeings.config.OtherLivingBeingsConfig;
 import de.blutmondgilde.otherlivingbeings.config.widget.BlockListWidget;
 import de.blutmondgilde.otherlivingbeings.config.widget.BlockTextField;
+import de.blutmondgilde.otherlivingbeings.handler.InventoryTabHandler;
 import de.blutmondgilde.otherlivingbeings.network.OtherLivingBeingNetwork;
 import de.blutmondgilde.otherlivingbeings.network.packet.toserver.RequestInventoryOpening;
 import de.blutmondgilde.otherlivingbeings.network.packet.toserver.RequestOpenSkillContainer;
@@ -29,6 +30,10 @@ import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.entity.Entity;
 import net.minecraft.world.level.block.Block;
 import net.minecraft.world.level.block.Blocks;
+import net.minecraftforge.api.distmarker.Dist;
+import net.minecraftforge.api.distmarker.OnlyIn;
+import net.minecraftforge.common.MinecraftForge;
+import net.minecraftforge.eventbus.api.IEventBus;
 import net.minecraftforge.fml.ModLoadingContext;
 import net.minecraftforge.fml.event.lifecycle.FMLClientSetupEvent;
 import net.minecraftforge.fmlclient.ConfigGuiHandler;
@@ -45,6 +50,7 @@ import java.util.Optional;
 import java.util.function.Predicate;
 import java.util.stream.Stream;
 
+@OnlyIn(Dist.CLIENT)
 public class OtherLivingBeingsClient {
     private static final ConfigEntryBuilder ENTRY_BUILDER = ConfigEntryBuilder.create();
     private static final Minecraft minecraft = Minecraft.getInstance();
@@ -56,6 +62,9 @@ public class OtherLivingBeingsClient {
                         .get()));
         //Create Inventory Tab for Skills
         createSkillInventoryTab();
+
+        IEventBus forgeBus = MinecraftForge.EVENT_BUS;
+        InventoryTabHandler.init(forgeBus);
     }
 
     private static void createSkillInventoryTab() {
