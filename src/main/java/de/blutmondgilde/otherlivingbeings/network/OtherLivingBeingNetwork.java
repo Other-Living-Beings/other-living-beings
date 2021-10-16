@@ -5,6 +5,7 @@ import de.blutmondgilde.otherlivingbeings.network.packet.toclient.OpenInventoryP
 import de.blutmondgilde.otherlivingbeings.network.packet.toclient.SyncDataPack;
 import de.blutmondgilde.otherlivingbeings.network.packet.toclient.SyncSkillsPacket;
 import de.blutmondgilde.otherlivingbeings.network.packet.toserver.RequestInventoryOpening;
+import de.blutmondgilde.otherlivingbeings.network.packet.toserver.RequestOpenSkillContainer;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraftforge.fmllegacy.network.NetworkRegistry;
 import net.minecraftforge.fmllegacy.network.simple.SimpleChannel;
@@ -19,6 +20,7 @@ public class OtherLivingBeingNetwork {
         getInstance().registerMessage(messageId++, SyncDataPack.class, SyncDataPack::encode, SyncDataPack::decode, SyncDataPack::handle);
         getInstance().registerMessage(messageId++, OpenInventoryPacket.class, OpenInventoryPacket::toBytes, OpenInventoryPacket::new, OpenInventoryPacket::handle);
         getInstance().registerMessage(messageId++, RequestInventoryOpening.class, RequestInventoryOpening::toBytes, RequestInventoryOpening::new, RequestInventoryOpening::handle);
+        getInstance().registerMessage(messageId++, RequestOpenSkillContainer.class, RequestOpenSkillContainer::toBytes, RequestOpenSkillContainer::new, RequestOpenSkillContainer::handle);
     }
 
     public static SimpleChannel getInstance() {
