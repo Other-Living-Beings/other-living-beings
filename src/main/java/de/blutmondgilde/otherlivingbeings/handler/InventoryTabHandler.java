@@ -33,7 +33,7 @@ public class InventoryTabHandler {
                 posIndex -= 12;
             }
 
-            int yOffset = 3;
+            int yOffset = 4;
             int xOffset = 1;
 
             switch (posIndex) {
