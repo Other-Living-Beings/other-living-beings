@@ -1,6 +1,6 @@
 package de.blutmondgilde.otherlivingbeings.network.packet.toserver;
 
-import de.blutmondgilde.otherlivingbeings.api.gui.inventory.tabs.AbstractTabContainer;
+import de.blutmondgilde.otherlivingbeings.api.gui.inventory.tabs.DefaultTabContainer;
 import de.blutmondgilde.otherlivingbeings.util.TranslationUtils;
 import net.minecraft.network.FriendlyByteBuf;
 import net.minecraft.network.chat.Component;
@@ -30,7 +30,7 @@ public class RequestOpenSkillContainer {
 
             @Override
             public AbstractContainerMenu createMenu(int pContainerId, Inventory pInventory, Player pPlayer) {
-                return new AbstractTabContainer(pContainerId, pPlayer, pInventory);
+                return new DefaultTabContainer(pContainerId, pPlayer, pInventory);
             }
         }));
         ctx.get().setPacketHandled(true);

@@ -3,8 +3,8 @@ package de.blutmondgilde.otherlivingbeings.client;
 import de.blutmondgilde.otherlivingbeings.OtherLivingBeings;
 import de.blutmondgilde.otherlivingbeings.api.capability.OtherLivingBeingsCapability;
 import de.blutmondgilde.otherlivingbeings.api.gui.inventory.tabs.AbstractInventoryTab;
-import de.blutmondgilde.otherlivingbeings.api.gui.inventory.tabs.AbstractTabContainer;
-import de.blutmondgilde.otherlivingbeings.api.gui.inventory.tabs.AbstractTabContainerScreen;
+import de.blutmondgilde.otherlivingbeings.api.gui.inventory.tabs.DefaultTabContainer;
+import de.blutmondgilde.otherlivingbeings.api.gui.inventory.tabs.DefaultTabContainerScreen;
 import de.blutmondgilde.otherlivingbeings.config.OtherLivingBeingsConfig;
 import de.blutmondgilde.otherlivingbeings.config.widget.BlockListWidget;
 import de.blutmondgilde.otherlivingbeings.config.widget.BlockTextField;
@@ -79,7 +79,7 @@ public class OtherLivingBeingsClient {
 
             @Override
             public Predicate<Screen> isCurrentScreen() {
-                return screen -> screen instanceof AbstractTabContainerScreen;
+                return screen -> screen instanceof DefaultTabContainerScreen;
             }
         });
     }
@@ -145,7 +145,7 @@ public class OtherLivingBeingsClient {
             }, isListOfType(Block.class));
         });
 
-        e.enqueueWork(() -> MenuScreens.register(OtherLivingBeingsContainer.BASIC_TAB_CONTAINER, (MenuScreens.ScreenConstructor) (menu, inventory, title) -> new AbstractTabContainerScreen((AbstractTabContainer) menu, inventory, title)));
+        e.enqueueWork(() -> MenuScreens.register(OtherLivingBeingsContainer.BASIC_TAB_CONTAINER, (MenuScreens.ScreenConstructor) (menu, inventory, title) -> new DefaultTabContainerScreen((DefaultTabContainer) menu, inventory, title)));
     }
 
     public static void syncSkills(final CompoundTag tag, final int targetId) {

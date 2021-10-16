@@ -9,10 +9,10 @@ import net.minecraft.network.chat.Component;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.entity.player.Inventory;
 
-public class AbstractTabContainerScreen extends EffectRenderingInventoryScreen<AbstractTabContainer> {
+public class DefaultTabContainerScreen extends EffectRenderingInventoryScreen<DefaultTabContainer> {
     public static final ResourceLocation INVENTORY_LOCATION = new ResourceLocation(OtherLivingBeings.MOD_ID, "textures/gui/inventory.png");
 
-    public AbstractTabContainerScreen(AbstractTabContainer menu, Inventory inventory, Component title) {
+    public DefaultTabContainerScreen(DefaultTabContainer menu, Inventory inventory, Component title) {
         super(menu, inventory, title);
     }
 

@@ -11,7 +11,7 @@ import net.minecraftforge.items.SlotItemHandler;
 import net.minecraftforge.items.wrapper.InvWrapper;
 import org.jetbrains.annotations.NotNull;
 
-public class AbstractTabContainer extends AbstractContainerMenu {
+public class DefaultTabContainer extends AbstractContainerMenu {
     private static final int HOTBAR_SLOT_COUNT = 9;
     private static final int PLAYER_INVENTORY_ROW_COUNT = 3;
     private static final int PLAYER_INVENTORY_COLUMN_COUNT = 9;
@@ -23,7 +23,7 @@ public class AbstractTabContainer extends AbstractContainerMenu {
     private final Player player;
     private final IItemHandler playerInventory;
 
-    public AbstractTabContainer(int windowId, Player player, Container inv) {
+    public DefaultTabContainer(int windowId, Player player, Container inv) {
         super(OtherLivingBeingsContainer.BASIC_TAB_CONTAINER, windowId);
         this.player = player;
         this.playerInventory = new InvWrapper(inv);

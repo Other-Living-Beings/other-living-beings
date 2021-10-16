@@ -1,7 +1,7 @@
 package de.blutmondgilde.otherlivingbeings.registry;
 
 import de.blutmondgilde.otherlivingbeings.OtherLivingBeings;
-import de.blutmondgilde.otherlivingbeings.api.gui.inventory.tabs.AbstractTabContainer;
+import de.blutmondgilde.otherlivingbeings.api.gui.inventory.tabs.DefaultTabContainer;
 import net.minecraft.world.inventory.MenuType;
 import net.minecraftforge.common.extensions.IForgeContainerType;
 import net.minecraftforge.eventbus.api.IEventBus;
@@ -20,7 +20,7 @@ public class OtherLivingBeingRegistry {
 
         public static void init(IEventBus modBus) {
             containers.register(modBus);
-            containers.register("basic_tab_container", () -> IForgeContainerType.create((windowId, inv, data) -> new AbstractTabContainer(windowId, inv.player, inv)));
+            containers.register("basic_tab_container", () -> IForgeContainerType.create((windowId, inv, data) -> new DefaultTabContainer(windowId, inv.player, inv)));
         }
     }
 }
