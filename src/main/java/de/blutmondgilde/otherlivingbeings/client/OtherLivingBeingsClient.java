@@ -3,6 +3,7 @@ package de.blutmondgilde.otherlivingbeings.client;
 import de.blutmondgilde.otherlivingbeings.OtherLivingBeings;
 import de.blutmondgilde.otherlivingbeings.api.capability.OtherLivingBeingsCapability;
 import de.blutmondgilde.otherlivingbeings.api.gui.inventory.tabs.AbstractInventoryTab;
+import de.blutmondgilde.otherlivingbeings.api.gui.inventory.tabs.AbstractTabContainer;
 import de.blutmondgilde.otherlivingbeings.api.gui.inventory.tabs.AbstractTabContainerScreen;
 import de.blutmondgilde.otherlivingbeings.config.OtherLivingBeingsConfig;
 import de.blutmondgilde.otherlivingbeings.config.widget.BlockListWidget;
@@ -11,12 +12,14 @@ import de.blutmondgilde.otherlivingbeings.network.OtherLivingBeingNetwork;
 import de.blutmondgilde.otherlivingbeings.network.packet.toserver.RequestInventoryOpening;
 import de.blutmondgilde.otherlivingbeings.network.packet.toserver.RequestOpenSkillContainer;
 import de.blutmondgilde.otherlivingbeings.registry.InventoryTabRegistry;
+import de.blutmondgilde.otherlivingbeings.registry.OtherLivingBeingsContainer;
 import me.shedaniel.autoconfig.AutoConfig;
 import me.shedaniel.autoconfig.annotation.ConfigEntry;
 import me.shedaniel.autoconfig.gui.registry.GuiRegistry;
 import me.shedaniel.autoconfig.util.Utils;
 import me.shedaniel.clothconfig2.api.ConfigEntryBuilder;
 import net.minecraft.client.Minecraft;
+import net.minecraft.client.gui.screens.MenuScreens;
 import net.minecraft.client.gui.screens.Screen;
 import net.minecraft.client.gui.screens.inventory.InventoryScreen;
 import net.minecraft.client.multiplayer.ClientLevel;
@@ -81,64 +84,68 @@ public class OtherLivingBeingsClient {
         });
     }
 
-    public static void registerConfigGUI(FMLClientSetupEvent e) {
-        GuiRegistry registry = AutoConfig.getGuiRegistry(OtherLivingBeingsConfig.class);
-        registry.registerTypeProvider((translationKey, configField, blockObject, defaultBlockObject, guiRegistryAccess) -> {
-            Block fieldValue = Utils.getUnsafely(configField, blockObject, Blocks.AIR);
-            BlockTextField blockWidget = new BlockTextField(
-                    new TranslatableComponent(translationKey),
-                    fieldValue.getRegistryName().toString(),
-                    ENTRY_BUILDER.getResetButtonKey(),
-                    () -> {
-                        Block block = Utils.getUnsafely(configField, defaultBlockObject, Blocks.AIR);
-                        return block.getRegistryName().toString();
-                    }, s -> Utils.setUnsafely(configField, blockObject, GameRegistry.findRegistry(Block.class).getValue(new ResourceLocation(s))),
-                    () -> {
-                        if (configField.isAnnotationPresent(ConfigEntry.Gui.Tooltip.class)) {
-                            int count = configField.getAnnotation(ConfigEntry.Gui.Tooltip.class).count();
-                            TranslatableComponent[] tooltips = new TranslatableComponent[count];
-                            for (int i = 0; i < count; i++) {
-                                tooltips[i] = new TranslatableComponent(translationKey + "." + i);
+    public static void clientSetup(FMLClientSetupEvent e) {
+        e.enqueueWork(() -> {
+            GuiRegistry registry = AutoConfig.getGuiRegistry(OtherLivingBeingsConfig.class);
+            registry.registerTypeProvider((translationKey, configField, blockObject, defaultBlockObject, guiRegistryAccess) -> {
+                Block fieldValue = Utils.getUnsafely(configField, blockObject, Blocks.AIR);
+                BlockTextField blockWidget = new BlockTextField(
+                        new TranslatableComponent(translationKey),
+                        fieldValue.getRegistryName().toString(),
+                        ENTRY_BUILDER.getResetButtonKey(),
+                        () -> {
+                            Block block = Utils.getUnsafely(configField, defaultBlockObject, Blocks.AIR);
+                            return block.getRegistryName().toString();
+                        }, s -> Utils.setUnsafely(configField, blockObject, GameRegistry.findRegistry(Block.class).getValue(new ResourceLocation(s))),
+                        () -> {
+                            if (configField.isAnnotationPresent(ConfigEntry.Gui.Tooltip.class)) {
+                                int count = configField.getAnnotation(ConfigEntry.Gui.Tooltip.class).count();
+                                TranslatableComponent[] tooltips = new TranslatableComponent[count];
+                                for (int i = 0; i < count; i++) {
+                                    tooltips[i] = new TranslatableComponent(translationKey + "." + i);
+                                }
+                                return Optional.of(tooltips);
+                            } else {
+                                return Optional.empty();
                             }
-                            return Optional.of(tooltips);
-                        } else {
-                            return Optional.empty();
-                        }
-                    }, configField.isAnnotationPresent(ConfigEntry.Gui.RequiresRestart.class));
+                        }, configField.isAnnotationPresent(ConfigEntry.Gui.RequiresRestart.class));
 
-            return List.of(blockWidget);
-        }, Block.class);
+                return List.of(blockWidget);
+            }, Block.class);
 
-        registry.registerPredicateProvider((translationKey, configField, fieldObject, defaultFieldObject, guiRegistryAccess) -> {
-            List<Block> fieldValue = Utils.getUnsafely(configField, fieldObject, List.of(Blocks.AIR));
+            registry.registerPredicateProvider((translationKey, configField, fieldObject, defaultFieldObject, guiRegistryAccess) -> {
+                List<Block> fieldValue = Utils.getUnsafely(configField, fieldObject, List.of(Blocks.AIR));
 
-            return List.of(new BlockListWidget(
-                    new TranslatableComponent(translationKey),
-                    new ArrayList<>(fieldValue.stream()
-                            .map(Block::getRegistryName).filter(Objects::nonNull)
-                            .map(ResourceLocation::toString)
-                            .distinct()
-                            .toList()),
-                    false,
-                    null,
-                    strings -> Utils.setUnsafely(configField, fieldObject, new ArrayList<>(strings
-                            .stream()
-                            .map(s -> GameRegistry.findRegistry(Block.class).getValue(new ResourceLocation(s)))
-                            .distinct()
-                            .toList())),
-                    () -> {
-                        List<Block> defaultBlockList = Utils.getUnsafely(configField, defaultFieldObject, List.of(Blocks.AIR));
-                        return new ArrayList<>(defaultBlockList.stream()
-                                .map(Block::getRegistryName)
-                                .filter(Objects::nonNull)
+                return List.of(new BlockListWidget(
+                        new TranslatableComponent(translationKey),
+                        new ArrayList<>(fieldValue.stream()
+                                .map(Block::getRegistryName).filter(Objects::nonNull)
                                 .map(ResourceLocation::toString)
                                 .distinct()
-                                .toList());
-                    },
-                    ENTRY_BUILDER.getResetButtonKey(),
-                    configField.isAnnotationPresent(ConfigEntry.Gui.RequiresRestart.class)
-            ));
-        }, isListOfType(Block.class));
+                                .toList()),
+                        false,
+                        null,
+                        strings -> Utils.setUnsafely(configField, fieldObject, new ArrayList<>(strings
+                                .stream()
+                                .map(s -> GameRegistry.findRegistry(Block.class).getValue(new ResourceLocation(s)))
+                                .distinct()
+                                .toList())),
+                        () -> {
+                            List<Block> defaultBlockList = Utils.getUnsafely(configField, defaultFieldObject, List.of(Blocks.AIR));
+                            return new ArrayList<>(defaultBlockList.stream()
+                                    .map(Block::getRegistryName)
+                                    .filter(Objects::nonNull)
+                                    .map(ResourceLocation::toString)
+                                    .distinct()
+                                    .toList());
+                        },
+                        ENTRY_BUILDER.getResetButtonKey(),
+                        configField.isAnnotationPresent(ConfigEntry.Gui.RequiresRestart.class)
+                ));
+            }, isListOfType(Block.class));
+        });
+
+        e.enqueueWork(() -> MenuScreens.register(OtherLivingBeingsContainer.BASIC_TAB_CONTAINER, (MenuScreens.ScreenConstructor) (menu, inventory, title) -> new AbstractTabContainerScreen((AbstractTabContainer) menu, inventory, title)));
     }
 
     public static void syncSkills(final CompoundTag tag, final int targetId) {
