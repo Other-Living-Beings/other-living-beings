@@ -1,6 +1,7 @@
 package de.blutmondgilde.otherlivingbeings.api.skill;
 
 import net.minecraft.nbt.CompoundTag;
+import net.minecraft.network.chat.MutableComponent;
 import net.minecraftforge.common.util.INBTSerializable;
 import net.minecraftforge.registries.IForgeRegistryEntry;
 
@@ -22,7 +23,7 @@ public interface ISkill extends INBTSerializable<CompoundTag>, IForgeRegistryEnt
      * returns the amount of exp required to trigger {@link ISkill#levelUp()}
      */
     default double nextLevelAt() {
-        return Math.ceil(60 * Math.pow(getLevel(), 2.8) - 60);
+        return Math.max(Math.ceil(60 * Math.pow(getLevel(), 2.8) - 60), 1);
     }
 
     @Override
