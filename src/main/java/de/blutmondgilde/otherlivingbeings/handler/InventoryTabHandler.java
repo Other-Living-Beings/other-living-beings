@@ -2,8 +2,8 @@ package de.blutmondgilde.otherlivingbeings.handler;
 
 import de.blutmondgilde.otherlivingbeings.api.gui.inventory.tabs.AbstractInventoryTab;
 import de.blutmondgilde.otherlivingbeings.api.gui.inventory.tabs.DefaultTabContainerScreen;
-import de.blutmondgilde.otherlivingbeings.api.gui.inventory.tabs.InventoryTabSwitcherWidget;
 import de.blutmondgilde.otherlivingbeings.api.gui.inventory.tabs.TabPosition;
+import de.blutmondgilde.otherlivingbeings.client.gui.widget.InventoryTabSwitcherWidget;
 import de.blutmondgilde.otherlivingbeings.registry.InventoryTabRegistry;
 import net.minecraft.client.gui.screens.Screen;
 import net.minecraft.client.gui.screens.inventory.AbstractContainerScreen;
@@ -54,17 +54,17 @@ public class InventoryTabHandler {
                 }
                 case 7 -> {
                     widget.x = screen.getGuiLeft();
-                    widget.y = screen.getGuiTop() + screen.imageWidth - yOffset;
+                    widget.y = screen.getGuiTop() + screen.imageWidth - yOffset - 11;
                     widget.setPosition(TabPosition.LEFT_BOT);
                 }
                 case 8, 9, 10, 11 -> {
-                    widget.x = screen.getGuiLeft() + widget.getWidth() * (posIndex - 7) + (xOffset * posIndex - 1);
-                    widget.y = screen.getGuiTop() + screen.imageWidth - yOffset;
+                    widget.x = screen.getGuiLeft() + widget.getWidth() * (posIndex - 7) + (xOffset * posIndex - 7);
+                    widget.y = screen.getGuiTop() + screen.imageWidth - yOffset - 11;
                     widget.setPosition(TabPosition.BOT);
                 }
                 case 12 -> {
-                    widget.x = screen.getGuiLeft() + widget.getWidth() * (posIndex - 7) + (xOffset * posIndex - 1);
-                    widget.y = screen.getGuiTop() + screen.imageWidth - yOffset;
+                    widget.x = screen.getGuiLeft() + widget.getWidth() * (posIndex - 7) + (xOffset * posIndex - 7);
+                    widget.y = screen.getGuiTop() + screen.imageWidth - yOffset - 11;
                     widget.setPosition(TabPosition.RIGHT_BOT);
                 }
             }

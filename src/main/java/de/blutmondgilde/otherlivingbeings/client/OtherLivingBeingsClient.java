@@ -91,6 +91,20 @@ public class OtherLivingBeingsClient {
                 return screen -> screen instanceof DefaultTabContainerScreen;
             }
         });
+
+        for (int i = 0; i < 13; i++) {
+            InventoryTabRegistry.register(new AbstractInventoryTab() {
+                @Override
+                public void sendOpenContainerPacket() {
+
+                }
+
+                @Override
+                public Predicate<Screen> isCurrentScreen() {
+                    return screen -> false;
+                }
+            });
+        }
     }
 
     public static void clientSetup(FMLClientSetupEvent e) {
