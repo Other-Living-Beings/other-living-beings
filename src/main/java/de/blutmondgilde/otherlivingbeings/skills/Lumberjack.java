@@ -23,12 +23,6 @@ import java.awt.*;
 
 public class Lumberjack extends AbstractLevelSkill implements BlockBreakListener, BlockBrokenListener {
     @Override
-    public MutableComponent getName() {
-        return TranslationUtils.createSkillComponent("lumberjack")
-                .withStyle(Style.EMPTY.withColor(TextColor.fromRgb(new Color(129, 74, 0, 197).getRGB())));
-    }
-
-    @Override
     public float onBlockBreak(Player player, BlockState state, BlockPos pos, float originalSpeed, float newSpeed) {
         final ItemStack item = player.getMainHandItem();
         if (item.getItem() instanceof AxeItem) {
@@ -54,11 +48,19 @@ public class Lumberjack extends AbstractLevelSkill implements BlockBreakListener
                 playerSkills.getSkills()
                         .stream()
                         .filter(iSkill -> iSkill instanceof Lumberjack)
-                        .forEach(iSkill -> iSkill.increaseExp(LumberjackDataProvider.getExpMap().get(state.getBlock())));
+                        .forEach(iSkill -> {
+                            iSkill.increaseExp(LumberjackDataProvider.getExpMap().get(state.getBlock()));
+                        });
                 //Sync Client
                 playerSkills.sync(player);
             }
         }
         return false;
+    }
+
+    @Override
+    public MutableComponent getDisplayName() {
+        return TranslationUtils.createSkillComponent("lumberjack")
+                .withStyle(Style.EMPTY.withColor(TextColor.fromRgb(new Color(129, 74, 0, 197).getRGB())));
     }
 }

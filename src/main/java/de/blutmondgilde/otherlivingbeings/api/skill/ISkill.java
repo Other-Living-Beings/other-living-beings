@@ -51,4 +51,7 @@ public interface ISkill extends INBTSerializable<CompoundTag>, IForgeRegistryEnt
     default Class<ISkill> getRegistryType() {
         return ISkill.class;
     }
+
+    /** Returns a {@link MutableComponent} which contains the Name which will be displayed in all GUIs */
+    MutableComponent getDisplayName();
 }

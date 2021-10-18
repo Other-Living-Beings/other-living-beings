@@ -2,7 +2,6 @@ package de.blutmondgilde.otherlivingbeings.api.skill;
 
 import lombok.Getter;
 import lombok.Setter;
-import net.minecraft.network.chat.MutableComponent;
 import net.minecraft.resources.ResourceLocation;
 
 public abstract class AbstractLevelSkill implements ISkill {
@@ -37,8 +36,6 @@ public abstract class AbstractLevelSkill implements ISkill {
             levelUp();
         }
     }
-
-    public abstract MutableComponent getName();
 
     @Override
     public ISkill setRegistryName(ResourceLocation registryName) {
