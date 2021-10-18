@@ -26,12 +26,12 @@ public class InventoryTabSwitcherWidget extends GuiComponent implements Widget, 
         this.parent = parent;
         this.maxPages = maxPages;
 
-        this.prevButton = new Button(0, 0, 20, 20, new TextComponent("<"), b -> {
+        this.prevButton = new Button(this.parent.getGuiLeft() - 20 - 2, this.parent.getGuiTop() - 20 - 2, 20, 20, new TextComponent("<"), b -> {
             page = Math.max(page - 1, 1);
             updateTabs();
         });
 
-        this.nextButton = new Button(parent.getGuiLeft() + parent.imageWidth - 20, parent.getGuiTop() - 50, 20, 20, new TextComponent(">"), b -> {
+        this.nextButton = new Button(parent.getGuiLeft() + parent.imageWidth + 2, this.parent.getGuiTop() - 20 - 2, 20, 20, new TextComponent(">"), b -> {
             page = Math.min(page + 1, this.maxPages);
             updateTabs();
         });
@@ -40,10 +40,16 @@ public class InventoryTabSwitcherWidget extends GuiComponent implements Widget, 
 
     @Override
     public void render(PoseStack poseStack, int mouseX, int mouseY, float partialTicks) {
-        if (maxPages > 1) {
+        if (page > 1) {
             this.prevButton.render(poseStack, mouseX, mouseY, partialTicks);
+        }
+
+        if (maxPages > 1 && page != maxPages) {
             this.nextButton.render(poseStack, mouseX, mouseY, partialTicks);
-            drawString(poseStack, Minecraft.getInstance().font, this.page + " / " + this.maxPages, 0, 20,
+        }
+
+        if (maxPages > 1) {
+            drawCenteredString(poseStack, Minecraft.getInstance().font, this.page + " / " + this.maxPages, this.parent.width / 2, 2,
                     new Color(255, 255, 255).getRGB());
         }
 
