@@ -29,7 +29,7 @@ public abstract class AbstractLevelSkill implements ISkill {
         //Add amount of EXP
         exp += amount;
         //Check for level up
-        if (exp <= nextLevelAt()) {
+        if (exp >= nextLevelAt()) {
             //lower exp to the value on the next level
             exp -= nextLevelAt();
             //trigger level up
