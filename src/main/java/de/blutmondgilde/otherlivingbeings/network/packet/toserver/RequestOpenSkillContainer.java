@@ -1,6 +1,6 @@
 package de.blutmondgilde.otherlivingbeings.network.packet.toserver;
 
-import de.blutmondgilde.otherlivingbeings.api.gui.inventory.tabs.DefaultTabContainer;
+import de.blutmondgilde.otherlivingbeings.container.SkillContainer;
 import de.blutmondgilde.otherlivingbeings.util.TranslationUtils;
 import net.minecraft.network.FriendlyByteBuf;
 import net.minecraft.network.chat.Component;
@@ -25,12 +25,12 @@ public class RequestOpenSkillContainer {
         ctx.get().enqueueWork(() -> NetworkHooks.openGui(ctx.get().getSender(), new MenuProvider() {
             @Override
             public Component getDisplayName() {
-                return TranslationUtils.createModComponent("containter.skills.title");
+                return TranslationUtils.createModComponent("container.skills.title");
             }
 
             @Override
             public AbstractContainerMenu createMenu(int pContainerId, Inventory pInventory, Player pPlayer) {
-                return new DefaultTabContainer(pContainerId, pPlayer, pInventory);
+                return new SkillContainer(pContainerId, pPlayer, pInventory);
             }
         }));
         ctx.get().setPacketHandled(true);

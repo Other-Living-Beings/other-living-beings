@@ -9,4 +9,6 @@ import net.minecraftforge.registries.ObjectHolder;
 public class OtherLivingBeingsContainer {
     @ObjectHolder("basic_tab_container")
     public static final MenuType<DefaultTabContainer> BASIC_TAB_CONTAINER = null;
+    @ObjectHolder("skill_container")
+    public static final MenuType<DefaultTabContainer> SKILL_CONTAINER = null;
 }

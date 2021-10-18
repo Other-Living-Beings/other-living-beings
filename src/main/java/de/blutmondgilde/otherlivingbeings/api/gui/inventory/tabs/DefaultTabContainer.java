@@ -4,6 +4,7 @@ import de.blutmondgilde.otherlivingbeings.registry.OtherLivingBeingsContainer;
 import net.minecraft.world.Container;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.inventory.AbstractContainerMenu;
+import net.minecraft.world.inventory.MenuType;
 import net.minecraft.world.inventory.Slot;
 import net.minecraft.world.item.ItemStack;
 import net.minecraftforge.items.IItemHandler;
@@ -20,11 +21,19 @@ public class DefaultTabContainer extends AbstractContainerMenu {
     private static final int VANILLA_FIRST_SLOT_INDEX = 0;
     public static final int PLAYER_INVENTORY_YPOS = 84;
     private static final int HOTBAR_YPOS = PLAYER_INVENTORY_YPOS + 64 - 6;
-    private final Player player;
-    private final IItemHandler playerInventory;
+    protected final Player player;
+    protected final IItemHandler playerInventory;
 
     public DefaultTabContainer(int windowId, Player player, Container inv) {
         super(OtherLivingBeingsContainer.BASIC_TAB_CONTAINER, windowId);
+        this.player = player;
+        this.playerInventory = new InvWrapper(inv);
+
+        addInventorySlots();
+    }
+
+    public DefaultTabContainer(MenuType<?> menuType, int windowId, Player player, Container inv) {
+        super(menuType, windowId);
         this.player = player;
         this.playerInventory = new InvWrapper(inv);
 

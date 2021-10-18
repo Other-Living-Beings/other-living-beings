@@ -5,9 +5,11 @@ import de.blutmondgilde.otherlivingbeings.api.capability.OtherLivingBeingsCapabi
 import de.blutmondgilde.otherlivingbeings.api.gui.inventory.tabs.AbstractInventoryTab;
 import de.blutmondgilde.otherlivingbeings.api.gui.inventory.tabs.DefaultTabContainer;
 import de.blutmondgilde.otherlivingbeings.api.gui.inventory.tabs.DefaultTabContainerScreen;
+import de.blutmondgilde.otherlivingbeings.client.gui.widget.SkillContainerScreen;
 import de.blutmondgilde.otherlivingbeings.config.OtherLivingBeingsConfig;
 import de.blutmondgilde.otherlivingbeings.config.widget.BlockListWidget;
 import de.blutmondgilde.otherlivingbeings.config.widget.BlockTextField;
+import de.blutmondgilde.otherlivingbeings.container.SkillContainer;
 import de.blutmondgilde.otherlivingbeings.handler.InventoryTabHandler;
 import de.blutmondgilde.otherlivingbeings.network.OtherLivingBeingNetwork;
 import de.blutmondgilde.otherlivingbeings.network.packet.toserver.RequestInventoryOpening;
@@ -88,7 +90,7 @@ public class OtherLivingBeingsClient {
 
             @Override
             public Predicate<Screen> isCurrentScreen() {
-                return screen -> screen instanceof DefaultTabContainerScreen;
+                return screen -> screen instanceof SkillContainerScreen;
             }
         });
     }
@@ -155,6 +157,7 @@ public class OtherLivingBeingsClient {
         });
 
         e.enqueueWork(() -> MenuScreens.register(OtherLivingBeingsContainer.BASIC_TAB_CONTAINER, (MenuScreens.ScreenConstructor) (menu, inventory, title) -> new DefaultTabContainerScreen((DefaultTabContainer) menu, inventory, title)));
+        e.enqueueWork(() -> MenuScreens.register(OtherLivingBeingsContainer.SKILL_CONTAINER, (MenuScreens.ScreenConstructor) (menu, inventory, title) -> new SkillContainerScreen((SkillContainer) menu, inventory, title)));
     }
 
     public static void syncSkills(final CompoundTag tag, final int targetId) {

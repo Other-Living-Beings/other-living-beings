@@ -2,6 +2,7 @@ package de.blutmondgilde.otherlivingbeings.registry;
 
 import de.blutmondgilde.otherlivingbeings.OtherLivingBeings;
 import de.blutmondgilde.otherlivingbeings.api.gui.inventory.tabs.DefaultTabContainer;
+import de.blutmondgilde.otherlivingbeings.container.SkillContainer;
 import net.minecraft.world.inventory.MenuType;
 import net.minecraftforge.common.extensions.IForgeContainerType;
 import net.minecraftforge.eventbus.api.IEventBus;
@@ -21,6 +22,7 @@ public class OtherLivingBeingRegistry {
         public static void init(IEventBus modBus) {
             containers.register(modBus);
             containers.register("basic_tab_container", () -> IForgeContainerType.create((windowId, inv, data) -> new DefaultTabContainer(windowId, inv.player, inv)));
+            containers.register("skill_container", () -> IForgeContainerType.create((windowId, inv, data) -> new SkillContainer(windowId, inv.player, inv)));
         }
     }
 }
