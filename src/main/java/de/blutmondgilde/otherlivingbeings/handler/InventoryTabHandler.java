@@ -2,7 +2,6 @@ package de.blutmondgilde.otherlivingbeings.handler;
 
 import de.blutmondgilde.otherlivingbeings.api.gui.inventory.tabs.AbstractInventoryTab;
 import de.blutmondgilde.otherlivingbeings.api.gui.inventory.tabs.DefaultTabContainerScreen;
-import de.blutmondgilde.otherlivingbeings.api.gui.inventory.tabs.TabPosition;
 import de.blutmondgilde.otherlivingbeings.client.gui.widget.InventoryTabSwitcherWidget;
 import de.blutmondgilde.otherlivingbeings.registry.InventoryTabRegistry;
 import net.minecraft.client.gui.screens.Screen;
@@ -33,43 +32,7 @@ public class InventoryTabHandler {
                 posIndex -= 12;
             }
 
-            int yOffset = 4;
-            int xOffset = 1;
-
-            switch (posIndex) {
-                case 1 -> {
-                    widget.x = screen.getGuiLeft();
-                    widget.y = screen.getGuiTop() - widget.getHeight() + yOffset;
-                    widget.setPosition(TabPosition.LEFT_TOP);
-                }
-                case 2, 3, 4, 5 -> {
-                    widget.x = screen.getGuiLeft() + widget.getWidth() * (posIndex - 1) + (xOffset * posIndex - 1);
-                    widget.y = screen.getGuiTop() - widget.getHeight() + yOffset;
-                    widget.setPosition(TabPosition.TOP);
-                }
-                case 6 -> {
-                    widget.x = screen.getGuiLeft() + widget.getWidth() * (posIndex - 1) + (xOffset * posIndex - 1);
-                    widget.y = screen.getGuiTop() - widget.getHeight() + yOffset;
-                    widget.setPosition(TabPosition.RIGHT_TOP);
-                }
-                case 7 -> {
-                    widget.x = screen.getGuiLeft();
-                    widget.y = screen.getGuiTop() + screen.imageWidth - yOffset - 11;
-                    widget.setPosition(TabPosition.LEFT_BOT);
-                }
-                case 8, 9, 10, 11 -> {
-                    widget.x = screen.getGuiLeft() + widget.getWidth() * (posIndex - 7) + (xOffset * posIndex - 7);
-                    widget.y = screen.getGuiTop() + screen.imageWidth - yOffset - 11;
-                    widget.setPosition(TabPosition.BOT);
-                }
-                case 12 -> {
-                    widget.x = screen.getGuiLeft() + widget.getWidth() * (posIndex - 7) + (xOffset * posIndex - 7);
-                    widget.y = screen.getGuiTop() + screen.imageWidth - yOffset - 11;
-                    widget.setPosition(TabPosition.RIGHT_BOT);
-                }
-            }
-
-            tabSwitcher.addUpdateListener(widget);
+            tabSwitcher.addUpdateListener(entry.getKey(), widget);
         }
 
         tabSwitcher.updateTabs();
