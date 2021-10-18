@@ -11,5 +11,6 @@
   "text.autoconfig.otherlivingbeings.option.jobConfig.miner.breakSpeedPerLevel.@Tooltip": "Additional break speed per level",
   "text.autoconfig.otherlivingbeings.option.jobConfig.miner.unbreakingChance": "Unbreaking chance per level",
   "text.autoconfig.otherlivingbeings.option.jobConfig.miner.unbreakingChance.@Tooltip": "Chance per level to not use a durability point",
-  "otherlivingbeings.container.skills.title": "Skills"
+  "otherlivingbeings.container.skills.title": "Skills",
+  "otherlivingbeings.skill.lumberjack": "Lumberjack"
 }

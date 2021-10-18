@@ -5,7 +5,7 @@ import de.blutmondgilde.otherlivingbeings.api.capability.OtherLivingBeingsCapabi
 import de.blutmondgilde.otherlivingbeings.api.gui.inventory.tabs.AbstractInventoryTab;
 import de.blutmondgilde.otherlivingbeings.api.gui.inventory.tabs.DefaultTabContainer;
 import de.blutmondgilde.otherlivingbeings.api.gui.inventory.tabs.DefaultTabContainerScreen;
-import de.blutmondgilde.otherlivingbeings.client.gui.widget.SkillContainerScreen;
+import de.blutmondgilde.otherlivingbeings.client.gui.SkillContainerScreen;
 import de.blutmondgilde.otherlivingbeings.config.OtherLivingBeingsConfig;
 import de.blutmondgilde.otherlivingbeings.config.widget.BlockListWidget;
 import de.blutmondgilde.otherlivingbeings.config.widget.BlockTextField;
