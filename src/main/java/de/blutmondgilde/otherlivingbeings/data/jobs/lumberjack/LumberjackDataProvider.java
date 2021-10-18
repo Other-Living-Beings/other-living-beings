@@ -32,11 +32,11 @@ public class LumberjackDataProvider extends ReloadableJobDataProvider {
 
     @Override
     public void sync() {
-        OtherLivingBeingNetwork.getInstance().send(PacketDistributor.ALL.noArg(), new SyncDataPack(expMap));
+        OtherLivingBeingNetwork.getInstance().send(PacketDistributor.ALL.noArg(), new SyncDataPack(expMap, SyncDataPack.Type.Lumberjack));
     }
 
     @Override
     public void sync(ServerPlayer player) {
-        OtherLivingBeingNetwork.getInstance().send(PacketDistributor.PLAYER.with(() -> player), new SyncDataPack(expMap));
+        OtherLivingBeingNetwork.getInstance().send(PacketDistributor.PLAYER.with(() -> player), new SyncDataPack(expMap, SyncDataPack.Type.Lumberjack));
     }
 }
