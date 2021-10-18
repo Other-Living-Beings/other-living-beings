@@ -1,12 +1,9 @@
 package de.blutmondgilde.otherlivingbeings.handler;
 
-import de.blutmondgilde.otherlivingbeings.OtherLivingBeings;
 import de.blutmondgilde.otherlivingbeings.api.capability.OtherLivingBeingsCapability;
-import de.blutmondgilde.otherlivingbeings.api.skill.ISkill;
 import de.blutmondgilde.otherlivingbeings.api.skill.listener.BlockBreakListener;
 import de.blutmondgilde.otherlivingbeings.api.skill.listener.BlockBrokenListener;
 import de.blutmondgilde.otherlivingbeings.capability.skill.IPlayerSkills;
-import de.blutmondgilde.otherlivingbeings.capability.skill.PlayerSkillsImpl;
 import lombok.experimental.UtilityClass;
 import net.minecraftforge.common.MinecraftForge;
 import net.minecraftforge.event.entity.player.PlayerEvent;
@@ -50,10 +47,7 @@ public class SkillHandler {
                 .stream()
                 .filter(iSkill -> iSkill instanceof BlockBrokenListener)
                 .map(iSkill -> (BlockBrokenListener) iSkill)
-                .forEach(blockBrokenListener -> {
-                    OtherLivingBeings.getLogger().info("Firing onBlockBroken for {}", ((ISkill) blockBrokenListener).getRegistryName());
-                    blockBrokenListener.onBlockBroken(e.getPlayer(), e.getState(), e.getPos(), e.getWorld());
-                });
+                .forEach(blockBrokenListener -> blockBrokenListener.onBlockBroken(e.getPlayer(), e.getState(), e.getPos(), e.getWorld()));
 
         e.setCanceled(isCanceled.get());
     }
