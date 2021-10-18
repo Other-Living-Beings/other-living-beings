@@ -38,7 +38,7 @@ MINOR
 PATCH
     Bugfixes.
  */
-version = "${minecraftVersion}-1.0.1.0-Alpha"
+version = "${minecraftVersion}-1.0.2.0-Alpha"
 
 java {
     archivesBaseName = 'OtherLivingBeings'
@@ -114,7 +114,9 @@ if (project.hasProperty("curseforge_apikey")) {
             id = '519914'
             releaseType = 'alpha'
             changelogType = 'html'
-            changelog = '<a></a>'
+            changelog = '''<h1>There is no Changelog! Watch changes on GitHub!</h1>
+<p>Current Commmit: <a href=""></a></p>
+<p>Last Commit: <a href="https://github.com/Blutmond-Development/Other-Living-Beings/tree/54a79b911f17bd9318892871e1905bf7dba942f0">54a79b911f17bd9318892871e1905bf7dba942f0</a></p>'''
             mainArtifact(jar) {
                 relations {
                     requiredDependency 'cloth-config-forge'
