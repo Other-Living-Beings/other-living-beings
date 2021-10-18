@@ -1,6 +1,7 @@
 package de.blutmondgilde.otherlivingbeings.api.gui.inventory.tabs;
 
 import de.blutmondgilde.otherlivingbeings.registry.OtherLivingBeingsContainer;
+import lombok.Getter;
 import net.minecraft.world.Container;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.inventory.AbstractContainerMenu;
@@ -21,7 +22,9 @@ public class DefaultTabContainer extends AbstractContainerMenu {
     private static final int VANILLA_FIRST_SLOT_INDEX = 0;
     public static final int PLAYER_INVENTORY_YPOS = 84;
     private static final int HOTBAR_YPOS = PLAYER_INVENTORY_YPOS + 64 - 6;
+    @Getter
     protected final Player player;
+    @Getter
     protected final IItemHandler playerInventory;
 
     public DefaultTabContainer(int windowId, Player player, Container inv) {
