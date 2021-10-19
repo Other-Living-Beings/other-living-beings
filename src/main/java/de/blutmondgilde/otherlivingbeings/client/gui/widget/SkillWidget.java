@@ -25,6 +25,7 @@ public class SkillWidget implements GuiEventListener, Widget, NarratableEntry {
     private final ISkill skill;
     private final MutableComponent skillName;
     private final int color;
+    private final Color barColor = new Color(52, 255, 64);
     @Setter
     @Getter
     private int x, y, width, height;
@@ -34,7 +35,7 @@ public class SkillWidget implements GuiEventListener, Widget, NarratableEntry {
         this.skill = skill;
         this.skillName = skill.getDisplayName();
         this.font = Minecraft.getInstance().font;
-        this.color = skillName.getStyle().getColor() != null ? skillName.getStyle().getColor().getValue() : new Color(255, 255, 255).getRGB();
+        this.color = skillName.getStyle().getColor() != null ? skillName.getStyle().getColor().getValue() : new Color(255, 254, 254).getRGB();
         this.x = x;
         this.y = y;
         this.width = 100;
@@ -53,12 +54,15 @@ public class SkillWidget implements GuiEventListener, Widget, NarratableEntry {
         GuiComponent.blit(poseStack, Math.round(this.x / 0.75F), this.y + this.font.lineHeight, 0F, 0F, 182, 5, 182, 10);
         poseStack.scale(1F / 0.75F, 1F, 1F);
 
+
+        RenderSystem.setShaderColor(1F / 255 * barColor.getRed(), 1F / 255 * barColor.getGreen(), 1F / 255 * barColor.getBlue(), 1F);
         poseStack.scale(0.75F, 1F, 1F);
         double widthModifier = 1.0 / this.skill.nextLevelAt() * this.skill.getExp();
         long percentWidth = Math.round(182 * widthModifier);
         int width = Math.toIntExact(percentWidth);
         GuiComponent.blit(poseStack, Math.round(this.x / 0.75F), this.y + this.font.lineHeight, 0F, 5F, width, 5, 182, 10);
         poseStack.scale(1F / 0.75F, 1F, 1F);
+        RenderSystem.setShaderColor(1F, 1F, 1F, 1F);
     }
 
     @Override
