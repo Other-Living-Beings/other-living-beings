@@ -1,5 +1,6 @@
 package de.blutmondgilde.otherlivingbeings.data.jobs.lumberjack;
 
+import de.blutmondgilde.otherlivingbeings.data.jobs.BlockExpPojo;
 import de.blutmondgilde.otherlivingbeings.data.jobs.JobDataGenerator;
 import net.minecraft.data.HashCache;
 import net.minecraft.world.level.block.Blocks;
@@ -8,7 +9,7 @@ import java.io.IOException;
 import java.nio.file.Path;
 import java.util.List;
 
-public class LumberjackDataGenerator extends JobDataGenerator<LumberjackPojo> {
+public class LumberjackDataGenerator extends JobDataGenerator<BlockExpPojo> {
     public LumberjackDataGenerator(String modId, Path outputFolder) {
         super(modId, "lumberjack", outputFolder);
     }
@@ -16,7 +17,7 @@ public class LumberjackDataGenerator extends JobDataGenerator<LumberjackPojo> {
     @Override
     public void run(HashCache cache) throws IOException {
 
-        generateWithKey(cache, "default", new LumberjackPojo(1.0F, List.of(
+        generateWithKey(cache, "default", new BlockExpPojo(1.0F, List.of(
                 Blocks.ACACIA_LOG,
                 Blocks.BIRCH_LOG,
                 Blocks.DARK_OAK_LOG,

@@ -1,5 +1,6 @@
 package de.blutmondgilde.otherlivingbeings.data.jobs.miner;
 
+import de.blutmondgilde.otherlivingbeings.data.jobs.BlockExpPojo;
 import de.blutmondgilde.otherlivingbeings.data.jobs.JobDataGenerator;
 import net.minecraft.data.HashCache;
 import net.minecraft.world.level.block.Blocks;
@@ -8,7 +9,7 @@ import java.io.IOException;
 import java.nio.file.Path;
 import java.util.List;
 
-public class MinerDataGenerator extends JobDataGenerator<MinerPojo> {
+public class MinerDataGenerator extends JobDataGenerator<BlockExpPojo> {
     public MinerDataGenerator(String modId, Path outputFolder) {
         super(modId, "miner", outputFolder);
     }
@@ -16,7 +17,7 @@ public class MinerDataGenerator extends JobDataGenerator<MinerPojo> {
     @Override
     public void run(HashCache cache) throws IOException {
 
-        generateWithKey(cache, "default", new MinerPojo(1.0F, List.of(
+        generateWithKey(cache, "default", new BlockExpPojo(1.0F, List.of(
                 Blocks.COAL_ORE,
                 Blocks.COPPER_ORE,
                 Blocks.DIAMOND_ORE,

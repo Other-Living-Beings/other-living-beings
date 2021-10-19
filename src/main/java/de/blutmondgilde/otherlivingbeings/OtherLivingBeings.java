@@ -3,6 +3,7 @@ package de.blutmondgilde.otherlivingbeings;
 import de.blutmondgilde.otherlivingbeings.capability.OtherLivingBeingsCapManager;
 import de.blutmondgilde.otherlivingbeings.client.OtherLivingBeingsClient;
 import de.blutmondgilde.otherlivingbeings.config.OtherLivingBeingsConfig;
+import de.blutmondgilde.otherlivingbeings.data.jobs.farmer.FarmerDataGenerator;
 import de.blutmondgilde.otherlivingbeings.data.jobs.lumberjack.LumberjackDataGenerator;
 import de.blutmondgilde.otherlivingbeings.data.jobs.miner.MinerDataGenerator;
 import de.blutmondgilde.otherlivingbeings.handler.DataPackHandler;
@@ -81,6 +82,7 @@ public class OtherLivingBeings {
         if (e.includeServer()) {
             e.getGenerator().addProvider(new LumberjackDataGenerator(MOD_ID, e.getGenerator().getOutputFolder()));
             e.getGenerator().addProvider(new MinerDataGenerator(MOD_ID, e.getGenerator().getOutputFolder()));
+            e.getGenerator().addProvider(new FarmerDataGenerator(MOD_ID, e.getGenerator().getOutputFolder()));
         }
     }
 }

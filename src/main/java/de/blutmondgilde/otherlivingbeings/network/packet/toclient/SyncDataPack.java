@@ -1,5 +1,6 @@
 package de.blutmondgilde.otherlivingbeings.network.packet.toclient;
 
+import de.blutmondgilde.otherlivingbeings.data.jobs.farmer.FarmerDataProvider;
 import de.blutmondgilde.otherlivingbeings.data.jobs.lumberjack.LumberjackDataProvider;
 import de.blutmondgilde.otherlivingbeings.data.jobs.miner.MinerDataProvider;
 import lombok.AllArgsConstructor;
@@ -45,7 +46,8 @@ public class SyncDataPack {
     @AllArgsConstructor
     public enum Type {
         Lumberjack(expMap -> LumberjackDataProvider.setExpMap(new HashMap<>(expMap))),
-        Miner(expMap -> MinerDataProvider.setExpMap(new HashMap<>(expMap)));
+        Miner(expMap -> MinerDataProvider.setExpMap(new HashMap<>(expMap))),
+        Farmer(expMap -> FarmerDataProvider.setExpMap(new HashMap<>(expMap)));
 
         private final Consumer<Map<Block, Float>> apply;
     }

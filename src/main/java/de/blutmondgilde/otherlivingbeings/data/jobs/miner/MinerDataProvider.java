@@ -2,6 +2,7 @@ package de.blutmondgilde.otherlivingbeings.data.jobs.miner;
 
 import com.google.gson.JsonElement;
 import de.blutmondgilde.otherlivingbeings.OtherLivingBeings;
+import de.blutmondgilde.otherlivingbeings.data.jobs.BlockExpPojo;
 import de.blutmondgilde.otherlivingbeings.data.jobs.ReloadableJobDataProvider;
 import de.blutmondgilde.otherlivingbeings.network.OtherLivingBeingNetwork;
 import de.blutmondgilde.otherlivingbeings.network.packet.toclient.SyncDataPack;
@@ -25,7 +26,7 @@ public class MinerDataProvider extends ReloadableJobDataProvider {
 
     @Override
     protected void apply(ResourceLocation fileLocation, JsonElement jsonElement) {
-        MinerPojo data = new MinerPojo().fromJson(jsonElement.toString());
+        BlockExpPojo data = new BlockExpPojo().fromJson(jsonElement.toString());
         OtherLivingBeings.getLogger().debug("Applying {} with {} blocks to Miner", fileLocation, data.getBlocks().size());
         data.getBlocks().forEach(block -> expMap.put(block, data.exp));
     }

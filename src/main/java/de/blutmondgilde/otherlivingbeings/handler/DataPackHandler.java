@@ -1,6 +1,7 @@
 package de.blutmondgilde.otherlivingbeings.handler;
 
 import de.blutmondgilde.otherlivingbeings.data.jobs.ReloadableJobDataProvider;
+import de.blutmondgilde.otherlivingbeings.data.jobs.farmer.FarmerDataProvider;
 import de.blutmondgilde.otherlivingbeings.data.jobs.lumberjack.LumberjackDataProvider;
 import de.blutmondgilde.otherlivingbeings.data.jobs.miner.MinerDataProvider;
 import net.minecraft.server.level.ServerPlayer;
@@ -19,6 +20,7 @@ public class DataPackHandler {
 
         dataProvider.add(new LumberjackDataProvider());
         dataProvider.add(new MinerDataProvider());
+        dataProvider.add(new FarmerDataProvider());
     }
 
     public static void onReload(AddReloadListenerEvent e) {

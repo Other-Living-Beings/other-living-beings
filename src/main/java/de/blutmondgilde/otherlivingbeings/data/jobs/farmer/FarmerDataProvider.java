@@ -1,4 +1,4 @@
-package de.blutmondgilde.otherlivingbeings.data.jobs.lumberjack;
+package de.blutmondgilde.otherlivingbeings.data.jobs.farmer;
 
 import com.google.gson.JsonElement;
 import de.blutmondgilde.otherlivingbeings.OtherLivingBeings;
@@ -15,13 +15,13 @@ import net.minecraftforge.fmllegacy.network.PacketDistributor;
 
 import java.util.HashMap;
 
-public class LumberjackDataProvider extends ReloadableJobDataProvider {
+public class FarmerDataProvider extends ReloadableJobDataProvider {
     @Setter
     @Getter
     private static HashMap<Block, Float> expMap = new HashMap<>();
 
-    public LumberjackDataProvider() {
-        super("lumberjack");
+    public FarmerDataProvider() {
+        super("farmer");
     }
 
     @Override
@@ -33,11 +33,11 @@ public class LumberjackDataProvider extends ReloadableJobDataProvider {
 
     @Override
     public void sync() {
-        OtherLivingBeingNetwork.getInstance().send(PacketDistributor.ALL.noArg(), new SyncDataPack(expMap, SyncDataPack.Type.Lumberjack));
+        OtherLivingBeingNetwork.getInstance().send(PacketDistributor.ALL.noArg(), new SyncDataPack(expMap, SyncDataPack.Type.Farmer));
     }
 
     @Override
     public void sync(ServerPlayer player) {
-        OtherLivingBeingNetwork.getInstance().send(PacketDistributor.PLAYER.with(() -> player), new SyncDataPack(expMap, SyncDataPack.Type.Lumberjack));
+        OtherLivingBeingNetwork.getInstance().send(PacketDistributor.PLAYER.with(() -> player), new SyncDataPack(expMap, SyncDataPack.Type.Farmer));
     }
 }

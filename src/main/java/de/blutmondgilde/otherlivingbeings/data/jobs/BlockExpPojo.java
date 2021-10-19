@@ -1,9 +1,8 @@
-package de.blutmondgilde.otherlivingbeings.data.jobs.lumberjack;
+package de.blutmondgilde.otherlivingbeings.data.jobs;
 
 import com.google.gson.JsonArray;
 import com.google.gson.JsonObject;
 import com.google.gson.JsonParser;
-import de.blutmondgilde.otherlivingbeings.data.jobs.GeneratableObject;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
@@ -19,7 +18,7 @@ import java.util.List;
 @ToString
 @AllArgsConstructor
 @NoArgsConstructor
-public class LumberjackPojo implements GeneratableObject<LumberjackPojo> {
+public class BlockExpPojo implements GeneratableObject<BlockExpPojo> {
     @Getter
     @Setter
     public float exp;
@@ -39,7 +38,7 @@ public class LumberjackPojo implements GeneratableObject<LumberjackPojo> {
     }
 
     @Override
-    public LumberjackPojo fromJson(String jsonString) {
+    public BlockExpPojo fromJson(String jsonString) {
         JsonParser parser = new JsonParser();
         JsonObject root = parser.parse(jsonString).getAsJsonObject();
         this.exp = root.get("exp").getAsFloat();
