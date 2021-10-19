@@ -7,7 +7,6 @@ import de.blutmondgilde.otherlivingbeings.api.skill.listener.CropGrowListener;
 import de.blutmondgilde.otherlivingbeings.capability.skill.IPlayerSkills;
 import de.blutmondgilde.otherlivingbeings.capability.skill.PlayerSkillsImpl;
 import de.blutmondgilde.otherlivingbeings.data.jobs.farmer.FarmerDataProvider;
-import de.blutmondgilde.otherlivingbeings.data.jobs.lumberjack.LumberjackDataProvider;
 import de.blutmondgilde.otherlivingbeings.util.TranslationUtils;
 import net.minecraft.core.BlockPos;
 import net.minecraft.network.chat.MutableComponent;
@@ -39,8 +38,8 @@ public class Farmer extends AbstractLevelSkill implements CropGrowListener, Bloc
             //Increase EXP
             playerSkills.getSkills()
                     .stream()
-                    .filter(iSkill -> iSkill instanceof Lumberjack)
-                    .forEach(iSkill -> iSkill.increaseExp(LumberjackDataProvider.getExpMap().get(state.getBlock())));
+                    .filter(iSkill -> iSkill instanceof Farmer)
+                    .forEach(iSkill -> iSkill.increaseExp(FarmerDataProvider.getExpMap().get(state.getBlock())));
             //Sync Client
             playerSkills.sync(player);
         }
