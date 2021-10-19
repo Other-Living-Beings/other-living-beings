@@ -123,10 +123,7 @@ public class InventoryTabSwitcherWidget extends GuiComponent implements Widget, 
                     .forEach(abstractInventoryTab -> abstractInventoryTab.mouseClicked(pMouseX, pMouseY, pButton));
             if (this.prevButton.isMouseOver(pMouseX, pMouseY)) this.prevButton.mouseClicked(pMouseX, pMouseY, pButton);
             if (this.nextButton.isMouseOver(pMouseX, pMouseY)) this.nextButton.mouseClicked(pMouseX, pMouseY, pButton);
-
-            return true;
-        } else {
-            return false;
         }
+        return false;
     }
 }
