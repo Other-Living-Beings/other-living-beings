@@ -35,6 +35,8 @@ import net.minecraft.network.chat.FormattedText;
 import net.minecraft.network.chat.TranslatableComponent;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.entity.Entity;
+import net.minecraft.world.item.ItemStack;
+import net.minecraft.world.item.Items;
 import net.minecraft.world.level.block.Block;
 import net.minecraft.world.level.block.Blocks;
 import net.minecraftforge.api.distmarker.Dist;
@@ -89,7 +91,7 @@ public class OtherLivingBeingsClient {
 
             @Override
             protected void renderIcon(PoseStack poseStack, int mouseX, int mouseY, float partialTicks) {
-                //TODO render Inventory Icon
+                Minecraft.getInstance().getItemRenderer().renderGuiItem(new ItemStack(Items.CHEST), this.x + 6, this.y + 9);
             }
 
             @Override
