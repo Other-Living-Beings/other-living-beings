@@ -68,7 +68,8 @@ public class SkillContainerScreen extends DefaultTabContainerScreen<SkillContain
 
     @Override
     public boolean mouseScrolled(double pMouseX, double pMouseY, double pDelta) {
-        this.yOffset += pDelta * 2;
+        this.yOffset -= pDelta * 2;
+        this.yOffset = Math.min(0, this.yOffset);
         return super.mouseScrolled(pMouseX, pMouseY, pDelta);
     }
 
