@@ -57,7 +57,7 @@ public class SkillContainerScreen extends DefaultTabContainerScreen<SkillContain
         this.skillWidgets = getMenu().getPlayer().getCapability(OtherLivingBeingsCapability.PLAYER_SKILLS).orElse(new PlayerSkillsImpl()).getSkills()
                 .stream().map(iSkill -> new SkillWidget(iSkill, this.getGuiLeft() + 20, 0))
                 .collect(Collectors.toList());
-
+        this.maxScroll = Math.min(0, 62 - this.skillWidgets.size() * 22);
         this.skillWidgets.forEach(this::addWidget);
     }
 
@@ -68,8 +68,9 @@ public class SkillContainerScreen extends DefaultTabContainerScreen<SkillContain
 
     @Override
     public boolean mouseScrolled(double pMouseX, double pMouseY, double pDelta) {
-        this.yOffset -= pDelta * 2;
+        this.yOffset += pDelta * 2;
         this.yOffset = Math.min(0, this.yOffset);
+        this.yOffset = Math.max(this.yOffset, this.maxScroll);
         return super.mouseScrolled(pMouseX, pMouseY, pDelta);
     }
 }
