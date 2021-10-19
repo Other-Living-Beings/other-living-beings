@@ -1,7 +1,6 @@
 package de.blutmondgilde.otherlivingbeings.client.gui;
 
 import com.mojang.blaze3d.vertex.PoseStack;
-import de.blutmondgilde.otherlivingbeings.OtherLivingBeings;
 import de.blutmondgilde.otherlivingbeings.api.capability.OtherLivingBeingsCapability;
 import de.blutmondgilde.otherlivingbeings.api.gui.inventory.tabs.DefaultTabContainerScreen;
 import de.blutmondgilde.otherlivingbeings.capability.skill.PlayerSkillsImpl;
@@ -21,6 +20,7 @@ public class SkillContainerScreen extends DefaultTabContainerScreen<SkillContain
     private List<SkillWidget> skillWidgets;
     private final TickCountDown tickCountDown;
     private int yOffset = 0;
+    private int maxScroll = 0;
 
     public SkillContainerScreen(SkillContainer menu, Inventory inventory, Component title) {
         super(menu, inventory, title);
@@ -71,11 +71,5 @@ public class SkillContainerScreen extends DefaultTabContainerScreen<SkillContain
         this.yOffset -= pDelta * 2;
         this.yOffset = Math.min(0, this.yOffset);
         return super.mouseScrolled(pMouseX, pMouseY, pDelta);
-    }
-
-    @Override
-    public boolean mouseClicked(double pMouseX, double pMouseY, int pButton) {
-        OtherLivingBeings.getLogger().info("MouseX: {}, MouseY: {}", pMouseY, pMouseY);
-        return super.mouseClicked(pMouseX, pMouseY, pButton);
     }
 }
