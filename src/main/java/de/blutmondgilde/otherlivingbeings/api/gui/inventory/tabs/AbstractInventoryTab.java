@@ -6,8 +6,13 @@ import lombok.Getter;
 import lombok.Setter;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.components.Button;
+import net.minecraft.client.gui.screens.Screen;
 import net.minecraft.client.renderer.GameRenderer;
+import net.minecraft.network.chat.FormattedText;
 import net.minecraft.network.chat.TextComponent;
+import net.minecraftforge.fmlclient.gui.GuiUtils;
+
+import java.util.List;
 
 public abstract class AbstractInventoryTab extends Button implements IInventoryTab {
     private static final int TAB_WIDTH = 28;
@@ -19,7 +24,12 @@ public abstract class AbstractInventoryTab extends Button implements IInventoryT
     private TabPosition position;
 
     public AbstractInventoryTab() {
-        this((pButton, pPoseStack, pMouseX, pMouseY) -> {});
+        this((pButton, pPoseStack, pMouseX, pMouseY) -> {
+            Screen currentScreen = Minecraft.getInstance().screen;
+            AbstractInventoryTab button = (AbstractInventoryTab) pButton;
+            //noinspection removal
+            GuiUtils.drawHoveringText(pPoseStack, button.getToolTip(), pMouseX, pMouseY, currentScreen.width, currentScreen.height, 150, Minecraft.getInstance().font);
+        });
     }
 
     public AbstractInventoryTab(OnTooltip pOnTooltip) {
@@ -40,6 +50,8 @@ public abstract class AbstractInventoryTab extends Button implements IInventoryT
         RenderSystem.enableDepthTest();
         this.renderBg(pMatrixStack, minecraft, pMouseX, pMouseY);
 
+        this.renderIcon(pMatrixStack, pMouseX, pMouseY, pPartialTicks);
+
         if (this.isHovered()) {
             this.renderToolTip(pMatrixStack, pMouseX, pMouseY);
         }
@@ -56,4 +68,8 @@ public abstract class AbstractInventoryTab extends Button implements IInventoryT
     public boolean isActive() {
         return isCurrentScreen().test(Minecraft.getInstance().screen);
     }
+
+    protected abstract void renderIcon(PoseStack poseStack, int mouseX, int mouseY, float partialTicks);
+
+    public abstract List<? extends FormattedText> getToolTip();
 }

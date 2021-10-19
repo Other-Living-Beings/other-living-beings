@@ -1,5 +1,7 @@
 package de.blutmondgilde.otherlivingbeings.client;
 
+import com.mojang.blaze3d.systems.RenderSystem;
+import com.mojang.blaze3d.vertex.PoseStack;
 import de.blutmondgilde.otherlivingbeings.OtherLivingBeings;
 import de.blutmondgilde.otherlivingbeings.api.capability.OtherLivingBeingsCapability;
 import de.blutmondgilde.otherlivingbeings.api.gui.inventory.tabs.AbstractInventoryTab;
@@ -26,7 +28,10 @@ import net.minecraft.client.gui.screens.MenuScreens;
 import net.minecraft.client.gui.screens.Screen;
 import net.minecraft.client.gui.screens.inventory.InventoryScreen;
 import net.minecraft.client.multiplayer.ClientLevel;
+import net.minecraft.client.renderer.GameRenderer;
+import net.minecraft.client.resources.language.I18n;
 import net.minecraft.nbt.CompoundTag;
+import net.minecraft.network.chat.FormattedText;
 import net.minecraft.network.chat.TranslatableComponent;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.entity.Entity;
@@ -56,6 +61,7 @@ import java.util.stream.Stream;
 public class OtherLivingBeingsClient {
     private static final ConfigEntryBuilder ENTRY_BUILDER = ConfigEntryBuilder.create();
     private static final Minecraft minecraft = Minecraft.getInstance();
+    private static final ResourceLocation SKILLS_ICON = new ResourceLocation(OtherLivingBeings.MOD_ID, "textures/gui/tabs/skills_icon.png");
 
     public static void init() {
         //Create Config GUI for Client
@@ -80,6 +86,16 @@ public class OtherLivingBeingsClient {
             public Predicate<Screen> isCurrentScreen() {
                 return screen -> screen instanceof InventoryScreen;
             }
+
+            @Override
+            protected void renderIcon(PoseStack poseStack, int mouseX, int mouseY, float partialTicks) {
+                //TODO render Inventory Icon
+            }
+
+            @Override
+            public List<? extends FormattedText> getToolTip() {
+                return List.of(FormattedText.of(I18n.get("otherlivingbeings.tab.inventory.title")));
+            }
         });
 
         InventoryTabRegistry.register(new AbstractInventoryTab() {
@@ -91,6 +107,21 @@ public class OtherLivingBeingsClient {
             @Override
             public Predicate<Screen> isCurrentScreen() {
                 return screen -> screen instanceof SkillContainerScreen;
+            }
+
+            @Override
+            protected void renderIcon(PoseStack poseStack, int mouseX, int mouseY, float partialTicks) {
+                RenderSystem.setShader(GameRenderer::getPositionTexShader);
+                RenderSystem.setShaderTexture(0, SKILLS_ICON);
+                float scale = 0.50F;
+                poseStack.scale(scale, scale, 1F);
+                blit(poseStack, Math.round((this.x + 3) / scale), Math.round((this.y + 3) / scale), 0, 0, 48, 48, 48, 48);
+                poseStack.scale(1F / scale, 1F / scale, 1F);
+            }
+
+            @Override
+            public List<? extends FormattedText> getToolTip() {
+                return List.of(FormattedText.of(I18n.get("otherlivingbeings.tab.skills.title")));
             }
         });
     }

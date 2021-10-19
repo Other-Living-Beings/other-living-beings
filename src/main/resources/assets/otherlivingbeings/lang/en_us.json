@@ -13,5 +13,7 @@
   "text.autoconfig.otherlivingbeings.option.jobConfig.miner.unbreakingChance.@Tooltip": "Chance per level to not use a durability point",
   "otherlivingbeings.container.skills.title": "Skills",
   "otherlivingbeings.skill.lumberjack": "Lumberjack",
-  "otherlivingbeings.skill.miner": "Miner"
+  "otherlivingbeings.skill.miner": "Miner",
+  "otherlivingbeings.tab.inventory.title": "Inventory",
+  "otherlivingbeings.tab.skills.title": "Skills"
 }
