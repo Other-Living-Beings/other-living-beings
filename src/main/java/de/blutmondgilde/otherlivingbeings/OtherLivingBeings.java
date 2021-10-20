@@ -3,9 +3,9 @@ package de.blutmondgilde.otherlivingbeings;
 import de.blutmondgilde.otherlivingbeings.capability.OtherLivingBeingsCapManager;
 import de.blutmondgilde.otherlivingbeings.client.OtherLivingBeingsClient;
 import de.blutmondgilde.otherlivingbeings.config.OtherLivingBeingsConfig;
-import de.blutmondgilde.otherlivingbeings.data.jobs.farmer.FarmerDataGenerator;
-import de.blutmondgilde.otherlivingbeings.data.jobs.lumberjack.LumberjackDataGenerator;
-import de.blutmondgilde.otherlivingbeings.data.jobs.miner.MinerDataGenerator;
+import de.blutmondgilde.otherlivingbeings.data.skills.provider.FarmerData;
+import de.blutmondgilde.otherlivingbeings.data.skills.provider.LumberjackData;
+import de.blutmondgilde.otherlivingbeings.data.skills.provider.MinerData;
 import de.blutmondgilde.otherlivingbeings.handler.DataPackHandler;
 import de.blutmondgilde.otherlivingbeings.handler.SkillHandler;
 import de.blutmondgilde.otherlivingbeings.network.OtherLivingBeingNetwork;
@@ -80,9 +80,9 @@ public class OtherLivingBeings {
 
     private void dataGen(final GatherDataEvent e) {
         if (e.includeServer()) {
-            e.getGenerator().addProvider(new LumberjackDataGenerator(MOD_ID, e.getGenerator().getOutputFolder()));
-            e.getGenerator().addProvider(new MinerDataGenerator(MOD_ID, e.getGenerator().getOutputFolder()));
-            e.getGenerator().addProvider(new FarmerDataGenerator(MOD_ID, e.getGenerator().getOutputFolder()));
+            e.getGenerator().addProvider(new LumberjackData.LumberjackDataGenerator(MOD_ID, e.getGenerator().getOutputFolder()));
+            e.getGenerator().addProvider(new MinerData.MinerDataGenerator(MOD_ID, e.getGenerator().getOutputFolder()));
+            e.getGenerator().addProvider(new FarmerData.FarmerDataGenerator(MOD_ID, e.getGenerator().getOutputFolder()));
         }
     }
 }

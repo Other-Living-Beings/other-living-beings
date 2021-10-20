@@ -1,0 +1,6 @@
+{
+  "type": "otherlivingbeings:farmer_blocks",
+  "exp": 1.0,
+  "block": "minecraft:red_mushroom",
+  "nbt": {}
+}

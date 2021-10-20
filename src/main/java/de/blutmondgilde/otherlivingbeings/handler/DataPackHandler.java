@@ -1,9 +1,9 @@
 package de.blutmondgilde.otherlivingbeings.handler;
 
-import de.blutmondgilde.otherlivingbeings.data.jobs.ReloadableJobDataProvider;
-import de.blutmondgilde.otherlivingbeings.data.jobs.farmer.FarmerDataProvider;
-import de.blutmondgilde.otherlivingbeings.data.jobs.lumberjack.LumberjackDataProvider;
-import de.blutmondgilde.otherlivingbeings.data.jobs.miner.MinerDataProvider;
+import de.blutmondgilde.otherlivingbeings.data.skills.ReloadableJobDataProvider;
+import de.blutmondgilde.otherlivingbeings.data.skills.provider.FarmerData;
+import de.blutmondgilde.otherlivingbeings.data.skills.provider.LumberjackData;
+import de.blutmondgilde.otherlivingbeings.data.skills.provider.MinerData;
 import net.minecraft.server.level.ServerPlayer;
 import net.minecraftforge.event.AddReloadListenerEvent;
 import net.minecraftforge.event.entity.player.PlayerEvent;
@@ -18,9 +18,9 @@ public class DataPackHandler {
         forgeBus.addListener(DataPackHandler::onReload);
         forgeBus.addListener(DataPackHandler::onLoginSync);
 
-        dataProvider.add(new LumberjackDataProvider());
-        dataProvider.add(new MinerDataProvider());
-        dataProvider.add(new FarmerDataProvider());
+        dataProvider.add(new LumberjackData.Provider());
+        dataProvider.add(new MinerData.Provider());
+        dataProvider.add(new FarmerData.Provider());
     }
 
     public static void onReload(AddReloadListenerEvent e) {

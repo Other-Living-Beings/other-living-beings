@@ -1,0 +1,6 @@
+{
+  "type": "otherlivingbeings:miner_blocks",
+  "exp": 1.0,
+  "block": "minecraft:deepslate_copper_ore",
+  "nbt": {}
+}

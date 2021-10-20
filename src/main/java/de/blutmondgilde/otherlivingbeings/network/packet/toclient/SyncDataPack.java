@@ -1,8 +1,9 @@
 package de.blutmondgilde.otherlivingbeings.network.packet.toclient;
 
-import de.blutmondgilde.otherlivingbeings.data.jobs.farmer.FarmerDataProvider;
-import de.blutmondgilde.otherlivingbeings.data.jobs.lumberjack.LumberjackDataProvider;
-import de.blutmondgilde.otherlivingbeings.data.jobs.miner.MinerDataProvider;
+import de.blutmondgilde.otherlivingbeings.data.skills.BlockStateExpEntry;
+import de.blutmondgilde.otherlivingbeings.data.skills.provider.FarmerData;
+import de.blutmondgilde.otherlivingbeings.data.skills.provider.LumberjackData;
+import de.blutmondgilde.otherlivingbeings.data.skills.provider.MinerData;
 import lombok.AllArgsConstructor;
 import net.minecraft.network.FriendlyByteBuf;
 import net.minecraft.world.level.block.Block;
@@ -18,18 +19,22 @@ import java.util.function.Supplier;
 
 @AllArgsConstructor
 public class SyncDataPack {
-    private final Map<Block, Float> expMap;
+    private final Map<Block, BlockStateExpEntry> expMap;
     private final Type type;
 
     public static void encode(SyncDataPack packet, FriendlyByteBuf buffer) {
-        buffer.writeMap(packet.expMap, (friendlyByteBuf, block) -> friendlyByteBuf.writeResourceLocation(block.getRegistryName()), FriendlyByteBuf::writeFloat);
+        buffer.writeMap(packet.expMap, (friendlyByteBuf, block) -> friendlyByteBuf.writeResourceLocation(block.getRegistryName()), (friendlyByteBuf, blockStateExpEntry) -> friendlyByteBuf.writeUtf(blockStateExpEntry.toJson()
+                .toString()));
         buffer.writeEnum(packet.type);
     }
 
     public static SyncDataPack decode(FriendlyByteBuf buffer) {
         return new SyncDataPack(buffer
                 .readMap(friendlyByteBuf -> GameRegistry.findRegistry(Block.class).getValue(friendlyByteBuf.readResourceLocation()),
-                        FriendlyByteBuf::readFloat), buffer.readEnum(Type.class));
+                        friendlyByteBuf -> {
+                            BlockStateExpEntry value = new BlockStateExpEntry();
+                            return value.fromJson(friendlyByteBuf.readUtf());
+                        }), buffer.readEnum(Type.class));
     }
 
     public static void handle(final SyncDataPack packet, Supplier<NetworkEvent.Context> context) {
@@ -38,17 +43,17 @@ public class SyncDataPack {
     }
 
     private static class UpdateDataPack {
-        private static DistExecutor.SafeRunnable update(Map<Block, Float> expMap, Type type) {
+        private static DistExecutor.SafeRunnable update(Map<Block, BlockStateExpEntry> expMap, Type type) {
             return () -> type.apply.accept(expMap);
         }
     }
 
     @AllArgsConstructor
     public enum Type {
-        Lumberjack(expMap -> LumberjackDataProvider.setExpMap(new HashMap<>(expMap))),
-        Miner(expMap -> MinerDataProvider.setExpMap(new HashMap<>(expMap))),
-        Farmer(expMap -> FarmerDataProvider.setExpMap(new HashMap<>(expMap)));
+        Lumberjack(expMap -> LumberjackData.Provider.setExpMap(new HashMap<>(expMap))),
+        Miner(expMap -> MinerData.Provider.setExpMap(new HashMap<>(expMap))),
+        Farmer(expMap -> FarmerData.Provider.setExpMap(new HashMap<>(expMap)));
 
-        private final Consumer<Map<Block, Float>> apply;
+        private final Consumer<Map<Block, BlockStateExpEntry>> apply;
     }
 }

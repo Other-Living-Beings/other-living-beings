@@ -128,6 +128,7 @@ public class OtherLivingBeingsClient {
         });
     }
 
+    @SuppressWarnings({"ConstantConditions", "unchecked", "rawtypes"})
     public static void clientSetup(FMLClientSetupEvent e) {
         e.enqueueWork(() -> {
             GuiRegistry registry = AutoConfig.getGuiRegistry(OtherLivingBeingsConfig.class);
@@ -220,6 +221,7 @@ public class OtherLivingBeingsClient {
         };
     }
 
+    @SuppressWarnings("ConstantConditions")
     public static void openInventory() {
         Minecraft.getInstance().setScreen(new InventoryScreen(Minecraft.getInstance().player));
     }

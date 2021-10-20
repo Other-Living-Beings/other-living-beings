@@ -1,0 +1,8 @@
+{
+  "type": "otherlivingbeings:farmer_blocks",
+  "exp": 1.0,
+  "block": "minecraft:sweet_berry_bush",
+  "nbt": {
+    "age": "3"
+  }
+}

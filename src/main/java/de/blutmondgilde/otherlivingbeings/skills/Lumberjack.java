@@ -7,7 +7,7 @@ import de.blutmondgilde.otherlivingbeings.api.skill.listener.BlockBreakListener;
 import de.blutmondgilde.otherlivingbeings.api.skill.listener.BlockBrokenListener;
 import de.blutmondgilde.otherlivingbeings.capability.skill.IPlayerSkills;
 import de.blutmondgilde.otherlivingbeings.capability.skill.PlayerSkillsImpl;
-import de.blutmondgilde.otherlivingbeings.data.jobs.lumberjack.LumberjackDataProvider;
+import de.blutmondgilde.otherlivingbeings.data.skills.provider.LumberjackData;
 import de.blutmondgilde.otherlivingbeings.util.TranslationUtils;
 import net.minecraft.core.BlockPos;
 import net.minecraft.network.chat.MutableComponent;
@@ -42,17 +42,19 @@ public class Lumberjack extends AbstractLevelSkill implements BlockBreakListener
     public boolean onBlockBroken(Player player, BlockState state, BlockPos pos, LevelAccessor world) {
         final ItemStack item = player.getMainHandItem();
         if (item.getItem() instanceof AxeItem) {
-            if (LumberjackDataProvider.getExpMap().containsKey(state.getBlock())) {
-                IPlayerSkills playerSkills = player.getCapability(OtherLivingBeingsCapability.PLAYER_SKILLS).orElse(new PlayerSkillsImpl());
-                //Increase EXP
-                playerSkills.getSkills()
-                        .stream()
-                        .filter(iSkill -> iSkill instanceof Lumberjack)
-                        .forEach(iSkill -> {
-                            iSkill.increaseExp(LumberjackDataProvider.getExpMap().get(state.getBlock()));
-                        });
-                //Sync Client
-                playerSkills.sync(player);
+            if (LumberjackData.Provider.getExpMap().containsKey(state.getBlock())) {
+                if (LumberjackData.Provider.getExpMap().get(state.getBlock()).equals(state)) {
+                    IPlayerSkills playerSkills = player.getCapability(OtherLivingBeingsCapability.PLAYER_SKILLS).orElse(new PlayerSkillsImpl());
+                    //Increase EXP
+                    playerSkills.getSkills()
+                            .stream()
+                            .filter(iSkill -> iSkill instanceof Lumberjack)
+                            .forEach(iSkill -> {
+                                iSkill.increaseExp(LumberjackData.Provider.getExpMap().get(state.getBlock()).getExp());
+                            });
+                    //Sync Client
+                    playerSkills.sync(player);
+                }
             }
         }
         return false;

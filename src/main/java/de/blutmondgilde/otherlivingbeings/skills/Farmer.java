@@ -6,7 +6,7 @@ import de.blutmondgilde.otherlivingbeings.api.skill.listener.BlockBrokenListener
 import de.blutmondgilde.otherlivingbeings.api.skill.listener.CropGrowListener;
 import de.blutmondgilde.otherlivingbeings.capability.skill.IPlayerSkills;
 import de.blutmondgilde.otherlivingbeings.capability.skill.PlayerSkillsImpl;
-import de.blutmondgilde.otherlivingbeings.data.jobs.farmer.FarmerDataProvider;
+import de.blutmondgilde.otherlivingbeings.data.skills.provider.FarmerData;
 import de.blutmondgilde.otherlivingbeings.util.TranslationUtils;
 import net.minecraft.core.BlockPos;
 import net.minecraft.network.chat.MutableComponent;
@@ -33,15 +33,17 @@ public class Farmer extends AbstractLevelSkill implements CropGrowListener, Bloc
     @Override
     public boolean onBlockBroken(Player player, BlockState state, BlockPos pos, LevelAccessor world) {
         //TODO increase Drops
-        if (FarmerDataProvider.getExpMap().containsKey(state.getBlock())) {
-            IPlayerSkills playerSkills = player.getCapability(OtherLivingBeingsCapability.PLAYER_SKILLS).orElse(new PlayerSkillsImpl());
-            //Increase EXP
-            playerSkills.getSkills()
-                    .stream()
-                    .filter(iSkill -> iSkill instanceof Farmer)
-                    .forEach(iSkill -> iSkill.increaseExp(FarmerDataProvider.getExpMap().get(state.getBlock())));
-            //Sync Client
-            playerSkills.sync(player);
+        if (FarmerData.Provider.getExpMap().containsKey(state.getBlock())) {
+            if (FarmerData.Provider.getExpMap().get(state.getBlock()).equals(state)) {
+                IPlayerSkills playerSkills = player.getCapability(OtherLivingBeingsCapability.PLAYER_SKILLS).orElse(new PlayerSkillsImpl());
+                //Increase EXP
+                playerSkills.getSkills()
+                        .stream()
+                        .filter(iSkill -> iSkill instanceof Farmer)
+                        .forEach(iSkill -> iSkill.increaseExp(FarmerData.Provider.getExpMap().get(state.getBlock()).getExp()));
+                //Sync Client
+                playerSkills.sync(player);
+            }
         }
         return false;
     }
