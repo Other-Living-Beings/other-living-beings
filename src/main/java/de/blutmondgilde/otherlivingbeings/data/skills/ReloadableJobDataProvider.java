@@ -24,7 +24,7 @@ public abstract class ReloadableJobDataProvider extends SimpleJsonResourceReload
     private final String jobName;
 
     public ReloadableJobDataProvider(String job) {
-        super(GSON, "jobs/" + job);
+        super(GSON, "skills/" + job);
         this.jobName = job;
     }
 

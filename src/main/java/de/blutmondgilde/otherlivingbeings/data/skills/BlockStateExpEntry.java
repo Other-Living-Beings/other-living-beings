@@ -16,7 +16,6 @@ import net.minecraftforge.fmllegacy.common.registry.GameRegistry;
 
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Objects;
 import java.util.Optional;
 
 @AllArgsConstructor
@@ -88,7 +87,7 @@ public class BlockStateExpEntry implements GeneratableObject<BlockStateExpEntry>
         return currentState;
     }
 
-    public boolean equals(BlockState blockState) {
+    public boolean isValid(BlockState blockState) {
         if (!this.block.getRegistryName().equals(blockState.getBlock().getRegistryName())) return false;
         return isSame(blockState, this.blockState);
     }
@@ -101,19 +100,6 @@ public class BlockStateExpEntry implements GeneratableObject<BlockStateExpEntry>
         }
 
         return true;
-    }
-
-    @Override
-    public boolean equals(Object o) {
-        if (this == o) return true;
-        if (o == null || getClass() != o.getClass()) return false;
-        BlockStateExpEntry that = (BlockStateExpEntry) o;
-        return equals(that.blockState);
-    }
-
-    @Override
-    public int hashCode() {
-        return Objects.hash(blockState);
     }
 
     public static List<BlockStateExpEntry> fromBlockState(String type, float exp, BlockState... blockStates) {

@@ -43,7 +43,7 @@ public class Miner extends AbstractLevelSkill implements BlockBreakListener, Blo
         final ItemStack item = player.getMainHandItem();
         if (item.getItem() instanceof PickaxeItem) {
             if (MinerData.Provider.getExpMap().containsKey(state.getBlock())) {
-                if (MinerData.Provider.getExpMap().get(state.getBlock()).equals(state)) {
+                if (MinerData.Provider.getExpMap().get(state.getBlock()).isValid(state)) {
                     IPlayerSkills playerSkills = player.getCapability(OtherLivingBeingsCapability.PLAYER_SKILLS).orElse(new PlayerSkillsImpl());
                     //Increase EXP
                     playerSkills.getSkills()

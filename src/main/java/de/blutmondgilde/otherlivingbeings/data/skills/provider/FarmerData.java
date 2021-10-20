@@ -40,7 +40,9 @@ public class FarmerData {
         @Override
         protected void apply(ResourceLocation fileLocation, JsonElement jsonElement) {
             BlockStateExpEntry data = new BlockStateExpEntry().fromJson(jsonElement.toString());
-            if (data.type.equals(type)) expMap.put(data.block, data);
+            if (data.type.equals(type)) {
+                expMap.put(data.block, data);
+            }
         }
 
         @Override

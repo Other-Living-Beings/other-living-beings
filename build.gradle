@@ -38,7 +38,7 @@ MINOR
 PATCH
     Bugfixes.
  */
-version = "${minecraftVersion}-1.0.3.0-Alpha"
+version = "${minecraftVersion}-1.1.2.0-Alpha"
 
 java {
     archivesBaseName = 'OtherLivingBeings'
@@ -112,7 +112,7 @@ if (project.hasProperty("curseforge_apikey")) {
         apiKey = curseforge_apikey
         project {
             id = '519914'
-            releaseType = 'alpha'
+            releaseType = 'beta'
             changelogType = 'html'
             changelog = '''<h1>There is no Changelog! Watch changes on GitHub!</h1>
 <p>Current Commit: <a href=""></a></p>
