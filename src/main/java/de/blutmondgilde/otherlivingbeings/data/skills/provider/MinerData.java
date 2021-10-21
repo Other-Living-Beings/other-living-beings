@@ -59,23 +59,39 @@ public class MinerData {
         public void run(HashCache cache) throws IOException {
             for (BlockStateExpEntry entry : BlockStateExpEntry.fromBlockState(type, 1.0F,
                     Blocks.COAL_ORE.defaultBlockState(),
-                    Blocks.COPPER_ORE.defaultBlockState(),
-                    Blocks.DIAMOND_ORE.defaultBlockState(),
-                    Blocks.EMERALD_ORE.defaultBlockState(),
-                    Blocks.GOLD_ORE.defaultBlockState(),
-                    Blocks.IRON_ORE.defaultBlockState(),
-                    Blocks.LAPIS_ORE.defaultBlockState(),
-                    Blocks.REDSTONE_ORE.defaultBlockState(),
                     Blocks.DEEPSLATE_COAL_ORE.defaultBlockState(),
+                    Blocks.COPPER_ORE.defaultBlockState(),
                     Blocks.DEEPSLATE_COPPER_ORE.defaultBlockState(),
-                    Blocks.DEEPSLATE_DIAMOND_ORE.defaultBlockState(),
-                    Blocks.DEEPSLATE_EMERALD_ORE.defaultBlockState(),
-                    Blocks.DEEPSLATE_GOLD_ORE.defaultBlockState(),
-                    Blocks.DEEPSLATE_IRON_ORE.defaultBlockState(),
-                    Blocks.DEEPSLATE_LAPIS_ORE.defaultBlockState(),
-                    Blocks.DEEPSLATE_REDSTONE_ORE.defaultBlockState(),
-                    Blocks.NETHER_GOLD_ORE.defaultBlockState(),
                     Blocks.NETHER_QUARTZ_ORE.defaultBlockState())) {
+                generateWithKey(cache, entry.getBlock().getRegistryName().getPath() + "_exp", entry);
+            }
+
+            for (BlockStateExpEntry entry : BlockStateExpEntry.fromBlockState(type, 2.0F,
+                    Blocks.IRON_ORE.defaultBlockState(),
+                    Blocks.DEEPSLATE_IRON_ORE.defaultBlockState(),
+                    Blocks.REDSTONE_ORE.defaultBlockState(),
+                    Blocks.DEEPSLATE_REDSTONE_ORE.defaultBlockState())) {
+                generateWithKey(cache, entry.getBlock().getRegistryName().getPath() + "_exp", entry);
+            }
+
+            for (BlockStateExpEntry entry : BlockStateExpEntry.fromBlockState(type, 3.0F,
+                    Blocks.GOLD_ORE.defaultBlockState(),
+                    Blocks.NETHER_GOLD_ORE.defaultBlockState(),
+                    Blocks.DEEPSLATE_GOLD_ORE.defaultBlockState(),
+                    Blocks.LAPIS_ORE.defaultBlockState(),
+                    Blocks.DEEPSLATE_LAPIS_ORE.defaultBlockState())) {
+                generateWithKey(cache, entry.getBlock().getRegistryName().getPath() + "_exp", entry);
+            }
+
+            for (BlockStateExpEntry entry : BlockStateExpEntry.fromBlockState(type, 5.0F,
+                    Blocks.DIAMOND_ORE.defaultBlockState(),
+                    Blocks.DEEPSLATE_DIAMOND_ORE.defaultBlockState())) {
+                generateWithKey(cache, entry.getBlock().getRegistryName().getPath() + "_exp", entry);
+            }
+
+            for (BlockStateExpEntry entry : BlockStateExpEntry.fromBlockState(type, 7.0F,
+                    Blocks.EMERALD_ORE.defaultBlockState(),
+                    Blocks.DEEPSLATE_EMERALD_ORE.defaultBlockState())) {
                 generateWithKey(cache, entry.getBlock().getRegistryName().getPath() + "_exp", entry);
             }
 
