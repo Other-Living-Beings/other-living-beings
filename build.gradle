@@ -116,7 +116,7 @@ if (project.hasProperty("curseforge_apikey")) {
             changelogType = 'html'
             changelog = '''<h1>There is no Changelog! Watch changes on GitHub!</h1>
 <p>Current Commit: <a href=""></a></p>
-<p>Last Commit: <a href="https://github.com/Blutmond-Development/Other-Living-Beings/commit/ccb195bb3ab8298488d1900c3a382e6dbc665e9a">ccb195bb3ab8298488d1900c3a382e6dbc665e9a</a></p>'''
+<p>Last Commit: <a href="https://github.com/Blutmond-Development/Other-Living-Beings/commit/359e1d9d5039771fbcd9bb1710250fd0cdd4ee50">359e1d9d5039771fbcd9bb1710250fd0cdd4ee50</a></p>'''
             mainArtifact(jar) {
                 relations {
                     requiredDependency 'cloth-config-forge'

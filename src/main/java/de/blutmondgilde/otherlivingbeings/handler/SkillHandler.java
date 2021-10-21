@@ -60,7 +60,6 @@ public class SkillHandler {
                 .filter(iSkill -> iSkill instanceof BlockBrokenListener)
                 .map(iSkill -> (BlockBrokenListener) iSkill)
                 .forEach(blockBrokenListener -> blockBrokenListener.onBlockBroken(e.getPlayer(), e.getState(), e.getPos(), e.getWorld()));
-
         e.setCanceled(isCanceled.get());
     }
 

@@ -28,14 +28,15 @@ public class Miner extends AbstractLevelSkill implements BlockBreakListener, Blo
         if (item.getItem() instanceof PickaxeItem) {
             double random = Math.random();
             //apply chance to not use durability of item in Hand
-            if (random < OtherLivingBeings.getConfig().get().jobConfig.miner.unbreakingChance * getLevel()) {
+            double increment = Math.ceil(getLevel() / 10.0);
+            if (random < OtherLivingBeings.getConfig().get().skillConfig.miner.unbreakingChance * increment) {
                 if (item.getDamageValue() > 0) {
                     item.setDamageValue(item.getDamageValue() - 1);
                 }
             }
         }
         //increases break speed
-        return newSpeed + OtherLivingBeings.getConfig().get().jobConfig.miner.breakSpeedPerLevel * getLevel();
+        return newSpeed + OtherLivingBeings.getConfig().get().skillConfig.miner.breakSpeedPerLevel * getLevel();
     }
 
     @Override

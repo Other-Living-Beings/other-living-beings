@@ -28,14 +28,15 @@ public class Lumberjack extends AbstractLevelSkill implements BlockBreakListener
         if (item.getItem() instanceof AxeItem) {
             double random = Math.random();
             //apply chance to not use durability of item in Hand
-            if (random < OtherLivingBeings.getConfig().get().jobConfig.lumberjack.unbreakingChance * getLevel()) {
+            double increment = Math.ceil(getLevel() / 10.0);
+            if (random < OtherLivingBeings.getConfig().get().skillConfig.lumberjack.unbreakingChance * increment) {
                 if (item.getDamageValue() > 0) {
                     item.setDamageValue(item.getDamageValue() - 1);
                 }
             }
         }
         //increases break speed
-        return newSpeed + OtherLivingBeings.getConfig().get().jobConfig.lumberjack.breakSpeedPerLevel * getLevel();
+        return newSpeed + OtherLivingBeings.getConfig().get().skillConfig.lumberjack.breakSpeedPerLevel * getLevel();
     }
 
     @Override

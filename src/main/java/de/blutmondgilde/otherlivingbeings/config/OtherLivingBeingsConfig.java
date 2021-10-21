@@ -9,13 +9,15 @@ import me.shedaniel.autoconfig.annotation.ConfigEntry;
 public class OtherLivingBeingsConfig implements ConfigData {
     @ConfigEntry.Gui.RequiresRestart
     @ConfigEntry.Gui.CollapsibleObject
-    public JobConfig jobConfig = new JobConfig();
+    public SkillConfig skillConfig = new SkillConfig();
 
-    public static class JobConfig {
+    public static class SkillConfig {
         @ConfigEntry.Gui.CollapsibleObject
         public Lumberjack lumberjack = new Lumberjack();
         @ConfigEntry.Gui.CollapsibleObject
         public Miner miner = new Miner();
+        @ConfigEntry.Gui.CollapsibleObject
+        public Farmer farmer = new Farmer();
 
         public static class Lumberjack {
             @ConfigEntry.Gui.Tooltip
@@ -24,11 +26,16 @@ public class OtherLivingBeingsConfig implements ConfigData {
             public float unbreakingChance = 0.05F;
         }
 
-        public static class Miner{
+        public static class Miner {
             @ConfigEntry.Gui.Tooltip
             public float breakSpeedPerLevel = 0.05F;
             @ConfigEntry.Gui.Tooltip
             public float unbreakingChance = 0.05F;
+        }
+
+        public static class Farmer {
+            @ConfigEntry.Gui.Tooltip
+            public float doubleLootChance = 0.05F;
         }
     }
 

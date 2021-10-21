@@ -57,6 +57,7 @@ public class MinerData {
 
         @Override
         public void run(HashCache cache) throws IOException {
+            //EXP values by niceore_101
             for (BlockStateExpEntry entry : BlockStateExpEntry.fromBlockState(type, 1.0F,
                     Blocks.COAL_ORE.defaultBlockState(),
                     Blocks.DEEPSLATE_COAL_ORE.defaultBlockState(),

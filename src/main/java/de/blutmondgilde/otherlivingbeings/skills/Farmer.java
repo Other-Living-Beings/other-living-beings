@@ -35,7 +35,6 @@ public class Farmer extends AbstractLevelSkill implements CropGrowListener, Bloc
 
     @Override
     public boolean onBlockBroken(Player player, BlockState state, BlockPos pos, LevelAccessor world) {
-        //TODO increase Drops
         HashMap<Block, BlockStateExpEntry> expMap = FarmerData.Provider.getExpMap();
         if (expMap.containsKey(state.getBlock())) {
             if (expMap.get(state.getBlock()).isValid(state)) {
