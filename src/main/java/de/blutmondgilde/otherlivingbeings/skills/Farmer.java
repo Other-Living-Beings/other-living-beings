@@ -1,5 +1,6 @@
 package de.blutmondgilde.otherlivingbeings.skills;
 
+import de.blutmondgilde.otherlivingbeings.OtherLivingBeings;
 import de.blutmondgilde.otherlivingbeings.api.capability.OtherLivingBeingsCapability;
 import de.blutmondgilde.otherlivingbeings.api.skill.AbstractLevelSkill;
 import de.blutmondgilde.otherlivingbeings.api.skill.listener.BlockBrokenListener;
@@ -20,6 +21,7 @@ import net.minecraftforge.eventbus.api.Event;
 
 import java.awt.*;
 import java.util.HashMap;
+import java.util.Optional;
 
 public class Farmer extends AbstractLevelSkill implements CropGrowListener, BlockBrokenListener {
     @Override
@@ -29,7 +31,19 @@ public class Farmer extends AbstractLevelSkill implements CropGrowListener, Bloc
 
     @Override
     public Event.Result onGrowTick(Player player, BlockPos blockPos, BlockState blockState, LevelAccessor world) {
-        //TODO change to grow a Crop
+        Optional<Farmer> farmerSkill = player.getCapability(OtherLivingBeingsCapability.PLAYER_SKILLS).orElse(new PlayerSkillsImpl()).getSkills()
+                .stream()
+                .filter(iSkill -> iSkill instanceof Farmer)
+                .map(iSkill -> (Farmer) iSkill)
+                .findFirst();
+
+        if (farmerSkill.isPresent()) {
+            double random = Math.random();
+            double increment = Math.ceil(farmerSkill.get().getLevel() / 10.0);
+            if (random < OtherLivingBeings.getConfig().get().skillConfig.farmer.growthTickChance * increment) {
+                return Event.Result.ALLOW;
+            }
+        }
         return Event.Result.DEFAULT;
     }
 

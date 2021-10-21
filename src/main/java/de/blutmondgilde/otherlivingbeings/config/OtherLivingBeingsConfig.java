@@ -36,6 +36,8 @@ public class OtherLivingBeingsConfig implements ConfigData {
         public static class Farmer {
             @ConfigEntry.Gui.Tooltip
             public float doubleLootChance = 0.05F;
+            @ConfigEntry.Gui.Tooltip
+            public float growthTickChance = 0.05F;
         }
     }
 
