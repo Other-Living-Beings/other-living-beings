@@ -73,6 +73,19 @@ public class GroupCommand {
             context.getSource().sendFailure(new TextComponent("You can't invite a Player as Console or Command Block!"));
             throw ex;
         }
+
+        //Check if target is already in a Group
+        Optional<GroupData> targetGroup = GroupProvider.getGroup(target);
+        if (targetGroup.isPresent()) {
+            MutableComponent alreadyInAGroupMessage = ChatMessageUtils.createGroupSystemMessage();
+            alreadyInAGroupMessage.append(target.getDisplayName());
+            alreadyInAGroupMessage.append(" ");
+            alreadyInAGroupMessage.append(TranslationUtils.createGroupMessage("invite.alreadyinagroup")
+                    .withStyle(Style.EMPTY.withColor(TextColor.fromRgb(new Color(255, 114, 0).getRGB()))));
+            source.sendMessage(alreadyInAGroupMessage, Util.NIL_UUID);
+            return Command.SINGLE_SUCCESS;
+        }
+
         //Get Group of Source or creates a new Group
         GroupData groupData = GroupProvider.getGroup(source).orElseGet(() -> {
             GroupData data = new GroupData(UUID.randomUUID(), source.getUUID(), new ArrayList<>(List.of(source.getUUID())));

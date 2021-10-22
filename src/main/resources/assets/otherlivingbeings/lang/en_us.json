@@ -29,5 +29,6 @@
   "otherlivingbeings.messages.group.invite.success": "joined the Group.",
   "otherlivingbeings.messages.group.invite.denied": "has denied the invitation.",
   "otherlivingbeings.messages.group.kick.notowner": "You don't have permission to kick someone out of your Group.",
-  "otherlivingbeings.messages.group.leave": "left the group."
+  "otherlivingbeings.messages.group.leave": "left the group.",
+  "otherlivingbeings.messages.group.invite.alreadyinagroup": "is already in a Group."
 }
