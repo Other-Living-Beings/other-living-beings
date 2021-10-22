@@ -1,4 +1,4 @@
-package de.blutmondgilde.otherlivingbeings.util;
+package de.blutmondgilde.otherlivingbeings.util.gson;
 
 import com.google.gson.TypeAdapter;
 import com.google.gson.stream.JsonReader;
