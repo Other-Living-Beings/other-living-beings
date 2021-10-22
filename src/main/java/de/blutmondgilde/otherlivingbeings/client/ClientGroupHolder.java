@@ -4,6 +4,7 @@ import de.blutmondgilde.otherlivingbeings.data.group.GroupData;
 import de.blutmondgilde.otherlivingbeings.data.group.GroupMemberData;
 import de.blutmondgilde.otherlivingbeings.network.OtherLivingBeingNetwork;
 import de.blutmondgilde.otherlivingbeings.network.packet.toserver.RequestMemberDataPacket;
+import net.minecraft.Util;
 import net.minecraftforge.fmllegacy.network.PacketDistributor;
 
 import javax.annotation.Nullable;
@@ -29,6 +30,7 @@ public class ClientGroupHolder {
 
     public static void reset() {
         currentGroup = Optional.empty();
+        dataMap.clear();
     }
 
     public static boolean isInGroup() {
@@ -40,7 +42,11 @@ public class ClientGroupHolder {
     }
 
     public static void updateMemberData(GroupMemberData data) {
-        dataMap.put(data.getPlayerUUID(), data);
+        if (data.getPlayerUUID().equals(Util.NIL_UUID)) {
+            reset();
+        } else {
+            dataMap.put(data.getPlayerUUID(), data);
+        }
     }
 
     public static Collection<GroupMemberData> getMemberData() {

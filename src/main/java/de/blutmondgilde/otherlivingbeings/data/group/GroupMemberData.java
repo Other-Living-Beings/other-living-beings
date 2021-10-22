@@ -4,8 +4,10 @@ import lombok.AccessLevel;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
+import net.minecraft.Util;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.network.chat.Component;
+import net.minecraft.network.chat.TextComponent;
 import net.minecraftforge.common.util.INBTSerializable;
 
 import java.util.UUID;
@@ -42,5 +44,9 @@ public class GroupMemberData implements INBTSerializable<CompoundTag> {
         GroupMemberData data = new GroupMemberData();
         data.deserializeNBT(nbt);
         return data;
+    }
+
+    public static GroupMemberData getReset() {
+        return new GroupMemberData(Util.NIL_UUID, new TextComponent(""), 0, 0);
     }
 }

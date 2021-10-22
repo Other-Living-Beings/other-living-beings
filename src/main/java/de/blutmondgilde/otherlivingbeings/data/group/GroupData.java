@@ -3,12 +3,14 @@ package de.blutmondgilde.otherlivingbeings.data.group;
 import de.blutmondgilde.otherlivingbeings.OtherLivingBeings;
 import de.blutmondgilde.otherlivingbeings.network.OtherLivingBeingNetwork;
 import de.blutmondgilde.otherlivingbeings.network.packet.toclient.SyncGroupDataPacket;
+import de.blutmondgilde.otherlivingbeings.network.packet.toclient.UpdateMemberDataPacket;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.Setter;
 import lombok.ToString;
 import net.minecraft.Util;
 import net.minecraft.nbt.CompoundTag;
+import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.world.entity.player.Player;
 import net.minecraftforge.common.util.INBTSerializable;
 import net.minecraftforge.fmllegacy.network.PacketDistributor;
@@ -53,6 +55,7 @@ public class GroupData implements INBTSerializable<CompoundTag> {
 
     public void removeMember(Player player) {
         members.remove(player.getUUID());
+        OtherLivingBeingNetwork.getInstance().send(PacketDistributor.PLAYER.with(() -> (ServerPlayer) player), new UpdateMemberDataPacket(GroupMemberData.getReset()));
     }
 
     public void addMember(Player player) {
