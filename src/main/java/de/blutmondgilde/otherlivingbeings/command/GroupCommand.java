@@ -10,6 +10,8 @@ import de.blutmondgilde.otherlivingbeings.data.group.GroupData;
 import de.blutmondgilde.otherlivingbeings.data.group.GroupInvite;
 import de.blutmondgilde.otherlivingbeings.data.group.GroupProvider;
 import de.blutmondgilde.otherlivingbeings.util.ChatMessageUtils;
+import de.blutmondgilde.otherlivingbeings.util.TranslationUtils;
+import net.minecraft.ChatFormatting;
 import net.minecraft.Util;
 import net.minecraft.commands.CommandSourceStack;
 import net.minecraft.commands.Commands;
@@ -39,9 +41,27 @@ public class GroupCommand {
                         .then(Commands.argument("target", EntityArgument.player()).executes(GroupCommand::invitePlayer))
                         .then(Commands.literal("accept").then(Commands.argument("uuid", MessageArgument.message()).executes(GroupCommand::inviteAccept)))
                         .then(Commands.literal("deny").then(Commands.argument("uuid", MessageArgument.message()).executes(GroupCommand::denyAccept))))
-                .then(Commands.literal("leave").executes(GroupCommand::leave));
+                .then(Commands.literal("leave").executes(GroupCommand::leave))
+                .then(Commands.literal("kick").then(Commands.argument("target", EntityArgument.player()).executes(GroupCommand::kickPlayer)));
 
         dispatcher.register(root);
+    }
+
+    private static int kickPlayer(CommandContext<CommandSourceStack> context) throws CommandSyntaxException {
+        ServerPlayer target = EntityArgument.getPlayer(context, "target");
+        ServerPlayer source = context.getSource().getPlayerOrException();
+
+        GroupProvider.getGroup(source).ifPresent(data -> {
+            if (data.isOwner(source)) {
+                GroupProvider.removePlayerFromGroup(target);
+            } else {
+                MutableComponent failureMessage = ChatMessageUtils.createGroupSystemMessage();
+                failureMessage.append(TranslationUtils.createGroupMessage("kick.notowner").withStyle(ChatFormatting.RED));
+                context.getSource().sendFailure(failureMessage);
+            }
+        });
+
+        return Command.SINGLE_SUCCESS;
     }
 
     private static int invitePlayer(CommandContext<CommandSourceStack> context) throws CommandSyntaxException {
@@ -99,7 +119,6 @@ public class GroupCommand {
 
     private static int inviteAccept(CommandContext<CommandSourceStack> commandSourceStackCommandContext) throws CommandSyntaxException {
         UUID invitationId = UUID.fromString(MessageArgument.getMessage(commandSourceStackCommandContext, "uuid").getString());
-
         Optional<GroupInvite> invitation = GroupProvider.getInvitation(invitationId);
 
         if (invitation.isPresent()) {

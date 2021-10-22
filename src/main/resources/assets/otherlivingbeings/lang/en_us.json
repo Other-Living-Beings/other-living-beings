@@ -27,5 +27,7 @@
   "otherlivingbeings.messages.group.invite.timeout": "The Invitation you are looking for does not exist.",
   "otherlivingbeings.messages.group.invite.failed.notarget": "Exception while inviting a Player. Could not find the target Player.",
   "otherlivingbeings.messages.group.invite.success": "joined the Group.",
-  "otherlivingbeings.messages.group.invite.denied": "has denied the invitation."
+  "otherlivingbeings.messages.group.invite.denied": "has denied the invitation.",
+  "otherlivingbeings.messages.group.kick.notowner": "You don't have permission to kick someone out of your Group.",
+  "otherlivingbeings.messages.group.leave": "left the group."
 }

@@ -1,9 +1,18 @@
 package de.blutmondgilde.otherlivingbeings.data.group;
 
+import de.blutmondgilde.otherlivingbeings.util.ChatMessageUtils;
+import de.blutmondgilde.otherlivingbeings.util.TranslationUtils;
+import net.minecraft.ChatFormatting;
+import net.minecraft.Util;
+import net.minecraft.network.chat.MutableComponent;
+import net.minecraft.network.chat.Style;
+import net.minecraft.network.chat.TranslatableComponent;
 import net.minecraft.world.entity.player.Player;
+import net.minecraftforge.fmllegacy.server.ServerLifecycleHooks;
 
 import java.util.HashMap;
 import java.util.Map;
+import java.util.Optional;
 import java.util.UUID;
 
 public class GroupMasterList {
@@ -34,9 +43,23 @@ public class GroupMasterList {
         //update member group date
         for (UUID memberId : groupData.getMembers()) {
             playerGroup.put(memberId, groupData);
+            Optional.ofNullable(ServerLifecycleHooks.getCurrentServer().getPlayerList().getPlayer(memberId)).ifPresent(player1 -> {
+                MutableComponent leftMessage = ChatMessageUtils.createGroupSystemMessage();
+                leftMessage.append(player.getDisplayName());
+                leftMessage.append(" ");
+                leftMessage.append(new TranslatableComponent("leave").withStyle(Style.EMPTY.withColor(ChatFormatting.RED)));
+                player1.sendMessage(leftMessage, Util.NIL_UUID);
+            });
         }
 
+        MutableComponent leftMessage = ChatMessageUtils.createGroupSystemMessage();
+        leftMessage.append(player.getDisplayName());
+        leftMessage.append(" ");
+        leftMessage.append(TranslationUtils.createGroupMessage("leave").withStyle(Style.EMPTY.withColor(ChatFormatting.RED)));
+        player.sendMessage(leftMessage, Util.NIL_UUID);
+
         //update clients
+        playerGroup.remove(player.getUUID());
         groupData.sync();
     }
 

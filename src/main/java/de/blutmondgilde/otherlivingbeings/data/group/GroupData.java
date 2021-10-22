@@ -70,6 +70,10 @@ public class GroupData implements INBTSerializable<CompoundTag> {
         });
     }
 
+    public boolean isEmpty() {
+        return this.members.isEmpty();
+    }
+
     @Override
     public CompoundTag serializeNBT() {
         CompoundTag tag = new CompoundTag();
