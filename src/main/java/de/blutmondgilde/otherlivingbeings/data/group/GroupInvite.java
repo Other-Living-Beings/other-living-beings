@@ -1,6 +1,8 @@
 package de.blutmondgilde.otherlivingbeings.data.group;
 
 import de.blutmondgilde.otherlivingbeings.OtherLivingBeings;
+import de.blutmondgilde.otherlivingbeings.network.OtherLivingBeingNetwork;
+import de.blutmondgilde.otherlivingbeings.network.packet.toclient.UpdateMemberDataPacket;
 import de.blutmondgilde.otherlivingbeings.util.ChatMessageUtils;
 import de.blutmondgilde.otherlivingbeings.util.TranslationUtils;
 import lombok.Getter;
@@ -11,6 +13,7 @@ import net.minecraft.network.chat.MutableComponent;
 import net.minecraft.network.chat.Style;
 import net.minecraft.network.chat.TextComponent;
 import net.minecraft.server.level.ServerPlayer;
+import net.minecraftforge.fmllegacy.network.PacketDistributor;
 import net.minecraftforge.fmllegacy.server.ServerLifecycleHooks;
 
 import java.util.Optional;
@@ -80,5 +83,8 @@ public class GroupInvite {
         } else {
             OtherLivingBeings.getLogger().error("Exception while trying to add player {} to group {} with owner {}", getTarget(), getPartyId(), getPartyOwner());
         }
+
+        Optional.ofNullable(ServerLifecycleHooks.getCurrentServer().getPlayerList().getPlayer(this.target))
+                .ifPresent(player -> OtherLivingBeingNetwork.getInstance().send(PacketDistributor.PLAYER.with(() -> player), new UpdateMemberDataPacket(GroupMemberData.getReset())));
     }
 }
