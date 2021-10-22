@@ -24,6 +24,12 @@ import java.awt.*;
 public class Lumberjack extends AbstractLevelSkill implements BlockBreakListener, BlockBrokenListener {
     @Override
     public float onBlockBreak(Player player, BlockState state, BlockPos pos, float originalSpeed, float newSpeed) {
+        //increases break speed
+        return newSpeed + OtherLivingBeings.getConfig().get().skillConfig.lumberjack.breakSpeedPerLevel * getLevel();
+    }
+
+    @Override
+    public boolean onBlockBroken(Player player, BlockState state, BlockPos pos, LevelAccessor world) {
         final ItemStack item = player.getMainHandItem();
         if (item.getItem() instanceof AxeItem) {
             double random = Math.random();
@@ -34,15 +40,7 @@ public class Lumberjack extends AbstractLevelSkill implements BlockBreakListener
                     item.setDamageValue(item.getDamageValue() - 1);
                 }
             }
-        }
-        //increases break speed
-        return newSpeed + OtherLivingBeings.getConfig().get().skillConfig.lumberjack.breakSpeedPerLevel * getLevel();
-    }
 
-    @Override
-    public boolean onBlockBroken(Player player, BlockState state, BlockPos pos, LevelAccessor world) {
-        final ItemStack item = player.getMainHandItem();
-        if (item.getItem() instanceof AxeItem) {
             if (LumberjackData.Provider.getExpMap().containsKey(state.getBlock())) {
                 if (LumberjackData.Provider.getExpMap().get(state.getBlock()).isValid(state)) {
                     IPlayerSkills playerSkills = player.getCapability(OtherLivingBeingsCapability.PLAYER_SKILLS).orElse(new PlayerSkillsImpl());
