@@ -1,6 +1,5 @@
 package de.blutmondgilde.otherlivingbeings.data.group;
 
-import com.google.gson.FieldNamingPolicy;
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
 import de.blutmondgilde.otherlivingbeings.OtherLivingBeings;
@@ -16,6 +15,7 @@ import java.io.FileReader;
 import java.io.FileWriter;
 import java.io.IOException;
 import java.nio.file.Path;
+import java.util.Objects;
 import java.util.Optional;
 import java.util.UUID;
 import java.util.concurrent.CopyOnWriteArrayList;
@@ -23,7 +23,6 @@ import java.util.concurrent.CopyOnWriteArrayList;
 public class GroupProvider {
     private static final Gson gson = new GsonBuilder()
             .setPrettyPrinting()
-            .setFieldNamingPolicy(FieldNamingPolicy.LOWER_CASE_WITH_UNDERSCORES)
             .registerTypeAdapter(UUID.class, new GsonUUIDTypeAdapter())
             .create();
 
@@ -39,9 +38,7 @@ public class GroupProvider {
 
         try {
             GroupMasterList loadedList = gson.fromJson(new FileReader(storagePath.resolve(fileName).toFile()), GroupMasterList.class);
-            if (loadedList != null) {
-                groupMasterList = loadedList;
-            }
+            groupMasterList = Objects.requireNonNullElseGet(loadedList, GroupMasterList::new);
         } catch (FileNotFoundException e) {
             OtherLivingBeings.getLogger().warn("Could not find a Group storage file for {}! If your world is new you can ignore this warning.", fileName);
         }
@@ -51,8 +48,12 @@ public class GroupProvider {
         String fileName = server.getWorldData().getLevelName() + ".json";
 
         try {
-            gson.toJson(groupMasterList, new FileWriter(storagePath.resolve(fileName).toFile(), false));
+            FileWriter writer = new FileWriter(storagePath.resolve(fileName).toFile(), false);
+            gson.toJson(groupMasterList, writer);
+            writer.flush();
+            writer.close();
         } catch (IOException e) {
+            OtherLivingBeings.getLogger().fatal("Error while trying to save GroupMasterList.\n {}", e.getMessage());
             e.printStackTrace();
         }
     }
