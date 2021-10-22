@@ -29,14 +29,18 @@ public class OtherLivingBeingsConfig implements ConfigData {
         public static class Miner {
             @ConfigEntry.Gui.Tooltip
             public float breakSpeedPerLevel = 0.05F;
-            @ConfigEntry.Gui.Tooltip
+            @ConfigEntry.Gui.Tooltip(count = 2)
             public float unbreakingChance = 0.05F;
+            @ConfigEntry.Gui.Tooltip(count = 2)
+            public float doubleLootChance = 0.05F;
+            @ConfigEntry.Gui.Tooltip(count = 2)
+            public float tripleLootChance = 0.05F;
         }
 
         public static class Farmer {
-            @ConfigEntry.Gui.Tooltip
+            @ConfigEntry.Gui.Tooltip(count = 2)
             public float doubleLootChance = 0.05F;
-            @ConfigEntry.Gui.Tooltip
+            @ConfigEntry.Gui.Tooltip(count = 2)
             public float growthTickChance = 0.05F;
         }
     }

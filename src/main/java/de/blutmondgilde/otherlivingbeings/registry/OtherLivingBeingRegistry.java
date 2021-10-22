@@ -4,6 +4,7 @@ import de.blutmondgilde.otherlivingbeings.OtherLivingBeings;
 import de.blutmondgilde.otherlivingbeings.api.gui.inventory.tabs.DefaultTabContainer;
 import de.blutmondgilde.otherlivingbeings.container.SkillContainer;
 import de.blutmondgilde.otherlivingbeings.data.loot.FarmerLootModifier;
+import de.blutmondgilde.otherlivingbeings.data.loot.MinerLootModifier;
 import net.minecraft.world.inventory.MenuType;
 import net.minecraftforge.common.extensions.IForgeContainerType;
 import net.minecraftforge.common.loot.GlobalLootModifierSerializer;
@@ -35,6 +36,7 @@ public class OtherLivingBeingRegistry {
         private static void init(IEventBus modBus) {
             serializer.register(modBus);
             serializer.register("farmer_skill_modifier", FarmerLootModifier.Serializer::new);
+            serializer.register("miner_skill_modifier", MinerLootModifier.Serializer::new);
         }
     }
 }

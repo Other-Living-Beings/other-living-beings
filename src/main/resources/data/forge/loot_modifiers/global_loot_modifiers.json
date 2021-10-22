@@ -1,6 +1,7 @@
 {
   "replace": false,
   "entries": [
-    "otherlivingbeings:farmer_skill_modifier"
+    "otherlivingbeings:farmer_skill_modifier",
+    "otherlivingbeings:miner_skill_modifier"
   ]
 }

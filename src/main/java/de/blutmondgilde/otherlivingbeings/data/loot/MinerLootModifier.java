@@ -5,8 +5,8 @@ import de.blutmondgilde.otherlivingbeings.OtherLivingBeings;
 import de.blutmondgilde.otherlivingbeings.api.capability.OtherLivingBeingsCapability;
 import de.blutmondgilde.otherlivingbeings.capability.skill.IPlayerSkills;
 import de.blutmondgilde.otherlivingbeings.capability.skill.PlayerSkillsImpl;
-import de.blutmondgilde.otherlivingbeings.data.skills.provider.FarmerData;
-import de.blutmondgilde.otherlivingbeings.skills.Farmer;
+import de.blutmondgilde.otherlivingbeings.data.skills.provider.MinerData;
+import de.blutmondgilde.otherlivingbeings.skills.Miner;
 import de.blutmondgilde.otherlivingbeings.util.ChatMessageUtils;
 import de.blutmondgilde.otherlivingbeings.util.TranslationUtils;
 import net.minecraft.Util;
@@ -27,13 +27,13 @@ import java.awt.*;
 import java.util.List;
 import java.util.Optional;
 
-public class FarmerLootModifier extends LootModifier {
+public class MinerLootModifier extends LootModifier {
     /**
      * Constructs a LootModifier.
      *
      * @param conditionsIn the ILootConditions that need to be matched before the loot is modified.
      */
-    protected FarmerLootModifier(LootItemCondition[] conditionsIn) {
+    protected MinerLootModifier(LootItemCondition[] conditionsIn) {
         super(conditionsIn);
     }
 
@@ -44,45 +44,61 @@ public class FarmerLootModifier extends LootModifier {
         if (!context.hasParam(LootContextParams.BLOCK_STATE)) return generatedLoot;
         //Check Block has a valid exp value
         final BlockState state = context.getParam(LootContextParams.BLOCK_STATE);
-        if (!FarmerData.Provider.getExpMap().containsKey(state.getBlock())) return generatedLoot;
+        if (!MinerData.Provider.getExpMap().containsKey(state.getBlock())) return generatedLoot;
         //Check BlockState
-        if (!FarmerData.Provider.getExpMap().get(state.getBlock()).isValid(state)) return generatedLoot;
+        if (!MinerData.Provider.getExpMap().get(state.getBlock()).isValid(state)) return generatedLoot;
         //Check for Entity
         if (!context.hasParam(LootContextParams.THIS_ENTITY)) return generatedLoot;
         //Check for Player
         if (!(context.getParam(LootContextParams.THIS_ENTITY) instanceof Player player)) return generatedLoot;
         IPlayerSkills playerSkills = player.getCapability(OtherLivingBeingsCapability.PLAYER_SKILLS).orElse(new PlayerSkillsImpl());
-        Optional<Farmer> farmerSkill = playerSkills.getSkills()
+        Optional<Miner> minerSkill = playerSkills.getSkills()
                 .stream()
-                .filter(iSkill -> iSkill instanceof Farmer)
-                .map(iSkill -> (Farmer) iSkill)
+                .filter(iSkill -> iSkill instanceof Miner)
+                .map(iSkill -> (Miner) iSkill)
                 .findFirst();
-        if (farmerSkill.isPresent()) {
+
+        if (minerSkill.isPresent()) {
             double random = Math.random();
-            double increment = Math.ceil(farmerSkill.get().getLevel() / 10.0);
-            if (random < OtherLivingBeings.getConfig().get().skillConfig.farmer.doubleLootChance * increment) {
+            double increment = Math.ceil(minerSkill.get().getLevel() / 10.0);
+            //double
+            if (random < OtherLivingBeings.getConfig().get().skillConfig.miner.doubleLootChance * increment) {
                 generatedLoot.addAll(generatedLoot);
                 MutableComponent doubleLootMessage = ChatMessageUtils.createSkillMessage();
                 doubleLootMessage.append(" ");
-                doubleLootMessage.append(TranslationUtils.createSkillMessage("farmer.doubleloot").withStyle(Style.EMPTY.withColor(new Color(0, 148, 4).getRGB())));
+                doubleLootMessage.append(TranslationUtils.createSkillMessage("miner.doubleloot").withStyle(Style.EMPTY.withColor(new Color(0, 148, 4).getRGB())));
                 player.sendMessage(doubleLootMessage, Util.NIL_UUID);
+                minerSkill.get().increaseExp(MinerData.Provider.getExpMap().get(state.getBlock()).getExp());
 
-                farmerSkill.get().increaseExp(FarmerData.Provider.getExpMap().get(state.getBlock()).getExp());
+                random = Math.random();
+                increment = Math.ceil(minerSkill.get().getLevel() / 50.0);
+                //triple
+                if (random < OtherLivingBeings.getConfig().get().skillConfig.miner.tripleLootChance * increment) {
+                    generatedLoot.addAll(generatedLoot);
+
+                    MutableComponent tripleLootMessage = ChatMessageUtils.createSkillMessage();
+                    tripleLootMessage.append(" ");
+                    tripleLootMessage.append(TranslationUtils.createSkillMessage("miner.tripleloot").withStyle(Style.EMPTY.withColor(new Color(0, 148, 4).getRGB())));
+                    player.sendMessage(tripleLootMessage, Util.NIL_UUID);
+                    minerSkill.get().increaseExp(MinerData.Provider.getExpMap().get(state.getBlock()).getExp());
+                }
+
                 playerSkills.sync(player);
             }
         }
         return generatedLoot;
     }
 
-    public static class Serializer extends GlobalLootModifierSerializer<FarmerLootModifier> {
+
+    public static class Serializer extends GlobalLootModifierSerializer<MinerLootModifier> {
 
         @Override
-        public FarmerLootModifier read(ResourceLocation location, JsonObject object, LootItemCondition[] ailootcondition) {
-            return new FarmerLootModifier(ailootcondition);
+        public MinerLootModifier read(ResourceLocation location, JsonObject object, LootItemCondition[] ailootcondition) {
+            return new MinerLootModifier(ailootcondition);
         }
 
         @Override
-        public JsonObject write(FarmerLootModifier instance) {
+        public JsonObject write(MinerLootModifier instance) {
             return makeConditions(instance.conditions);
         }
     }
