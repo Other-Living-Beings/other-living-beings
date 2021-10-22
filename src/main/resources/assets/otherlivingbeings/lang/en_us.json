@@ -18,5 +18,14 @@
   "otherlivingbeings.skill.miner": "Miner",
   "otherlivingbeings.skill.farmer": "Farmer",
   "otherlivingbeings.tab.inventory.title": "Inventory",
-  "otherlivingbeings.tab.skills.title": "Skills"
+  "otherlivingbeings.tab.skills.title": "Skills",
+  "otherlivingbeings.messages.group.prefix": "Group-System",
+  "otherlivingbeings.messages.group.invite": "has invited you into his group.",
+  "otherlivingbeings.messages.group.invite.accept": "Accept",
+  "otherlivingbeings.messages.group.invite.deny": "Deny",
+  "otherlivingbeings.messages.group.invite.notowner": "You don't have permission to invite someone into this group. Please ask %s to invite %s",
+  "otherlivingbeings.messages.group.invite.timeout": "The Invitation you are looking for does not exist.",
+  "otherlivingbeings.messages.group.invite.failed.notarget": "Exception while inviting a Player. Could not find the target Player.",
+  "otherlivingbeings.messages.group.invite.success": "joined the Group.",
+  "otherlivingbeings.messages.group.invite.denied": "has denied the invitation."
 }

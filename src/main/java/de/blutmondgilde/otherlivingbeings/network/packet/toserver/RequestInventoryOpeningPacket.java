@@ -9,10 +9,10 @@ import net.minecraftforge.fmllegacy.network.PacketDistributor;
 
 import java.util.function.Supplier;
 
-public class RequestInventoryOpening {
-    public RequestInventoryOpening() {}
+public class RequestInventoryOpeningPacket {
+    public RequestInventoryOpeningPacket() {}
 
-    public RequestInventoryOpening(FriendlyByteBuf buf) {}
+    public RequestInventoryOpeningPacket(FriendlyByteBuf buf) {}
 
     public void toBytes(FriendlyByteBuf buf) {}
 

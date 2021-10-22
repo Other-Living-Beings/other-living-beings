@@ -6,7 +6,7 @@ import de.blutmondgilde.otherlivingbeings.data.skills.BlockStateExpEntry;
 import de.blutmondgilde.otherlivingbeings.data.skills.ExpEntryDataGenerator;
 import de.blutmondgilde.otherlivingbeings.data.skills.ReloadableJobDataProvider;
 import de.blutmondgilde.otherlivingbeings.network.OtherLivingBeingNetwork;
-import de.blutmondgilde.otherlivingbeings.network.packet.toclient.SyncDataPack;
+import de.blutmondgilde.otherlivingbeings.network.packet.toclient.SyncDataPackPacket;
 import lombok.Getter;
 import lombok.Setter;
 import net.minecraft.data.HashCache;
@@ -47,12 +47,12 @@ public class FarmerData {
 
         @Override
         public void sync() {
-            OtherLivingBeingNetwork.getInstance().send(PacketDistributor.ALL.noArg(), new SyncDataPack(expMap, SyncDataPack.Type.Farmer));
+            OtherLivingBeingNetwork.getInstance().send(PacketDistributor.ALL.noArg(), new SyncDataPackPacket(expMap, SyncDataPackPacket.Type.Farmer));
         }
 
         @Override
         public void sync(ServerPlayer player) {
-            OtherLivingBeingNetwork.getInstance().send(PacketDistributor.PLAYER.with(() -> player), new SyncDataPack(expMap, SyncDataPack.Type.Farmer));
+            OtherLivingBeingNetwork.getInstance().send(PacketDistributor.PLAYER.with(() -> player), new SyncDataPackPacket(expMap, SyncDataPackPacket.Type.Farmer));
         }
     }
 

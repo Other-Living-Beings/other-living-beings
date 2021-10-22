@@ -3,12 +3,15 @@ package de.blutmondgilde.otherlivingbeings;
 import de.blutmondgilde.otherlivingbeings.capability.OtherLivingBeingsCapManager;
 import de.blutmondgilde.otherlivingbeings.client.OtherLivingBeingsClient;
 import de.blutmondgilde.otherlivingbeings.config.OtherLivingBeingsConfig;
+import de.blutmondgilde.otherlivingbeings.data.group.GroupProvider;
 import de.blutmondgilde.otherlivingbeings.data.skills.provider.FarmerData;
 import de.blutmondgilde.otherlivingbeings.data.skills.provider.LumberjackData;
 import de.blutmondgilde.otherlivingbeings.data.skills.provider.MinerData;
 import de.blutmondgilde.otherlivingbeings.handler.DataPackHandler;
+import de.blutmondgilde.otherlivingbeings.handler.GroupHandler;
 import de.blutmondgilde.otherlivingbeings.handler.SkillHandler;
 import de.blutmondgilde.otherlivingbeings.network.OtherLivingBeingNetwork;
+import de.blutmondgilde.otherlivingbeings.registry.CommandRegistry;
 import de.blutmondgilde.otherlivingbeings.registry.OtherLivingBeingRegistry;
 import de.blutmondgilde.otherlivingbeings.registry.SkillRegistry;
 import lombok.Getter;
@@ -27,6 +30,8 @@ import net.minecraftforge.fml.common.Mod;
 import net.minecraftforge.fml.event.lifecycle.FMLCommonSetupEvent;
 import net.minecraftforge.fml.javafmlmod.FMLJavaModLoadingContext;
 import net.minecraftforge.fmllegacy.common.registry.GameRegistry;
+import net.minecraftforge.fmlserverevents.FMLServerStartingEvent;
+import net.minecraftforge.fmlserverevents.FMLServerStoppingEvent;
 import net.minecraftforge.forge.event.lifecycle.GatherDataEvent;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
@@ -52,8 +57,12 @@ public class OtherLivingBeings {
         SkillRegistry.init(modBus);
 
         final IEventBus forgeBus = MinecraftForge.EVENT_BUS;
+        forgeBus.addListener(this::serverStart);
+        forgeBus.addListener(this::serverStop);
         SkillHandler.init();
         DataPackHandler.init(forgeBus);
+        CommandRegistry.init(forgeBus);
+        GroupHandler.init(forgeBus);
         OtherLivingBeingsCapManager.init(modBus, forgeBus);
 
         DistExecutor.unsafeRunWhenOn(Dist.CLIENT, () -> OtherLivingBeingsClient::init);
@@ -61,6 +70,14 @@ public class OtherLivingBeings {
 
     private void setup(final FMLCommonSetupEvent e) {
         e.enqueueWork(OtherLivingBeingNetwork::registerPackets);
+    }
+
+    private void serverStart(final FMLServerStartingEvent e) {
+        GroupProvider.initialize(e.getServer());
+    }
+
+    private void serverStop(final FMLServerStoppingEvent e) {
+        GroupProvider.shutdown(e.getServer());
     }
 
     public static Logger getLogger() {

@@ -13,11 +13,11 @@ import net.minecraftforge.fmllegacy.network.NetworkHooks;
 
 import java.util.function.Supplier;
 
-public class RequestOpenSkillContainer {
+public class RequestOpenSkillContainerPacket {
 
-    public RequestOpenSkillContainer() {}
+    public RequestOpenSkillContainerPacket() {}
 
-    public RequestOpenSkillContainer(FriendlyByteBuf buf) {}
+    public RequestOpenSkillContainerPacket(FriendlyByteBuf buf) {}
 
     public void toBytes(FriendlyByteBuf buf) {}
 

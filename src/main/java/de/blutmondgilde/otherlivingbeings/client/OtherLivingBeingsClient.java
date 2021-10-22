@@ -8,14 +8,15 @@ import de.blutmondgilde.otherlivingbeings.api.gui.inventory.tabs.AbstractInvento
 import de.blutmondgilde.otherlivingbeings.api.gui.inventory.tabs.DefaultTabContainer;
 import de.blutmondgilde.otherlivingbeings.api.gui.inventory.tabs.DefaultTabContainerScreen;
 import de.blutmondgilde.otherlivingbeings.client.gui.SkillContainerScreen;
+import de.blutmondgilde.otherlivingbeings.client.gui.overlay.GroupOverlay;
 import de.blutmondgilde.otherlivingbeings.config.OtherLivingBeingsConfig;
 import de.blutmondgilde.otherlivingbeings.config.widget.BlockListWidget;
 import de.blutmondgilde.otherlivingbeings.config.widget.BlockTextField;
 import de.blutmondgilde.otherlivingbeings.container.SkillContainer;
 import de.blutmondgilde.otherlivingbeings.handler.InventoryTabHandler;
 import de.blutmondgilde.otherlivingbeings.network.OtherLivingBeingNetwork;
-import de.blutmondgilde.otherlivingbeings.network.packet.toserver.RequestInventoryOpening;
-import de.blutmondgilde.otherlivingbeings.network.packet.toserver.RequestOpenSkillContainer;
+import de.blutmondgilde.otherlivingbeings.network.packet.toserver.RequestInventoryOpeningPacket;
+import de.blutmondgilde.otherlivingbeings.network.packet.toserver.RequestOpenSkillContainerPacket;
 import de.blutmondgilde.otherlivingbeings.registry.InventoryTabRegistry;
 import de.blutmondgilde.otherlivingbeings.registry.OtherLivingBeingsContainer;
 import me.shedaniel.autoconfig.AutoConfig;
@@ -41,6 +42,7 @@ import net.minecraft.world.level.block.Block;
 import net.minecraft.world.level.block.Blocks;
 import net.minecraftforge.api.distmarker.Dist;
 import net.minecraftforge.api.distmarker.OnlyIn;
+import net.minecraftforge.client.gui.OverlayRegistry;
 import net.minecraftforge.common.MinecraftForge;
 import net.minecraftforge.eventbus.api.IEventBus;
 import net.minecraftforge.fml.ModLoadingContext;
@@ -81,7 +83,7 @@ public class OtherLivingBeingsClient {
         InventoryTabRegistry.register(new AbstractInventoryTab() {
             @Override
             public void sendOpenContainerPacket() {
-                OtherLivingBeingNetwork.getInstance().send(PacketDistributor.SERVER.noArg(), new RequestInventoryOpening());
+                OtherLivingBeingNetwork.getInstance().send(PacketDistributor.SERVER.noArg(), new RequestInventoryOpeningPacket());
             }
 
             @Override
@@ -103,7 +105,7 @@ public class OtherLivingBeingsClient {
         InventoryTabRegistry.register(new AbstractInventoryTab() {
             @Override
             public void sendOpenContainerPacket() {
-                OtherLivingBeingNetwork.getInstance().send(PacketDistributor.SERVER.noArg(), new RequestOpenSkillContainer());
+                OtherLivingBeingNetwork.getInstance().send(PacketDistributor.SERVER.noArg(), new RequestOpenSkillContainerPacket());
             }
 
             @Override
@@ -192,6 +194,10 @@ public class OtherLivingBeingsClient {
 
         e.enqueueWork(() -> MenuScreens.register(OtherLivingBeingsContainer.BASIC_TAB_CONTAINER, (MenuScreens.ScreenConstructor) (menu, inventory, title) -> new DefaultTabContainerScreen((DefaultTabContainer) menu, inventory, title)));
         e.enqueueWork(() -> MenuScreens.register(OtherLivingBeingsContainer.SKILL_CONTAINER, (MenuScreens.ScreenConstructor) (menu, inventory, title) -> new SkillContainerScreen((SkillContainer) menu, inventory, title)));
+
+        e.enqueueWork(() -> {
+            OverlayRegistry.registerOverlayTop("GroupOverlay", new GroupOverlay());
+        });
     }
 
     public static void syncSkills(final CompoundTag tag, final int targetId) {
