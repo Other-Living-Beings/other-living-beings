@@ -6,6 +6,11 @@ import de.blutmondgilde.otherlivingbeings.api.capability.OtherLivingBeingsCapabi
 import de.blutmondgilde.otherlivingbeings.capability.skill.PlayerSkillsImpl;
 import de.blutmondgilde.otherlivingbeings.data.skills.provider.FarmerData;
 import de.blutmondgilde.otherlivingbeings.skills.Farmer;
+import de.blutmondgilde.otherlivingbeings.util.ChatMessageUtils;
+import de.blutmondgilde.otherlivingbeings.util.TranslationUtils;
+import net.minecraft.Util;
+import net.minecraft.network.chat.MutableComponent;
+import net.minecraft.network.chat.Style;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.item.ItemStack;
@@ -17,6 +22,7 @@ import net.minecraftforge.common.loot.GlobalLootModifierSerializer;
 import net.minecraftforge.common.loot.LootModifier;
 import org.jetbrains.annotations.NotNull;
 
+import java.awt.*;
 import java.util.List;
 import java.util.Optional;
 
@@ -54,6 +60,10 @@ public class FarmerLootModifier extends LootModifier {
             double increment = Math.ceil(farmerSkill.get().getLevel() / 10.0);
             if (random < OtherLivingBeings.getConfig().get().skillConfig.farmer.doubleLootChance * increment) {
                 generatedLoot.addAll(generatedLoot);
+                MutableComponent doubleLootMessage = ChatMessageUtils.createSkillMessage();
+                doubleLootMessage.append(" ");
+                doubleLootMessage.append(TranslationUtils.createSkillMessage("farmer.doubleloot").withStyle(Style.EMPTY.withColor(new Color(0, 148, 4).getRGB())));
+                player.sendMessage(doubleLootMessage, Util.NIL_UUID);
             }
         }
         return generatedLoot;

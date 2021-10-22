@@ -19,4 +19,8 @@ public class TranslationUtils {
     public static TranslatableComponent createGroupMessage(String messagePath) {
         return createMessageComponent("group." + messagePath);
     }
+
+    public static TranslatableComponent createSkillMessage(String messagePath) {
+        return createMessageComponent("skill." + messagePath);
+    }
 }

@@ -10,9 +10,16 @@ import java.awt.*;
 
 public class ChatMessageUtils {
 
-    public static MutableComponent createGroupSystemMessage(){
+    public static MutableComponent createGroupSystemMessage() {
         MutableComponent prefix = new TextComponent("[");
         prefix.append(new TranslatableComponent("otherlivingbeings.messages.group.prefix").withStyle(Style.EMPTY.withColor(TextColor.fromRgb(new Color(0, 131, 234).getRGB()))));
+        prefix.append("] ");
+        return prefix;
+    }
+
+    public static MutableComponent createSkillMessage() {
+        MutableComponent prefix = new TextComponent("[");
+        prefix.append(TranslationUtils.createSkillMessage("prefix").withStyle(Style.EMPTY.withColor(new Color(1, 203, 15).getRGB())));
         prefix.append("] ");
         return prefix;
     }
