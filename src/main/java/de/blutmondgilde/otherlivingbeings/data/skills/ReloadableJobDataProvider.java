@@ -4,7 +4,7 @@ import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
 import com.google.gson.JsonElement;
 import de.blutmondgilde.otherlivingbeings.OtherLivingBeings;
-import de.blutmondgilde.otherlivingbeings.util.GsonBlockTypeAdapter;
+import de.blutmondgilde.otherlivingbeings.util.gson.GsonBlockTypeAdapter;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.server.packs.resources.ResourceManager;

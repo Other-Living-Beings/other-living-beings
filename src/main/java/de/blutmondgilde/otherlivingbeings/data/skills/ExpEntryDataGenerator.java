@@ -3,7 +3,7 @@ package de.blutmondgilde.otherlivingbeings.data.skills;
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
 import de.blutmondgilde.otherlivingbeings.OtherLivingBeings;
-import de.blutmondgilde.otherlivingbeings.util.GsonBlockTypeAdapter;
+import de.blutmondgilde.otherlivingbeings.util.gson.GsonBlockTypeAdapter;
 import lombok.AccessLevel;
 import lombok.Getter;
 import net.minecraft.data.DataProvider;

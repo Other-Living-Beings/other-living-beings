@@ -9,6 +9,7 @@ import de.blutmondgilde.otherlivingbeings.api.gui.inventory.tabs.DefaultTabConta
 import de.blutmondgilde.otherlivingbeings.api.gui.inventory.tabs.DefaultTabContainerScreen;
 import de.blutmondgilde.otherlivingbeings.client.gui.SkillContainerScreen;
 import de.blutmondgilde.otherlivingbeings.client.gui.overlay.GroupOverlay;
+import de.blutmondgilde.otherlivingbeings.client.handler.ClientGroupHandler;
 import de.blutmondgilde.otherlivingbeings.config.OtherLivingBeingsConfig;
 import de.blutmondgilde.otherlivingbeings.config.widget.BlockListWidget;
 import de.blutmondgilde.otherlivingbeings.config.widget.BlockTextField;
@@ -77,6 +78,7 @@ public class OtherLivingBeingsClient {
 
         IEventBus forgeBus = MinecraftForge.EVENT_BUS;
         InventoryTabHandler.init(forgeBus);
+        ClientGroupHandler.init(forgeBus);
     }
 
     private static void createSkillInventoryTab() {

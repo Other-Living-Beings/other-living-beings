@@ -3,7 +3,7 @@ package de.blutmondgilde.otherlivingbeings.data.group;
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
 import de.blutmondgilde.otherlivingbeings.OtherLivingBeings;
-import de.blutmondgilde.otherlivingbeings.util.GsonUUIDTypeAdapter;
+import de.blutmondgilde.otherlivingbeings.util.gson.GsonUUIDTypeAdapter;
 import net.minecraft.server.MinecraftServer;
 import net.minecraft.world.entity.player.Player;
 import net.minecraftforge.common.MinecraftForge;
