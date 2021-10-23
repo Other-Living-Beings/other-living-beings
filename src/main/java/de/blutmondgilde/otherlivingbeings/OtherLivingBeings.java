@@ -33,6 +33,8 @@ import net.minecraftforge.fmllegacy.common.registry.GameRegistry;
 import net.minecraftforge.fmlserverevents.FMLServerStartingEvent;
 import net.minecraftforge.fmlserverevents.FMLServerStoppingEvent;
 import net.minecraftforge.forge.event.lifecycle.GatherDataEvent;
+import net.minecraftforge.server.permission.DefaultPermissionLevel;
+import net.minecraftforge.server.permission.PermissionAPI;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
@@ -70,7 +72,7 @@ public class OtherLivingBeings {
 
     private void setup(final FMLCommonSetupEvent e) {
         e.enqueueWork(OtherLivingBeingNetwork::registerPackets);
-        //e.enqueueWork(() -> PermissionAPI.registerNode(OtherLivingBeings.MOD_ID + ".fogblocks", DefaultPermissionLevel.OP, "Allows to create Fog Blocks."));
+        e.enqueueWork(() -> PermissionAPI.registerNode(OtherLivingBeings.MOD_ID + ".fogblocks", DefaultPermissionLevel.OP, "Allows to create Fog Blocks."));
     }
 
     private void serverStart(final FMLServerStartingEvent e) {
