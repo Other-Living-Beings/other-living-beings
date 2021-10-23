@@ -70,7 +70,6 @@ public class OtherLivingBeings {
 
     private void setup(final FMLCommonSetupEvent e) {
         e.enqueueWork(OtherLivingBeingNetwork::registerPackets);
-        //e.enqueueWork(() -> PermissionAPI.registerNode(OtherLivingBeings.MOD_ID + ".fogblocks", DefaultPermissionLevel.OP, "Allows to create Fog Blocks."));
     }
 
     private void serverStart(final FMLServerStartingEvent e) {
