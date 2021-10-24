@@ -14,7 +14,6 @@ import de.blutmondgilde.otherlivingbeings.handler.SkillHandler;
 import de.blutmondgilde.otherlivingbeings.network.OtherLivingBeingNetwork;
 import de.blutmondgilde.otherlivingbeings.registry.CommandRegistry;
 import de.blutmondgilde.otherlivingbeings.registry.OtherLivingBeingRegistry;
-import de.blutmondgilde.otherlivingbeings.registry.SkillRegistry;
 import lombok.Getter;
 import me.shedaniel.autoconfig.AutoConfig;
 import me.shedaniel.autoconfig.ConfigHolder;
@@ -55,7 +54,6 @@ public class OtherLivingBeings {
         modBus.addListener(this::dataGen);
         DistExecutor.unsafeRunWhenOn(Dist.CLIENT, () -> () -> modBus.addListener(OtherLivingBeingsClient::clientSetup));
         OtherLivingBeingRegistry.init();
-        SkillRegistry.init(modBus);
 
         final IEventBus forgeBus = MinecraftForge.EVENT_BUS;
         forgeBus.addListener(this::serverStart);
