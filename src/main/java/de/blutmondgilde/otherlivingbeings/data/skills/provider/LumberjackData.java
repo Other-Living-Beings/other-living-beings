@@ -6,7 +6,7 @@ import de.blutmondgilde.otherlivingbeings.data.skills.pojo.BlockStateExpEntry;
 import de.blutmondgilde.otherlivingbeings.data.skills.ExpEntryDataGenerator;
 import de.blutmondgilde.otherlivingbeings.data.skills.ReloadableJobDataProvider;
 import de.blutmondgilde.otherlivingbeings.network.OtherLivingBeingNetwork;
-import de.blutmondgilde.otherlivingbeings.network.packet.toclient.SyncDataPackPacket;
+import de.blutmondgilde.otherlivingbeings.network.packet.toclient.SyncBlockDataPackPacket;
 import lombok.Getter;
 import lombok.Setter;
 import net.minecraft.data.HashCache;
@@ -41,12 +41,12 @@ public class LumberjackData {
 
         @Override
         public void sync() {
-            OtherLivingBeingNetwork.getInstance().send(PacketDistributor.ALL.noArg(), new SyncDataPackPacket(expMap, SyncDataPackPacket.Type.Lumberjack));
+            OtherLivingBeingNetwork.getInstance().send(PacketDistributor.ALL.noArg(), new SyncBlockDataPackPacket(expMap, SyncBlockDataPackPacket.Type.Lumberjack));
         }
 
         @Override
         public void sync(ServerPlayer player) {
-            OtherLivingBeingNetwork.getInstance().send(PacketDistributor.PLAYER.with(() -> player), new SyncDataPackPacket(expMap, SyncDataPackPacket.Type.Lumberjack));
+            OtherLivingBeingNetwork.getInstance().send(PacketDistributor.PLAYER.with(() -> player), new SyncBlockDataPackPacket(expMap, SyncBlockDataPackPacket.Type.Lumberjack));
         }
     }
 

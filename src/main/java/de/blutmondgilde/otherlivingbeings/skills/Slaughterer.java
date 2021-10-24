@@ -5,6 +5,8 @@ import de.blutmondgilde.otherlivingbeings.api.skill.AbstractLevelSkill;
 import de.blutmondgilde.otherlivingbeings.api.skill.listener.LivingHurtListener;
 import de.blutmondgilde.otherlivingbeings.capability.skill.IPlayerSkills;
 import de.blutmondgilde.otherlivingbeings.capability.skill.PlayerSkillsImpl;
+import de.blutmondgilde.otherlivingbeings.data.skills.pojo.EntityExpEntry;
+import de.blutmondgilde.otherlivingbeings.data.skills.provider.SlaughtererData;
 import de.blutmondgilde.otherlivingbeings.util.TranslationUtils;
 import net.minecraft.network.chat.MutableComponent;
 import net.minecraft.network.chat.Style;
@@ -25,14 +27,15 @@ public class Slaughterer extends AbstractLevelSkill implements LivingHurtListene
 
     @Override
     public void onHurt(LivingEntity target, float amount, DamageSource source, Player trueSource) {
+        if (!SlaughtererData.Provider.getExpMap().containsKey(target.getType())) return;
+        EntityExpEntry expValue = SlaughtererData.Provider.getExpMap().get(target.getType());
         IPlayerSkills skills = trueSource.getCapability(OtherLivingBeingsCapability.PLAYER_SKILLS).orElse(new PlayerSkillsImpl());
         skills.getSkills()
                 .stream()
                 .filter(iSkill -> iSkill instanceof Slaughterer)
                 .map(iSkill -> (Slaughterer) iSkill)
                 .forEach(slaughterer -> {
-                    //TODO exp amount
-                    slaughterer.increaseExp(.0);
+                    slaughterer.increaseExp(expValue.getExp());
                 });
 
         skills.sync(trueSource);

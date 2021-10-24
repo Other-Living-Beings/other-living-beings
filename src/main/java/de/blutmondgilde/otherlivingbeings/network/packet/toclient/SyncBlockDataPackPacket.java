@@ -4,7 +4,6 @@ import de.blutmondgilde.otherlivingbeings.data.skills.pojo.BlockStateExpEntry;
 import de.blutmondgilde.otherlivingbeings.data.skills.provider.FarmerData;
 import de.blutmondgilde.otherlivingbeings.data.skills.provider.LumberjackData;
 import de.blutmondgilde.otherlivingbeings.data.skills.provider.MinerData;
-import de.blutmondgilde.otherlivingbeings.data.skills.provider.SlaughtererData;
 import lombok.AllArgsConstructor;
 import net.minecraft.network.FriendlyByteBuf;
 import net.minecraft.world.level.block.Block;
@@ -19,18 +18,18 @@ import java.util.function.Consumer;
 import java.util.function.Supplier;
 
 @AllArgsConstructor
-public class SyncDataPackPacket {
+public class SyncBlockDataPackPacket {
     private final Map<Block, BlockStateExpEntry> expMap;
     private final Type type;
 
-    public static void encode(SyncDataPackPacket packet, FriendlyByteBuf buffer) {
+    public static void encode(SyncBlockDataPackPacket packet, FriendlyByteBuf buffer) {
         buffer.writeMap(packet.expMap, (friendlyByteBuf, block) -> friendlyByteBuf.writeResourceLocation(block.getRegistryName()), (friendlyByteBuf, blockStateExpEntry) -> friendlyByteBuf.writeUtf(blockStateExpEntry.toJson()
                 .toString()));
         buffer.writeEnum(packet.type);
     }
 
-    public static SyncDataPackPacket decode(FriendlyByteBuf buffer) {
-        return new SyncDataPackPacket(buffer
+    public static SyncBlockDataPackPacket decode(FriendlyByteBuf buffer) {
+        return new SyncBlockDataPackPacket(buffer
                 .readMap(friendlyByteBuf -> GameRegistry.findRegistry(Block.class).getValue(friendlyByteBuf.readResourceLocation()),
                         friendlyByteBuf -> {
                             BlockStateExpEntry value = new BlockStateExpEntry();
@@ -38,7 +37,7 @@ public class SyncDataPackPacket {
                         }), buffer.readEnum(Type.class));
     }
 
-    public static void handle(final SyncDataPackPacket packet, Supplier<NetworkEvent.Context> context) {
+    public static void handle(final SyncBlockDataPackPacket packet, Supplier<NetworkEvent.Context> context) {
         context.get().enqueueWork(() -> DistExecutor.unsafeRunWhenOn(Dist.CLIENT, () -> UpdateDataPack.update(packet.expMap, packet.type)));
         context.get().setPacketHandled(true);
     }
@@ -53,8 +52,7 @@ public class SyncDataPackPacket {
     public enum Type {
         Lumberjack(expMap -> LumberjackData.Provider.setExpMap(new HashMap<>(expMap))),
         Miner(expMap -> MinerData.Provider.setExpMap(new HashMap<>(expMap))),
-        Farmer(expMap -> FarmerData.Provider.setExpMap(new HashMap<>(expMap))),
-        Slaughterer(expMap -> SlaughtererData.Provider.setExpMap(new HashMap<>(expMap)));
+        Farmer(expMap -> FarmerData.Provider.setExpMap(new HashMap<>(expMap)));
 
         private final Consumer<Map<Block, BlockStateExpEntry>> apply;
     }

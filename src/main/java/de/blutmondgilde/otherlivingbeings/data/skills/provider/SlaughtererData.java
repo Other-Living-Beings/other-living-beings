@@ -4,17 +4,15 @@ import com.google.gson.JsonElement;
 import de.blutmondgilde.otherlivingbeings.OtherLivingBeings;
 import de.blutmondgilde.otherlivingbeings.data.skills.ExpEntryDataGenerator;
 import de.blutmondgilde.otherlivingbeings.data.skills.ReloadableJobDataProvider;
-import de.blutmondgilde.otherlivingbeings.data.skills.pojo.BlockStateExpEntry;
 import de.blutmondgilde.otherlivingbeings.data.skills.pojo.EntityExpEntry;
 import de.blutmondgilde.otherlivingbeings.network.OtherLivingBeingNetwork;
-import de.blutmondgilde.otherlivingbeings.network.packet.toclient.SyncDataPackPacket;
+import de.blutmondgilde.otherlivingbeings.network.packet.toclient.SyncEntityDataPackPacket;
 import lombok.Getter;
 import lombok.Setter;
 import net.minecraft.data.HashCache;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.world.entity.EntityType;
-import net.minecraft.world.level.block.Block;
 import net.minecraftforge.fmllegacy.network.PacketDistributor;
 
 import java.io.IOException;
@@ -28,7 +26,7 @@ public class SlaughtererData {
     public static class Provider extends ReloadableJobDataProvider {
         @Setter
         @Getter
-        private static HashMap<Block, BlockStateExpEntry> expMap = new HashMap<>();
+        private static HashMap<EntityType<?>, EntityExpEntry> expMap = new HashMap<>();
 
         public Provider() {
             super(name);
@@ -36,18 +34,18 @@ public class SlaughtererData {
 
         @Override
         protected void apply(ResourceLocation fileLocation, JsonElement jsonElement) {
-            BlockStateExpEntry data = new BlockStateExpEntry().fromJson(jsonElement.toString());
-            if (data.type.equals(type)) expMap.put(data.block, data);
+            EntityExpEntry data = new EntityExpEntry().fromJson(jsonElement.toString());
+            if (data.type.equals(type)) expMap.put(data.entity, data);
         }
 
         @Override
         public void sync() {
-            OtherLivingBeingNetwork.getInstance().send(PacketDistributor.ALL.noArg(), new SyncDataPackPacket(expMap, SyncDataPackPacket.Type.Slaughterer));
+            OtherLivingBeingNetwork.getInstance().send(PacketDistributor.ALL.noArg(), new SyncEntityDataPackPacket(expMap, SyncEntityDataPackPacket.Type.Slaughterer));
         }
 
         @Override
         public void sync(ServerPlayer player) {
-            OtherLivingBeingNetwork.getInstance().send(PacketDistributor.PLAYER.with(() -> player), new SyncDataPackPacket(expMap, SyncDataPackPacket.Type.Slaughterer));
+            OtherLivingBeingNetwork.getInstance().send(PacketDistributor.PLAYER.with(() -> player), new SyncEntityDataPackPacket(expMap, SyncEntityDataPackPacket.Type.Slaughterer));
         }
     }
 
