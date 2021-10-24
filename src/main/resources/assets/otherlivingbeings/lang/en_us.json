@@ -32,6 +32,7 @@
   "otherlivingbeings.skill.lumberjack": "Lumberjack",
   "otherlivingbeings.skill.miner": "Miner",
   "otherlivingbeings.skill.farmer": "Farmer",
+  "otherlivingbeings.skill.slaughterer": "Slaughterer",
   "otherlivingbeings.tab.inventory.title": "Inventory",
   "otherlivingbeings.tab.skills.title": "Skills",
   "otherlivingbeings.messages.group.prefix": "Group-System",
