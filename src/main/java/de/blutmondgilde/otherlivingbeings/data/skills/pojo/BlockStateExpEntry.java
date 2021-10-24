@@ -1,7 +1,8 @@
-package de.blutmondgilde.otherlivingbeings.data.skills;
+package de.blutmondgilde.otherlivingbeings.data.skills.pojo;
 
 import com.google.gson.JsonObject;
 import com.google.gson.JsonParser;
+import de.blutmondgilde.otherlivingbeings.data.skills.GeneratableObject;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;

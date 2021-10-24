@@ -2,7 +2,7 @@ package de.blutmondgilde.otherlivingbeings.data.skills.provider;
 
 import com.google.gson.JsonElement;
 import de.blutmondgilde.otherlivingbeings.OtherLivingBeings;
-import de.blutmondgilde.otherlivingbeings.data.skills.BlockStateExpEntry;
+import de.blutmondgilde.otherlivingbeings.data.skills.pojo.BlockStateExpEntry;
 import de.blutmondgilde.otherlivingbeings.data.skills.ExpEntryDataGenerator;
 import de.blutmondgilde.otherlivingbeings.data.skills.ReloadableJobDataProvider;
 import de.blutmondgilde.otherlivingbeings.network.OtherLivingBeingNetwork;
