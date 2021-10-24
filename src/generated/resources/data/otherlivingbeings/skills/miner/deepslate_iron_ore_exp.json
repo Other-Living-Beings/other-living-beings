@@ -1,6 +1,6 @@
 {
   "type": "otherlivingbeings:miner_blocks",
-  "exp": 1.0,
+  "exp": 2.0,
   "block": "minecraft:deepslate_iron_ore",
   "nbt": {}
 }

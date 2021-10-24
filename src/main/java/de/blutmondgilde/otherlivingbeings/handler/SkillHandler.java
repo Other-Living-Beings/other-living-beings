@@ -4,22 +4,26 @@ import de.blutmondgilde.otherlivingbeings.api.capability.OtherLivingBeingsCapabi
 import de.blutmondgilde.otherlivingbeings.api.skill.listener.BlockBreakListener;
 import de.blutmondgilde.otherlivingbeings.api.skill.listener.BlockBrokenListener;
 import de.blutmondgilde.otherlivingbeings.api.skill.listener.CropGrowListener;
+import de.blutmondgilde.otherlivingbeings.api.skill.listener.LivingHurtListener;
 import de.blutmondgilde.otherlivingbeings.capability.skill.IPlayerSkills;
 import de.blutmondgilde.otherlivingbeings.capability.skill.PlayerSkillsImpl;
 import lombok.experimental.UtilityClass;
 import net.minecraft.core.BlockPos;
+import net.minecraft.world.damagesource.DamageSource;
 import net.minecraft.world.entity.Entity;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.level.LevelAccessor;
 import net.minecraft.world.level.levelgen.structure.BoundingBox;
 import net.minecraft.world.phys.AABB;
 import net.minecraftforge.common.MinecraftForge;
+import net.minecraftforge.event.entity.living.LivingHurtEvent;
 import net.minecraftforge.event.entity.player.PlayerEvent;
 import net.minecraftforge.event.world.BlockEvent;
 import net.minecraftforge.eventbus.api.Event;
 import net.minecraftforge.eventbus.api.IEventBus;
 
 import java.util.List;
+import java.util.Optional;
 import java.util.concurrent.atomic.AtomicBoolean;
 import java.util.concurrent.atomic.AtomicReference;
 import java.util.stream.Collectors;
@@ -31,9 +35,10 @@ public class SkillHandler {
         forgeBus.addListener(SkillHandler::onBlockBroken);
         forgeBus.addListener(SkillHandler::onBreakBlock);
         forgeBus.addListener(SkillHandler::onPlantGrowth);
+        forgeBus.addListener(SkillHandler::LivingHurt);
     }
 
-    public static void onBreakBlock(PlayerEvent.BreakSpeed e) {
+    public static void onBreakBlock(final PlayerEvent.BreakSpeed e) {
         final IPlayerSkills skills = e.getPlayer().getCapability(OtherLivingBeingsCapability.PLAYER_SKILLS).orElseThrow(() -> new IllegalStateException("No Skill Capablility present!"));
         AtomicReference<Float> breakSpeed = new AtomicReference<>(e.getNewSpeed());
 
@@ -52,7 +57,7 @@ public class SkillHandler {
                 });
     }
 
-    public static void onBlockBroken(BlockEvent.BreakEvent e) {
+    public static void onBlockBroken(final BlockEvent.BreakEvent e) {
         final IPlayerSkills skills = e.getPlayer().getCapability(OtherLivingBeingsCapability.PLAYER_SKILLS).orElseThrow(() -> new IllegalStateException("No Skill Capablility present!"));
         AtomicBoolean isCanceled = new AtomicBoolean(false);
         skills.getSkills()
@@ -63,7 +68,7 @@ public class SkillHandler {
         e.setCanceled(isCanceled.get());
     }
 
-    public static void onPlantGrowth(BlockEvent.CropGrowEvent.Pre e) {
+    public static void onPlantGrowth(final BlockEvent.CropGrowEvent.Pre e) {
         LevelAccessor world = e.getWorld();
         BlockPos position = e.getPos();
         BoundingBox range = new BoundingBox(position);
@@ -90,5 +95,21 @@ public class SkillHandler {
                 }));
 
         e.setResult(result.get());
+    }
+
+    public static void LivingHurt(final LivingHurtEvent e) {
+        Optional<Player> source = isCausedByPlayer(e.getSource());
+        source.ifPresent(player -> player.getCapability(OtherLivingBeingsCapability.PLAYER_SKILLS).orElse(new PlayerSkillsImpl())
+                .getSkills()
+                .stream()
+                .filter(iSkill -> iSkill instanceof LivingHurtListener)
+                .map(iSkill -> (LivingHurtListener) iSkill)
+                .forEach(livingHurtListener -> livingHurtListener.onHurt(e.getEntityLiving(), e.getAmount(), e.getSource(), player)));
+    }
+
+    private static Optional<Player> isCausedByPlayer(DamageSource damageSource) {
+        if (damageSource.getDirectEntity() instanceof Player player) return Optional.of(player);
+        if (damageSource.getEntity() instanceof Player player) return Optional.of(player);
+        return Optional.empty();
     }
 }

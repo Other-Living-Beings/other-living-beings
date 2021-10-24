@@ -1,6 +1,6 @@
 {
   "type": "otherlivingbeings:miner_blocks",
-  "exp": 1.0,
+  "exp": 3.0,
   "block": "minecraft:deepslate_lapis_ore",
   "nbt": {}
 }

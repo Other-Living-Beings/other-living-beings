@@ -7,7 +7,7 @@ import de.blutmondgilde.otherlivingbeings.api.skill.listener.BlockBrokenListener
 import de.blutmondgilde.otherlivingbeings.api.skill.listener.CropGrowListener;
 import de.blutmondgilde.otherlivingbeings.capability.skill.IPlayerSkills;
 import de.blutmondgilde.otherlivingbeings.capability.skill.PlayerSkillsImpl;
-import de.blutmondgilde.otherlivingbeings.data.skills.BlockStateExpEntry;
+import de.blutmondgilde.otherlivingbeings.data.skills.pojo.BlockStateExpEntry;
 import de.blutmondgilde.otherlivingbeings.data.skills.provider.FarmerData;
 import de.blutmondgilde.otherlivingbeings.util.TranslationUtils;
 import net.minecraft.core.BlockPos;

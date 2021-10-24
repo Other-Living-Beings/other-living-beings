@@ -56,8 +56,8 @@ public class FarmerData {
         }
     }
 
-    public static class FarmerDataGenerator extends ExpEntryDataGenerator<BlockStateExpEntry> {
-        public FarmerDataGenerator(String modId, Path outputFolder) {
+    public static class DataGenerator extends ExpEntryDataGenerator<BlockStateExpEntry> {
+        public DataGenerator(String modId, Path outputFolder) {
             super(modId, name, outputFolder);
         }
 

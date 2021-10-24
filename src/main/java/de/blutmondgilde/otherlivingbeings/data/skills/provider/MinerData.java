@@ -50,9 +50,9 @@ public class MinerData {
         }
     }
 
-    public static class MinerDataGenerator extends ExpEntryDataGenerator<BlockStateExpEntry> {
-        public MinerDataGenerator(String modId, Path outputFolder) {
-            super(modId, "miner", outputFolder);
+    public static class DataGenerator extends ExpEntryDataGenerator<BlockStateExpEntry> {
+        public DataGenerator(String modId, Path outputFolder) {
+            super(modId, name, outputFolder);
         }
 
         @Override

@@ -1,6 +1,6 @@
 {
   "type": "otherlivingbeings:miner_blocks",
-  "exp": 1.0,
+  "exp": 7.0,
   "block": "minecraft:emerald_ore",
   "nbt": {}
 }

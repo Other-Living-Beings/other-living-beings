@@ -1,9 +1,10 @@
 package de.blutmondgilde.otherlivingbeings.network.packet.toclient;
 
-import de.blutmondgilde.otherlivingbeings.data.skills.BlockStateExpEntry;
+import de.blutmondgilde.otherlivingbeings.data.skills.pojo.BlockStateExpEntry;
 import de.blutmondgilde.otherlivingbeings.data.skills.provider.FarmerData;
 import de.blutmondgilde.otherlivingbeings.data.skills.provider.LumberjackData;
 import de.blutmondgilde.otherlivingbeings.data.skills.provider.MinerData;
+import de.blutmondgilde.otherlivingbeings.data.skills.provider.SlaughtererData;
 import lombok.AllArgsConstructor;
 import net.minecraft.network.FriendlyByteBuf;
 import net.minecraft.world.level.block.Block;
@@ -52,7 +53,8 @@ public class SyncDataPackPacket {
     public enum Type {
         Lumberjack(expMap -> LumberjackData.Provider.setExpMap(new HashMap<>(expMap))),
         Miner(expMap -> MinerData.Provider.setExpMap(new HashMap<>(expMap))),
-        Farmer(expMap -> FarmerData.Provider.setExpMap(new HashMap<>(expMap)));
+        Farmer(expMap -> FarmerData.Provider.setExpMap(new HashMap<>(expMap))),
+        Slaughterer(expMap -> SlaughtererData.Provider.setExpMap(new HashMap<>(expMap)));
 
         private final Consumer<Map<Block, BlockStateExpEntry>> apply;
     }

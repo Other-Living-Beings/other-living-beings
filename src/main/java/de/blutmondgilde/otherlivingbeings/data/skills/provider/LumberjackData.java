@@ -50,8 +50,8 @@ public class LumberjackData {
         }
     }
 
-    public static class LumberjackDataGenerator extends ExpEntryDataGenerator<BlockStateExpEntry> {
-        public LumberjackDataGenerator(String modId, Path outputFolder) {
+    public static class DataGenerator extends ExpEntryDataGenerator<BlockStateExpEntry> {
+        public DataGenerator(String modId, Path outputFolder) {
             super(modId, "lumberjack", outputFolder);
         }
 

@@ -7,6 +7,7 @@ import de.blutmondgilde.otherlivingbeings.data.group.GroupProvider;
 import de.blutmondgilde.otherlivingbeings.data.skills.provider.FarmerData;
 import de.blutmondgilde.otherlivingbeings.data.skills.provider.LumberjackData;
 import de.blutmondgilde.otherlivingbeings.data.skills.provider.MinerData;
+import de.blutmondgilde.otherlivingbeings.data.skills.provider.SlaughtererData;
 import de.blutmondgilde.otherlivingbeings.handler.DataPackHandler;
 import de.blutmondgilde.otherlivingbeings.handler.GroupHandler;
 import de.blutmondgilde.otherlivingbeings.handler.SkillHandler;
@@ -97,9 +98,10 @@ public class OtherLivingBeings {
 
     private void dataGen(final GatherDataEvent e) {
         if (e.includeServer()) {
-            e.getGenerator().addProvider(new LumberjackData.LumberjackDataGenerator(MOD_ID, e.getGenerator().getOutputFolder()));
-            e.getGenerator().addProvider(new MinerData.MinerDataGenerator(MOD_ID, e.getGenerator().getOutputFolder()));
-            e.getGenerator().addProvider(new FarmerData.FarmerDataGenerator(MOD_ID, e.getGenerator().getOutputFolder()));
+            e.getGenerator().addProvider(new LumberjackData.DataGenerator(MOD_ID, e.getGenerator().getOutputFolder()));
+            e.getGenerator().addProvider(new MinerData.DataGenerator(MOD_ID, e.getGenerator().getOutputFolder()));
+            e.getGenerator().addProvider(new FarmerData.DataGenerator(MOD_ID, e.getGenerator().getOutputFolder()));
+            e.getGenerator().addProvider(new SlaughtererData.DataGenerator(MOD_ID, e.getGenerator().getOutputFolder()));
         }
     }
 }
