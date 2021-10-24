@@ -18,6 +18,8 @@ public class OtherLivingBeingsConfig implements ConfigData {
         public Miner miner = new Miner();
         @ConfigEntry.Gui.CollapsibleObject
         public Farmer farmer = new Farmer();
+        @ConfigEntry.Gui.CollapsibleObject
+        public Slaughterer slaughterer = new Slaughterer();
 
         public static class Lumberjack {
             @ConfigEntry.Gui.Tooltip
@@ -42,6 +44,11 @@ public class OtherLivingBeingsConfig implements ConfigData {
             public float doubleLootChance = 0.005F;
             @ConfigEntry.Gui.Tooltip(count = 2)
             public float growthTickChance = 0.005F;
+        }
+
+        public static class Slaughterer {
+            @ConfigEntry.Gui.Tooltip(count = 2)
+            public float additionalDamage = 1.0F;
         }
     }
 

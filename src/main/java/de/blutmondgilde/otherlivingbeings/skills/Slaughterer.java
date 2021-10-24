@@ -1,5 +1,6 @@
 package de.blutmondgilde.otherlivingbeings.skills;
 
+import de.blutmondgilde.otherlivingbeings.OtherLivingBeings;
 import de.blutmondgilde.otherlivingbeings.api.capability.OtherLivingBeingsCapability;
 import de.blutmondgilde.otherlivingbeings.api.skill.AbstractLevelSkill;
 import de.blutmondgilde.otherlivingbeings.api.skill.listener.LivingHurtListener;
@@ -16,6 +17,7 @@ import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.entity.player.Player;
 
 import java.awt.*;
+import java.util.List;
 
 public class Slaughterer extends AbstractLevelSkill implements LivingHurtListener {
 
@@ -26,18 +28,24 @@ public class Slaughterer extends AbstractLevelSkill implements LivingHurtListene
     }
 
     @Override
-    public void onHurt(LivingEntity target, float amount, DamageSource source, Player trueSource) {
-        if (!SlaughtererData.Provider.getExpMap().containsKey(target.getType())) return;
+    public float onHurt(LivingEntity target, float amount, DamageSource source, Player trueSource) {
+        if (!SlaughtererData.Provider.getExpMap().containsKey(target.getType())) return amount;
         EntityExpEntry expValue = SlaughtererData.Provider.getExpMap().get(target.getType());
         IPlayerSkills skills = trueSource.getCapability(OtherLivingBeingsCapability.PLAYER_SKILLS).orElse(new PlayerSkillsImpl());
-        skills.getSkills()
+        List<Slaughterer> slaughterers = skills.getSkills()
                 .stream()
                 .filter(iSkill -> iSkill instanceof Slaughterer)
                 .map(iSkill -> (Slaughterer) iSkill)
-                .forEach(slaughterer -> {
-                    slaughterer.increaseExp(expValue.getExp());
-                });
+                .toList();
+
+        for (Slaughterer skill : slaughterers) {
+            skill.increaseExp(expValue.getExp());
+            double increment = Math.ceil(skill.getLevel() / 10.0) - 1;
+            amount += OtherLivingBeings.getConfig().get().skillConfig.slaughterer.additionalDamage * increment;
+        }
 
         skills.sync(trueSource);
+
+        return amount;
     }
 }

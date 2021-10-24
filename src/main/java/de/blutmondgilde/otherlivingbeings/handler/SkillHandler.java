@@ -99,12 +99,22 @@ public class SkillHandler {
 
     public static void LivingHurt(final LivingHurtEvent e) {
         Optional<Player> source = isCausedByPlayer(e.getSource());
-        source.ifPresent(player -> player.getCapability(OtherLivingBeingsCapability.PLAYER_SKILLS).orElse(new PlayerSkillsImpl())
-                .getSkills()
-                .stream()
-                .filter(iSkill -> iSkill instanceof LivingHurtListener)
-                .map(iSkill -> (LivingHurtListener) iSkill)
-                .forEach(livingHurtListener -> livingHurtListener.onHurt(e.getEntityLiving(), e.getAmount(), e.getSource(), player)));
+        source.ifPresent(player -> {
+            List<LivingHurtListener> listener = player.getCapability(OtherLivingBeingsCapability.PLAYER_SKILLS).orElse(new PlayerSkillsImpl())
+                    .getSkills()
+                    .stream()
+                    .filter(iSkill -> iSkill instanceof LivingHurtListener)
+                    .map(iSkill -> (LivingHurtListener) iSkill)
+                    .toList();
+
+            float currentDamage = e.getAmount();
+
+            for (LivingHurtListener skillListener : listener) {
+                currentDamage = skillListener.onHurt(e.getEntityLiving(), currentDamage, e.getSource(), player);
+            }
+
+            e.setAmount(currentDamage);
+        });
     }
 
     private static Optional<Player> isCausedByPlayer(DamageSource damageSource) {
