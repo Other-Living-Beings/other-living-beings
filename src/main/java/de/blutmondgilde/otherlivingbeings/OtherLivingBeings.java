@@ -8,6 +8,7 @@ import de.blutmondgilde.otherlivingbeings.data.skills.provider.FarmerData;
 import de.blutmondgilde.otherlivingbeings.data.skills.provider.LumberjackData;
 import de.blutmondgilde.otherlivingbeings.data.skills.provider.MinerData;
 import de.blutmondgilde.otherlivingbeings.data.skills.provider.SlaughtererData;
+import de.blutmondgilde.otherlivingbeings.data.skills.provider.SmelterData;
 import de.blutmondgilde.otherlivingbeings.handler.DataPackHandler;
 import de.blutmondgilde.otherlivingbeings.handler.GroupHandler;
 import de.blutmondgilde.otherlivingbeings.handler.SkillHandler;
@@ -100,6 +101,7 @@ public class OtherLivingBeings {
             e.getGenerator().addProvider(new MinerData.DataGenerator(MOD_ID, e.getGenerator().getOutputFolder()));
             e.getGenerator().addProvider(new FarmerData.DataGenerator(MOD_ID, e.getGenerator().getOutputFolder()));
             e.getGenerator().addProvider(new SlaughtererData.DataGenerator(MOD_ID, e.getGenerator().getOutputFolder()));
+            e.getGenerator().addProvider(new SmelterData.DataGenerator(MOD_ID, e.getGenerator().getOutputFolder()));
         }
     }
 }

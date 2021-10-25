@@ -10,6 +10,7 @@ import de.blutmondgilde.otherlivingbeings.skills.Farmer;
 import de.blutmondgilde.otherlivingbeings.skills.Lumberjack;
 import de.blutmondgilde.otherlivingbeings.skills.Miner;
 import de.blutmondgilde.otherlivingbeings.skills.Slaughterer;
+import de.blutmondgilde.otherlivingbeings.skills.Smelter;
 import net.minecraft.world.inventory.MenuType;
 import net.minecraftforge.common.extensions.IForgeContainerType;
 import net.minecraftforge.common.loot.GlobalLootModifierSerializer;
@@ -56,6 +57,7 @@ public class OtherLivingBeingRegistry {
             registry.register("miner", Miner::new);
             registry.register("farmer", Farmer::new);
             registry.register("slaughterer", Slaughterer::new);
+            registry.register("smelter", Smelter::new);
             registry.register(modEventBus);
         }
     }

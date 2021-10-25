@@ -1,13 +1,18 @@
 package de.blutmondgilde.otherlivingbeings.handler;
 
 import de.blutmondgilde.otherlivingbeings.api.capability.OtherLivingBeingsCapability;
+import de.blutmondgilde.otherlivingbeings.api.event.FurnaceEvent;
 import de.blutmondgilde.otherlivingbeings.api.skill.listener.BlockBreakListener;
 import de.blutmondgilde.otherlivingbeings.api.skill.listener.BlockBrokenListener;
 import de.blutmondgilde.otherlivingbeings.api.skill.listener.CropGrowListener;
+import de.blutmondgilde.otherlivingbeings.api.skill.listener.FurnaceCookTimeListener;
 import de.blutmondgilde.otherlivingbeings.api.skill.listener.LivingHurtListener;
+import de.blutmondgilde.otherlivingbeings.api.skill.listener.TakeFurnaceResultListener;
+import de.blutmondgilde.otherlivingbeings.capability.block.FurnacePlayerImpl;
 import de.blutmondgilde.otherlivingbeings.capability.skill.IPlayerSkills;
 import de.blutmondgilde.otherlivingbeings.capability.skill.PlayerSkillsImpl;
 import lombok.experimental.UtilityClass;
+import net.minecraft.Util;
 import net.minecraft.core.BlockPos;
 import net.minecraft.world.damagesource.DamageSource;
 import net.minecraft.world.entity.Entity;
@@ -21,9 +26,11 @@ import net.minecraftforge.event.entity.player.PlayerEvent;
 import net.minecraftforge.event.world.BlockEvent;
 import net.minecraftforge.eventbus.api.Event;
 import net.minecraftforge.eventbus.api.IEventBus;
+import net.minecraftforge.fmllegacy.server.ServerLifecycleHooks;
 
 import java.util.List;
 import java.util.Optional;
+import java.util.UUID;
 import java.util.concurrent.atomic.AtomicBoolean;
 import java.util.concurrent.atomic.AtomicReference;
 import java.util.stream.Collectors;
@@ -36,6 +43,8 @@ public class SkillHandler {
         forgeBus.addListener(SkillHandler::onBreakBlock);
         forgeBus.addListener(SkillHandler::onPlantGrowth);
         forgeBus.addListener(SkillHandler::LivingHurt);
+        forgeBus.addListener(SkillHandler::onTakeFurnaceResult);
+        forgeBus.addListener(SkillHandler::onCookTimeCalculation);
     }
 
     public static void onBreakBlock(final PlayerEvent.BreakSpeed e) {
@@ -115,6 +124,37 @@ public class SkillHandler {
 
             e.setAmount(currentDamage);
         });
+    }
+
+    public static void onTakeFurnaceResult(final FurnaceEvent.TakeResult e) {
+        e.getPlayer().getCapability(OtherLivingBeingsCapability.PLAYER_SKILLS).orElse(new PlayerSkillsImpl())
+                .getSkills()
+                .stream()
+                .filter(iSkill -> iSkill instanceof TakeFurnaceResultListener)
+                .map(iSkill -> (TakeFurnaceResultListener) iSkill)
+                .forEach(takeFurnaceResultListener -> takeFurnaceResultListener.onTake(e.getPlayer(), e.getItemStack()));
+    }
+
+    public static void onCookTimeCalculation(FurnaceEvent.CalculateCookTime e) {
+        UUID ownerId = e.getBlockEntity().getCapability(OtherLivingBeingsCapability.FURNACE_PLACER).orElse(new FurnacePlayerImpl()).getOwner();
+        if (ownerId.equals(Util.NIL_UUID)) return;
+        Optional.ofNullable(ServerLifecycleHooks.getCurrentServer().getPlayerList().getPlayer(ownerId))
+                .ifPresent(player -> {
+                    List<FurnaceCookTimeListener> listener = player.getCapability(OtherLivingBeingsCapability.PLAYER_SKILLS).orElse(new PlayerSkillsImpl())
+                            .getSkills()
+                            .stream()
+                            .filter(iSkill -> iSkill instanceof FurnaceCookTimeListener)
+                            .map(iSkill -> (FurnaceCookTimeListener) iSkill)
+                            .toList();
+
+                    int currentCookTime = e.getCookTime();
+
+                    for (FurnaceCookTimeListener furnaceCookTimeListener : listener) {
+                        currentCookTime = furnaceCookTimeListener.calculateCookTime(e.getBlockEntity(), player, currentCookTime);
+                    }
+
+                    e.setCookTime(currentCookTime);
+                });
     }
 
     private static Optional<Player> isCausedByPlayer(DamageSource damageSource) {

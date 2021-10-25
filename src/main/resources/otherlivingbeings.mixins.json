@@ -1,10 +1,12 @@
 {
   "required": true,
-  "minVersion": "0.8",
+  "minVersion": "0.8.4",
   "package": "de.blutmondgilde.otherlivingbeings.mixin",
-  "compatibilityLevel": "JAVA_8",
+  "compatibilityLevel": "JAVA_16",
   "refmap": "otherlivingbeings.refmap.json",
   "mixins": [
+    "MixinAbstractFurnaceBlockEntity",
+    "MixinFurnaceResultSlot"
   ],
   "client": [
   ],

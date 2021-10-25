@@ -32,6 +32,7 @@ import net.minecraft.client.gui.screens.inventory.InventoryScreen;
 import net.minecraft.client.multiplayer.ClientLevel;
 import net.minecraft.client.renderer.GameRenderer;
 import net.minecraft.client.resources.language.I18n;
+import net.minecraft.core.BlockPos;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.network.chat.FormattedText;
 import net.minecraft.network.chat.TranslatableComponent;
@@ -232,5 +233,11 @@ public class OtherLivingBeingsClient {
     @SuppressWarnings("ConstantConditions")
     public static void openInventory() {
         Minecraft.getInstance().setScreen(new InventoryScreen(Minecraft.getInstance().player));
+    }
+
+    public static void syncFurnaceOwner(BlockPos pos, CompoundTag tag) {
+        Minecraft.getInstance().level.getBlockEntity(pos).getCapability(OtherLivingBeingsCapability.FURNACE_PLACER).ifPresent(iFurnacePlacer -> {
+            iFurnacePlacer.deserializeNBT(tag);
+        });
     }
 }

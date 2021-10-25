@@ -5,6 +5,7 @@ import de.blutmondgilde.otherlivingbeings.data.skills.provider.FarmerData;
 import de.blutmondgilde.otherlivingbeings.data.skills.provider.LumberjackData;
 import de.blutmondgilde.otherlivingbeings.data.skills.provider.MinerData;
 import de.blutmondgilde.otherlivingbeings.data.skills.provider.SlaughtererData;
+import de.blutmondgilde.otherlivingbeings.data.skills.provider.SmelterData;
 import net.minecraft.server.level.ServerPlayer;
 import net.minecraftforge.event.AddReloadListenerEvent;
 import net.minecraftforge.event.entity.player.PlayerEvent;
@@ -23,6 +24,7 @@ public class DataPackHandler {
         dataProvider.add(new MinerData.Provider());
         dataProvider.add(new FarmerData.Provider());
         dataProvider.add(new SlaughtererData.Provider());
+        dataProvider.add(new SmelterData.Provider());
     }
 
     public static void onReload(AddReloadListenerEvent e) {

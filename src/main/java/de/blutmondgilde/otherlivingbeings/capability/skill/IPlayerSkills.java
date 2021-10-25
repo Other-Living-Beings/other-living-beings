@@ -4,6 +4,7 @@ import de.blutmondgilde.otherlivingbeings.api.skill.ISkill;
 import de.blutmondgilde.otherlivingbeings.network.OtherLivingBeingNetwork;
 import de.blutmondgilde.otherlivingbeings.network.packet.toclient.SyncSkillsPacket;
 import net.minecraft.nbt.CompoundTag;
+import net.minecraft.server.level.ServerChunkCache;
 import net.minecraft.world.entity.Entity;
 import net.minecraftforge.common.capabilities.ICapabilitySerializable;
 import net.minecraftforge.fmllegacy.network.PacketDistributor;
@@ -16,6 +17,7 @@ public interface IPlayerSkills extends ICapabilitySerializable<CompoundTag> {
     void setSkills(List<ISkill> skills);
 
     default void sync(final Entity entity) {
+        if (!(entity.getCommandSenderWorld().getChunkSource() instanceof ServerChunkCache)) return;
         OtherLivingBeingNetwork.getInstance().send(PacketDistributor.TRACKING_ENTITY_AND_SELF.with(() -> entity), new SyncSkillsPacket(this, entity));
     }
 }
