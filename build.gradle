@@ -1,3 +1,5 @@
+import se.bjurr.gitchangelog.plugin.gradle.GitChangelogTask
+
 buildscript {
     repositories {
         // These repositories are only for Gradle plugins, put any other repositories in the repository block further below
@@ -11,12 +13,14 @@ buildscript {
         classpath 'org.spongepowered:mixingradle:0.7-SNAPSHOT'
         classpath 'org.parchmentmc:librarian:1.+'
         classpath "gradle.plugin.com.matthewprenger:CurseGradle:1.4.0"
+        classpath "gradle.plugin.se.bjurr.gitchangelog:git-changelog-gradle-plugin:1.71.4"
     }
 }
 
 apply plugin: 'net.minecraftforge.gradle'
 apply plugin: 'org.spongepowered.mixin'
 apply plugin: 'org.parchmentmc.librarian.forgegradle'
+apply plugin: "se.bjurr.gitchangelog.git-changelog-gradle-plugin"
 if (project.hasProperty("curseforge_apikey")) {
     apply plugin: "com.matthewprenger.cursegradle"
 }
@@ -38,7 +42,8 @@ MINOR
 PATCH
     Bugfixes.
  */
-version = "${minecraftVersion}-1.1.3.0-Alpha"
+version = "${minecraftVersion}-${modMajorVersion}.${modMajorApiVersion}.${modMinorVersion}" +
+        ".${modPatchVersion}-${releaseType}"
 
 java {
     archivesBaseName = 'OtherLivingBeings'
@@ -46,7 +51,7 @@ java {
 }
 
 minecraft {
-    mappings channel: 'parchment', version: "2021.10.17-${minecraftVersion}"
+    mappings channel: 'parchment', version: "${mappingsVersion}-${minecraftVersion}"
 
     accessTransformer = file('src/main/resources/META-INF/accesstransformer.cfg')
 
@@ -114,9 +119,7 @@ if (project.hasProperty("curseforge_apikey")) {
             id = '519914'
             releaseType = 'beta'
             changelogType = 'html'
-            changelog = '''<h1>There is no Changelog! Watch changes on GitHub!</h1>
-<p>Current Commit: <a href=""></a></p>
-<p>Last Commit: <a href="https://github.com/Blutmond-Development/Other-Living-Beings/commit/1268a6438e9064294be95fd0dc9e93973610fc52">1268a6438e9064294be95fd0dc9e93973610fc52</a></p>'''
+            changelog = file('changelog.html')
             mainArtifact(jar) {
                 relations {
                     requiredDependency 'cloth-config-forge'
@@ -141,7 +144,7 @@ repositories {
 }
 
 dependencies {
-    minecraft 'net.minecraftforge:forge:1.17.1-37.0.103'
+    minecraft 'net.minecraftforge:forge:1.17.1-37.0.109'
 
     annotationProcessor 'org.spongepowered:mixin:0.8.4:processor'
     implementation group: 'org.jetbrains', name: 'annotations', version: '22.0.0'
@@ -165,6 +168,39 @@ jar {
                 "Implementation-Timestamp": new Date().format("yyyy-MM-dd'T'HH:mm:ssZ")
         ])
     }
+
+    finalizedBy 'reobfJar'
 }
 
-jar.finalizedBy('reobfJar')
+task makeChangelog(type: GitChangelogTask) {
+    fromRepo = file("$projectDir")
+    file = file('changelog.html')
+    untaggedName = "Current release ${project.version}"
+    fromCommit = 'bc92343a8dabd8239b4d667061c207d76060d63f'
+    toRef = 'HEAD'
+    templateContent = file('changelog.mustache').getText('UTF-8')
+}
+
+afterEvaluate {
+    tasks.curseforge519914.dependsOn makeChangelog
+}
+
+def replaceResources = tasks.register("replaceResources", Copy) {
+    it.outputs.upToDateWhen { false }
+    //Copy it into the build dir
+    it.from(sourceSets.main.resources) {
+        include "META-INF/mods.toml"
+        expand 'modVersion': "${project.version}"
+    }
+    it.into "$buildDir/resources/main/"
+}
+
+processResources {
+    duplicatesStrategy(DuplicatesStrategy.FAIL)
+    exclude('META-INF/mods.toml')
+    configure { finalizedBy(replaceResources) }
+}
+
+classes.configure {
+    dependsOn(replaceResources)
+}
