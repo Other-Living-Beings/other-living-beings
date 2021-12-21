@@ -1,13 +1,11 @@
 package de.blutmondgilde.otherlivingbeings.network.packet.toclient;
 
+import de.blutmondgilde.otherlivingbeings.OtherLivingBeings;
 import de.blutmondgilde.otherlivingbeings.capability.skill.IPlayerSkills;
-import de.blutmondgilde.otherlivingbeings.client.OtherLivingBeingsClient;
 import lombok.AllArgsConstructor;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.network.FriendlyByteBuf;
 import net.minecraft.world.entity.Entity;
-import net.minecraftforge.api.distmarker.Dist;
-import net.minecraftforge.fml.DistExecutor;
 import net.minecraftforge.fmllegacy.network.NetworkEvent;
 
 import java.util.function.Supplier;
@@ -31,7 +29,7 @@ public class SyncSkillsPacket {
     }
 
     public static void handle(final SyncSkillsPacket packet, Supplier<NetworkEvent.Context> context) {
-        context.get().enqueueWork(() -> DistExecutor.unsafeRunWhenOn(Dist.CLIENT, () -> () -> OtherLivingBeingsClient.syncSkills(packet.tag, packet.targetId)));
+        context.get().enqueueWork(() -> OtherLivingBeings.getInstance().getProxy().syncPlayerSkills(packet.tag, packet.targetId));
         context.get().setPacketHandled(true);
     }
 }

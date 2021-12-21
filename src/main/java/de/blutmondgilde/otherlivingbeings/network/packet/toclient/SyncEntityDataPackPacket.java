@@ -1,12 +1,11 @@
 package de.blutmondgilde.otherlivingbeings.network.packet.toclient;
 
+import de.blutmondgilde.otherlivingbeings.OtherLivingBeings;
 import de.blutmondgilde.otherlivingbeings.data.skills.pojo.EntityExpEntry;
 import de.blutmondgilde.otherlivingbeings.data.skills.provider.SlaughtererData;
 import lombok.AllArgsConstructor;
 import net.minecraft.network.FriendlyByteBuf;
 import net.minecraft.world.entity.EntityType;
-import net.minecraftforge.api.distmarker.Dist;
-import net.minecraftforge.fml.DistExecutor;
 import net.minecraftforge.fmllegacy.network.NetworkEvent;
 import net.minecraftforge.registries.ForgeRegistries;
 
@@ -21,35 +20,30 @@ public class SyncEntityDataPackPacket {
     private final Type type;
 
     public static void encode(SyncEntityDataPackPacket packet, FriendlyByteBuf buffer) {
-        buffer.writeMap(packet.expMap, (friendlyByteBuf, entity) -> friendlyByteBuf.writeResourceLocation(entity.getRegistryName()), (friendlyByteBuf, entityExpEntry) -> friendlyByteBuf.writeUtf(entityExpEntry.toJson()
+        buffer.writeMap(packet.expMap, (friendlyByteBuf, entity) -> friendlyByteBuf.writeResourceLocation(entity.getRegistryName()),
+            (friendlyByteBuf, entityExpEntry) -> friendlyByteBuf.writeUtf(entityExpEntry.toJson()
                 .toString()));
         buffer.writeEnum(packet.type);
     }
 
     public static SyncEntityDataPackPacket decode(FriendlyByteBuf buffer) {
         return new SyncEntityDataPackPacket(buffer
-                .readMap(friendlyByteBuf -> ForgeRegistries.ENTITIES.getValue(friendlyByteBuf.readResourceLocation()),
-                        friendlyByteBuf -> {
-                            EntityExpEntry value = new EntityExpEntry();
-                            return value.fromJson(friendlyByteBuf.readUtf());
-                        }), buffer.readEnum(Type.class));
+            .readMap(friendlyByteBuf -> ForgeRegistries.ENTITIES.getValue(friendlyByteBuf.readResourceLocation()),
+                friendlyByteBuf -> {
+                    EntityExpEntry value = new EntityExpEntry();
+                    return value.fromJson(friendlyByteBuf.readUtf());
+                }), buffer.readEnum(Type.class));
     }
 
     public static void handle(final SyncEntityDataPackPacket packet, Supplier<NetworkEvent.Context> context) {
-        context.get().enqueueWork(() -> DistExecutor.unsafeRunWhenOn(Dist.CLIENT, () -> UpdateDataPack.update(packet.expMap, packet.type)));
+        context.get().enqueueWork(() -> OtherLivingBeings.getInstance().getProxy().updateDataProvider(packet.expMap, packet.type));
         context.get().setPacketHandled(true);
-    }
-
-    private static class UpdateDataPack {
-        private static DistExecutor.SafeRunnable update(Map<EntityType<?>, EntityExpEntry> expMap, Type type) {
-            return () -> type.apply.accept(expMap);
-        }
     }
 
     @AllArgsConstructor
     public enum Type {
         Slaughterer(expMap -> SlaughtererData.Provider.setExpMap(new HashMap<>(expMap)));
 
-        private final Consumer<Map<EntityType<?>, EntityExpEntry>> apply;
+        public final Consumer<Map<EntityType<?>, EntityExpEntry>> apply;
     }
 }

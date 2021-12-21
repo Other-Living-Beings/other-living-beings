@@ -1,6 +1,6 @@
 package de.blutmondgilde.otherlivingbeings.network.packet.toclient;
 
-import de.blutmondgilde.otherlivingbeings.client.ClientGroupHolder;
+import de.blutmondgilde.otherlivingbeings.OtherLivingBeings;
 import de.blutmondgilde.otherlivingbeings.data.group.GroupMemberData;
 import lombok.RequiredArgsConstructor;
 import net.minecraft.network.FriendlyByteBuf;
@@ -21,7 +21,7 @@ public class UpdateMemberDataPacket {
     }
 
     public void handle(Supplier<NetworkEvent.Context> ctx) {
-        ctx.get().enqueueWork(() -> ClientGroupHolder.updateMemberData(this.memberData));
+        ctx.get().enqueueWork(() -> OtherLivingBeings.getInstance().getProxy().updateGroupMemberInformation(memberData));
         ctx.get().setPacketHandled(true);
     }
 }

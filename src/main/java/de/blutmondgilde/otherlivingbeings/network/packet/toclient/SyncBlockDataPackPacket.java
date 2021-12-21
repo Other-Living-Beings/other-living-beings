@@ -1,5 +1,6 @@
 package de.blutmondgilde.otherlivingbeings.network.packet.toclient;
 
+import de.blutmondgilde.otherlivingbeings.OtherLivingBeings;
 import de.blutmondgilde.otherlivingbeings.data.skills.pojo.BlockStateExpEntry;
 import de.blutmondgilde.otherlivingbeings.data.skills.provider.FarmerData;
 import de.blutmondgilde.otherlivingbeings.data.skills.provider.LumberjackData;
@@ -7,8 +8,6 @@ import de.blutmondgilde.otherlivingbeings.data.skills.provider.MinerData;
 import lombok.AllArgsConstructor;
 import net.minecraft.network.FriendlyByteBuf;
 import net.minecraft.world.level.block.Block;
-import net.minecraftforge.api.distmarker.Dist;
-import net.minecraftforge.fml.DistExecutor;
 import net.minecraftforge.fmllegacy.common.registry.GameRegistry;
 import net.minecraftforge.fmllegacy.network.NetworkEvent;
 
@@ -38,14 +37,8 @@ public class SyncBlockDataPackPacket {
     }
 
     public static void handle(final SyncBlockDataPackPacket packet, Supplier<NetworkEvent.Context> context) {
-        context.get().enqueueWork(() -> DistExecutor.unsafeRunWhenOn(Dist.CLIENT, () -> UpdateDataPack.update(packet.expMap, packet.type)));
+        context.get().enqueueWork(() -> OtherLivingBeings.getInstance().getProxy().updateDataProvider(packet.expMap, packet.type));
         context.get().setPacketHandled(true);
-    }
-
-    private static class UpdateDataPack {
-        private static DistExecutor.SafeRunnable update(Map<Block, BlockStateExpEntry> expMap, Type type) {
-            return () -> type.apply.accept(expMap);
-        }
     }
 
     @AllArgsConstructor
@@ -54,6 +47,6 @@ public class SyncBlockDataPackPacket {
         Miner(expMap -> MinerData.Provider.setExpMap(new HashMap<>(expMap))),
         Farmer(expMap -> FarmerData.Provider.setExpMap(new HashMap<>(expMap)));
 
-        private final Consumer<Map<Block, BlockStateExpEntry>> apply;
+        public final Consumer<Map<Block, BlockStateExpEntry>> apply;
     }
 }

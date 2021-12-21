@@ -1,6 +1,7 @@
 package de.blutmondgilde.otherlivingbeings.network.packet.toclient;
 
-import de.blutmondgilde.otherlivingbeings.client.ClientGroupHolder;
+import de.blutmondgilde.otherlivingbeings.CommonProxy;
+import de.blutmondgilde.otherlivingbeings.OtherLivingBeings;
 import de.blutmondgilde.otherlivingbeings.data.group.GroupData;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.network.FriendlyByteBuf;
@@ -33,10 +34,11 @@ public class SyncGroupDataPacket {
 
     public void handle(Supplier<NetworkEvent.Context> ctx) {
         ctx.get().enqueueWork(() -> {
-            if(this.data==null){
-                ClientGroupHolder.reset();
+            CommonProxy proxy = OtherLivingBeings.getInstance().getProxy();
+            if (this.data == null) {
+                proxy.resetGroupInformation();
             } else {
-                ClientGroupHolder.updateGroupData(this.data);
+                proxy.updateGroupInformation(data);
             }
         });
         ctx.get().setPacketHandled(true);
