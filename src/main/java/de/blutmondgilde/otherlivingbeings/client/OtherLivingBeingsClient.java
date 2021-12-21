@@ -3,7 +3,6 @@ package de.blutmondgilde.otherlivingbeings.client;
 import com.mojang.blaze3d.systems.RenderSystem;
 import com.mojang.blaze3d.vertex.PoseStack;
 import de.blutmondgilde.otherlivingbeings.OtherLivingBeings;
-import de.blutmondgilde.otherlivingbeings.api.capability.OtherLivingBeingsCapability;
 import de.blutmondgilde.otherlivingbeings.api.gui.inventory.tabs.AbstractInventoryTab;
 import de.blutmondgilde.otherlivingbeings.api.gui.inventory.tabs.DefaultTabContainer;
 import de.blutmondgilde.otherlivingbeings.api.gui.inventory.tabs.DefaultTabContainerScreen;
@@ -29,15 +28,11 @@ import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.screens.MenuScreens;
 import net.minecraft.client.gui.screens.Screen;
 import net.minecraft.client.gui.screens.inventory.InventoryScreen;
-import net.minecraft.client.multiplayer.ClientLevel;
 import net.minecraft.client.renderer.GameRenderer;
 import net.minecraft.client.resources.language.I18n;
-import net.minecraft.core.BlockPos;
-import net.minecraft.nbt.CompoundTag;
 import net.minecraft.network.chat.FormattedText;
 import net.minecraft.network.chat.TranslatableComponent;
 import net.minecraft.resources.ResourceLocation;
-import net.minecraft.world.entity.Entity;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.Items;
 import net.minecraft.world.level.block.Block;
@@ -66,7 +61,6 @@ import java.util.stream.Stream;
 @OnlyIn(Dist.CLIENT)
 public class OtherLivingBeingsClient {
     private static final ConfigEntryBuilder ENTRY_BUILDER = ConfigEntryBuilder.create();
-    private static final Minecraft minecraft = Minecraft.getInstance();
     private static final ResourceLocation SKILLS_ICON = new ResourceLocation(OtherLivingBeings.MOD_ID, "textures/gui/tabs/skills_icon.png");
 
     public static void init() {
@@ -203,22 +197,6 @@ public class OtherLivingBeingsClient {
         });
     }
 
-    public static void syncSkills(final CompoundTag tag, final int targetId) {
-        OtherLivingBeings.getLogger().debug("Received Player Skills Sync Packet with {} values. Start Handling...", tag.size());
-
-        final long startTime = System.currentTimeMillis();
-        final ClientLevel level = minecraft.level;
-
-        if (level == null) {
-            OtherLivingBeings.getLogger().fatal("Exception while syncing Skills from Entity {}. ClientWorld is NULL!", targetId);
-            return;
-        }
-        Optional<Entity> target = Optional.ofNullable(level.getEntity(targetId));
-        target.ifPresent(entity -> entity.getCapability(OtherLivingBeingsCapability.PLAYER_SKILLS).ifPresent(playerSkills -> playerSkills.deserializeNBT(tag)));
-
-        OtherLivingBeings.getLogger().debug("Applied Player Skill Sync Packet in {} ms", System.currentTimeMillis() - startTime);
-    }
-
     private static Predicate<Field> isListOfType(Type... types) {
         return (field) -> {
             if (List.class.isAssignableFrom(field.getType()) && field.getGenericType() instanceof ParameterizedType) {
@@ -228,16 +206,5 @@ public class OtherLivingBeingsClient {
                 return false;
             }
         };
-    }
-
-    @SuppressWarnings("ConstantConditions")
-    public static void openInventory() {
-        Minecraft.getInstance().setScreen(new InventoryScreen(Minecraft.getInstance().player));
-    }
-
-    public static void syncFurnaceOwner(BlockPos pos, CompoundTag tag) {
-        Minecraft.getInstance().level.getBlockEntity(pos).getCapability(OtherLivingBeingsCapability.FURNACE_PLACER).ifPresent(iFurnacePlacer -> {
-            iFurnacePlacer.deserializeNBT(tag);
-        });
     }
 }

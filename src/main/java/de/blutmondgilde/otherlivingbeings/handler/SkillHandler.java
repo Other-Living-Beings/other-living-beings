@@ -20,7 +20,6 @@ import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.level.LevelAccessor;
 import net.minecraft.world.level.levelgen.structure.BoundingBox;
 import net.minecraft.world.phys.AABB;
-import net.minecraftforge.common.MinecraftForge;
 import net.minecraftforge.event.entity.living.LivingHurtEvent;
 import net.minecraftforge.event.entity.player.PlayerEvent;
 import net.minecraftforge.event.world.BlockEvent;
@@ -37,8 +36,7 @@ import java.util.stream.Collectors;
 
 @UtilityClass
 public class SkillHandler {
-    public static void init() {
-        final IEventBus forgeBus = MinecraftForge.EVENT_BUS;
+    public static void init(IEventBus forgeBus) {
         forgeBus.addListener(SkillHandler::onBlockBroken);
         forgeBus.addListener(SkillHandler::onBreakBlock);
         forgeBus.addListener(SkillHandler::onPlantGrowth);
