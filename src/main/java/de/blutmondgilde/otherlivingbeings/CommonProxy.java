@@ -94,5 +94,5 @@ public class CommonProxy {
 
     public void syncFurnaceOwner(BlockPos pos, CompoundTag tag) {}
 
-    public void openPlayerInventory(){}
+    public void openPlayerInventory() {}
 }

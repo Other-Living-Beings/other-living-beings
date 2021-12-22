@@ -68,15 +68,21 @@ public class GroupMemberWidget implements Widget {
         RenderSystem.setShaderColor(1F / 255 * barColor.getRed(), 1F / 255 * barColor.getGreen(), 1F / 255 * barColor.getBlue(), 1F);
         float scale = 0.5F;
         poseStack.scale(scale, 1F, 1F);
-        int width = Math.toIntExact(Math.round(182 * healthPercentage));
+        int width = Math.toIntExact(Math.round(182 * Math.min(healthPercentage, 1)));
         GuiComponent.blit(poseStack, Math.round(this.x / scale), this.y + this.font.lineHeight, 0F, 5F, width, 5, 182, 10);
         poseStack.scale(1F / scale, 1F, 1F);
         RenderSystem.setShaderColor(1F, 1F, 1F, 1F);
     }
 
     private Color getBarColor(double healthPercentage) {
-        int red = (int) Math.round(255 * (1 - healthPercentage));
-        int green = (int) Math.round(255 * healthPercentage);
+        int red = safeColorValue(Math.toIntExact(Math.round(255 * (1 - healthPercentage))));
+        int green = safeColorValue(Math.toIntExact(Math.round(255 * healthPercentage)));
         return new Color(red, green, 0);
+    }
+
+    private int safeColorValue(int unsafeValue) {
+        unsafeValue = Math.max(unsafeValue, 0);
+        unsafeValue = Math.min(unsafeValue, 255);
+        return unsafeValue;
     }
 }
