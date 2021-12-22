@@ -43,6 +43,9 @@ public abstract class MixinPlayerEntry {
 
     @Shadow
     float tooltipHoverTime;
+    @Shadow
+    @Final
+    private Minecraft minecraft;
     private static final ResourceLocation groupButtonTextures = new ResourceLocation(OtherLivingBeings.MOD_ID, "textures/gui/group_buttons.png");
     private static final Component emptyText = new TextComponent("");
     private List<FormattedCharSequence> inviteButtonToolTip;
@@ -56,7 +59,7 @@ public abstract class MixinPlayerEntry {
     }
 
     private final ImageButton inviteButton = new ImageButton(0, 0, 20, 20, 0, 0, 20, groupButtonTextures, 256, 256, pButton -> {
-        Minecraft.getInstance().player.chat("/group invite " + getPlayerName());
+        minecraft.player.chat("/group invite " + getPlayerName());
     }, (pButton, stack, mouseX, mouseY) -> {
         tooltipHoverTime += Minecraft.getInstance().getDeltaFrameTime();
         if (tooltipHoverTime >= 10.0F) {
