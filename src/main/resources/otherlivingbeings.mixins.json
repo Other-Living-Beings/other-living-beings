@@ -9,6 +9,7 @@
     "MixinFurnaceResultSlot"
   ],
   "client": [
+    "MixinPlayerEntry"
   ],
   "injectors": {
     "defaultRequire": 1

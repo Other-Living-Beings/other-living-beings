@@ -63,5 +63,6 @@
   "otherlivingbeings.messages.skill.prefix": "Skill-System",
   "otherlivingbeings.messages.skill.farmer.doubleloot": "Your drops has been duplicated though your Farmer skill.",
   "otherlivingbeings.messages.skill.miner.doubleloot": "Your drops has been duplicated though your Miner skill.",
-  "otherlivingbeings.messages.skill.miner.tripleloot": "Your drops has been tripled though your Miner skill."
+  "otherlivingbeings.messages.skill.miner.tripleloot": "Your drops has been tripled though your Miner skill.",
+  "otherlivingbeings.gui.socialInteractions.tooltip.invite": "Invite %s into Group"
 }
