@@ -3,12 +3,17 @@ package de.blutmondgilde.otherlivingbeings.data.group;
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
 import de.blutmondgilde.otherlivingbeings.OtherLivingBeings;
+import de.blutmondgilde.otherlivingbeings.util.ChatMessageUtils;
 import de.blutmondgilde.otherlivingbeings.util.gson.GsonUUIDTypeAdapter;
+import net.minecraft.Util;
+import net.minecraft.network.chat.MutableComponent;
+import net.minecraft.network.chat.TranslatableComponent;
 import net.minecraft.server.MinecraftServer;
 import net.minecraft.world.entity.player.Player;
 import net.minecraftforge.common.MinecraftForge;
 import net.minecraftforge.event.TickEvent;
 import net.minecraftforge.fml.loading.FMLPaths;
+import net.minecraftforge.fmllegacy.server.ServerLifecycleHooks;
 
 import java.io.FileNotFoundException;
 import java.io.FileReader;
@@ -22,9 +27,9 @@ import java.util.concurrent.CopyOnWriteArrayList;
 
 public class GroupProvider {
     private static final Gson gson = new GsonBuilder()
-            .setPrettyPrinting()
-            .registerTypeAdapter(UUID.class, new GsonUUIDTypeAdapter())
-            .create();
+        .setPrettyPrinting()
+        .registerTypeAdapter(UUID.class, new GsonUUIDTypeAdapter())
+        .create();
 
     private static final Path storagePath = FMLPaths.GAMEDIR.get().resolve(OtherLivingBeings.MOD_ID).resolve("groups");
     static final CopyOnWriteArrayList<GroupInvite> groupInvites = new CopyOnWriteArrayList<>();
@@ -78,8 +83,16 @@ public class GroupProvider {
         if (!e.phase.equals(TickEvent.Phase.END)) return;
         //Remove old invites
         groupInvites.stream()
-                .filter(groupInvite -> groupInvite.getRemainingTicks() <= 0)
-                .forEach(groupInvites::remove);
+            .filter(groupInvite -> groupInvite.getRemainingTicks() <= 0)
+            .forEach(groupInvite -> {
+                Optional.ofNullable(ServerLifecycleHooks.getCurrentServer().getPlayerList().getPlayer(groupInvite.getTarget())).ifPresent(serverPlayer -> {
+                    Optional.ofNullable(ServerLifecycleHooks.getCurrentServer().getPlayerList().getPlayer(groupInvite.getPartyOwner())).ifPresent(serverPlayer1 -> {
+                        MutableComponent message = ChatMessageUtils.createGroupSystemMessage();
+                        message.append(new TranslatableComponent("otherlivingbeings.messages.group.invite.timeout.target", serverPlayer1));
+                        serverPlayer.sendMessage(message, Util.NIL_UUID);
+                    });
+                });
+            });
         //Tick lower invite duration
         groupInvites.forEach(GroupInvite::tick);
     }

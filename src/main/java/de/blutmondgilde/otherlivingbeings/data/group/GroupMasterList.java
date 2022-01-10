@@ -20,10 +20,10 @@ public class GroupMasterList {
 
     public void addPlayerToGroup(Player player, GroupData groupData) {
         if (!playerGroup.containsKey(player.getUUID())) {
+            groupData.addMember(player);
             playerGroup.put(player.getUUID(), groupData);
         } else {
-            //TODO enable duplicate prevention
-            //throw new IllegalArgumentException("Cannot add Player to a group while he's already in another group.");
+            throw new IllegalArgumentException("Cannot add Player to a group while he's already in another group.");
         }
         groupData.sync();
     }
@@ -32,30 +32,37 @@ public class GroupMasterList {
         if (!playerGroup.containsKey(player.getUUID())) return;
         GroupData groupData = playerGroup.get(player.getUUID());
 
-        //update player group data
+        //remove player from group
         groupData.removeMember(player);
+        //update owner if he left
         if (groupData.isOwner(player)) {
             if (!groupData.getMembers().isEmpty()) {
                 groupData.setPartyOwner(groupData.getMembers().get(0));
             }
         }
 
-        //update member group date
-        for (UUID memberId : groupData.getMembers()) {
-            playerGroup.put(memberId, groupData);
-            Optional.ofNullable(ServerLifecycleHooks.getCurrentServer().getPlayerList().getPlayer(memberId)).ifPresent(player1 -> {
+        if (groupData.getMembers().size() <= 1) {
+            //delete group and remove last player from it
+            Optional.ofNullable(ServerLifecycleHooks.getCurrentServer().getPlayerList().getPlayer(groupData.getMembers().get(0))).ifPresent(serverPlayer -> {
+                groupData.removeMember(serverPlayer);
+                playerGroup.remove(serverPlayer.getUUID());
                 MutableComponent leftMessage = ChatMessageUtils.createGroupSystemMessage();
-                leftMessage.append(player.getDisplayName());
-                leftMessage.append(" ");
-                leftMessage.append(new TranslatableComponent("leave").withStyle(Style.EMPTY.withColor(ChatFormatting.RED)));
-                player1.sendMessage(leftMessage, Util.NIL_UUID);
+                leftMessage.append(new TranslatableComponent("otherlivingbeings.messages.group.deleted", player.getDisplayName().getString()).withStyle(Style.EMPTY.withColor(ChatFormatting.RED)));
             });
+        } else {
+            //update other members group state
+            for (UUID memberId : groupData.getMembers()) {
+                playerGroup.put(memberId, groupData);
+                Optional.ofNullable(ServerLifecycleHooks.getCurrentServer().getPlayerList().getPlayer(memberId)).ifPresent(player1 -> {
+                    MutableComponent leftMessage = ChatMessageUtils.createGroupSystemMessage();
+                    leftMessage.append(new TranslatableComponent("otherlivingbeings.messages.group.leave", player.getDisplayName().getString()).withStyle(Style.EMPTY.withColor(ChatFormatting.RED)));
+                    player1.sendMessage(leftMessage, Util.NIL_UUID);
+                });
+            }
         }
 
         MutableComponent leftMessage = ChatMessageUtils.createGroupSystemMessage();
-        leftMessage.append(player.getDisplayName());
-        leftMessage.append(" ");
-        leftMessage.append(TranslationUtils.createGroupMessage("leave").withStyle(Style.EMPTY.withColor(ChatFormatting.RED)));
+        leftMessage.append(TranslationUtils.createGroupMessage("leave.self").withStyle(Style.EMPTY.withColor(ChatFormatting.RED)));
         player.sendMessage(leftMessage, Util.NIL_UUID);
 
         //update clients

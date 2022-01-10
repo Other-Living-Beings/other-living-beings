@@ -66,7 +66,7 @@ public class GroupData implements INBTSerializable<CompoundTag> {
         this.members.forEach(uuid -> {
             try {
                 OtherLivingBeingNetwork.getInstance().send(PacketDistributor.PLAYER.with(() -> ServerLifecycleHooks.getCurrentServer().getPlayerList().getPlayer(uuid)),
-                        new SyncGroupDataPacket(this));
+                    new SyncGroupDataPacket(this));
             } catch (NullPointerException ex) {
                 OtherLivingBeings.getLogger().error("Exception while trying to sync group {} to player {}", this, uuid);
             }
@@ -100,5 +100,9 @@ public class GroupData implements INBTSerializable<CompoundTag> {
         for (String key : memberTag.getAllKeys()) {
             this.members.add(memberTag.getUUID(key));
         }
+    }
+
+    public boolean isFull() {
+        return members.size() >= 5;
     }
 }

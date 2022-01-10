@@ -36,13 +36,10 @@ public class GroupCommand {
 
     public static void register(CommandDispatcher<CommandSourceStack> dispatcher) {
         LiteralArgumentBuilder<CommandSourceStack> root = Commands.literal("group");
-        root
-                .then(Commands.literal("invite")
-                        .then(Commands.argument("target", EntityArgument.player()).executes(GroupCommand::invitePlayer))
-                        .then(Commands.literal("accept").then(Commands.argument("uuid", MessageArgument.message()).executes(GroupCommand::inviteAccept)))
-                        .then(Commands.literal("deny").then(Commands.argument("uuid", MessageArgument.message()).executes(GroupCommand::denyAccept))))
-                .then(Commands.literal("leave").executes(GroupCommand::leave))
-                .then(Commands.literal("kick").then(Commands.argument("target", EntityArgument.player()).executes(GroupCommand::kickPlayer)));
+        root.then(Commands.literal("invite").then(Commands.argument("target", EntityArgument.player()).executes(GroupCommand::invitePlayer))
+                .then(Commands.literal("accept").then(Commands.argument("uuid", MessageArgument.message()).executes(GroupCommand::inviteAccept)))
+                .then(Commands.literal("deny").then(Commands.argument("uuid", MessageArgument.message()).executes(GroupCommand::denyAccept)))).then(Commands.literal("leave").executes(GroupCommand::leave))
+            .then(Commands.literal("kick").then(Commands.argument("target", EntityArgument.player()).executes(GroupCommand::kickPlayer)));
 
         dispatcher.register(root);
     }
@@ -80,8 +77,7 @@ public class GroupCommand {
             MutableComponent alreadyInAGroupMessage = ChatMessageUtils.createGroupSystemMessage();
             alreadyInAGroupMessage.append(target.getDisplayName());
             alreadyInAGroupMessage.append(" ");
-            alreadyInAGroupMessage.append(TranslationUtils.createGroupMessage("invite.alreadyinagroup")
-                    .withStyle(Style.EMPTY.withColor(TextColor.fromRgb(new Color(255, 114, 0).getRGB()))));
+            alreadyInAGroupMessage.append(TranslationUtils.createGroupMessage("invite.alreadyinagroup").withStyle(Style.EMPTY.withColor(TextColor.fromRgb(new Color(255, 114, 0).getRGB()))));
             source.sendMessage(alreadyInAGroupMessage, Util.NIL_UUID);
             return Command.SINGLE_SUCCESS;
         }
@@ -95,11 +91,20 @@ public class GroupCommand {
         //Check Source is Group Owner
         if (!groupData.getPartyOwner().equals(source.getUUID())) {
             ServerPlayer ownerPlayer = ServerLifecycleHooks.getCurrentServer().getPlayerList().getPlayer(groupData.getPartyOwner());
-            MutableComponent errorMessage = new TextComponent("[");
-            errorMessage.append(new TranslatableComponent("otherlivingbeings.messages.group.prefix").withStyle(Style.EMPTY.withColor(TextColor.fromRgb(new Color(0, 131, 234).getRGB()))));
-            errorMessage.append("] ");
-            throw new CommandSyntaxException(new SimpleCommandExceptionType(errorMessage), new TranslatableComponent("otherlivingbeings.messages.group.invite.notowner", ownerPlayer, target));
+            throw new CommandSyntaxException(new SimpleCommandExceptionType(ChatMessageUtils.createGroupSystemMessage()),
+                new TranslatableComponent("otherlivingbeings.messages.group.invite.notowner", ownerPlayer, target));
         }
+
+        //Check if group is already full
+        if (groupData.isFull()) {
+            throw new CommandSyntaxException(new SimpleCommandExceptionType(ChatMessageUtils.createGroupSystemMessage()), new TranslatableComponent("otherlivingbeings.messages.group.invite.full"));
+        }
+
+        //Check if sender is the target
+        if (source.getUUID().equals(target.getUUID())) {
+            throw new CommandSyntaxException(new SimpleCommandExceptionType(ChatMessageUtils.createGroupSystemMessage()), new TranslatableComponent("otherlivingbeings.messages.group.invite.self"));
+        }
+
         //Create invitation
         GroupInvite invite = GroupProvider.invite(new GroupInvite(groupData, target.getUUID()));
         //Invitation Message
@@ -109,23 +114,21 @@ public class GroupCommand {
         inviteMessage.append(new TranslatableComponent("otherlivingbeings.messages.group.invite"));
 
         //Accept / Deny Message
-        MutableComponent answerMessage = new TranslatableComponent("otherlivingbeings.messages.group.invite.accept")
-                .withStyle(Style.EMPTY
-                        .withColor(TextColor.fromRgb(new Color(0, 148, 4).getRGB()))
-                        .withUnderlined(true)
-                        .withClickEvent(new ClickEvent(ClickEvent.Action.RUN_COMMAND, "/group invite accept " + invite.getInviteId())));
-        answerMessage.append(new TextComponent(" ").withStyle(Style.EMPTY
-                .withBold(false)
-                .withUnderlined(false)));
-        answerMessage.append(new TranslatableComponent("otherlivingbeings.messages.group.invite.deny")
-                .withStyle(Style.EMPTY
-                        .withColor(TextColor.fromRgb(new Color(255, 0, 0).getRGB()))
-                        .withUnderlined(true)
-                        .withClickEvent(new ClickEvent(ClickEvent.Action.RUN_COMMAND, "/group invite deny " + invite.getInviteId()))));
+        MutableComponent answerMessage = new TranslatableComponent("otherlivingbeings.messages.group.invite.accept").withStyle(
+            Style.EMPTY.withColor(TextColor.fromRgb(new Color(0, 148, 4).getRGB())).withUnderlined(true)
+                .withClickEvent(new ClickEvent(ClickEvent.Action.RUN_COMMAND, "/group invite accept " + invite.getInviteId())));
+        answerMessage.append(new TextComponent(" ").withStyle(Style.EMPTY.withBold(false).withUnderlined(false)));
+        answerMessage.append(new TranslatableComponent("otherlivingbeings.messages.group.invite.deny").withStyle(
+            Style.EMPTY.withColor(TextColor.fromRgb(new Color(255, 0, 0).getRGB())).withUnderlined(true)
+                .withClickEvent(new ClickEvent(ClickEvent.Action.RUN_COMMAND, "/group invite deny " + invite.getInviteId()))));
 
         //Send Messages
         target.sendMessage(inviteMessage, Util.NIL_UUID);
         target.sendMessage(answerMessage, Util.NIL_UUID);
+
+        MutableComponent successMessage = ChatMessageUtils.createGroupSystemMessage();
+        successMessage.append(new TranslatableComponent("otherlivingbeings.messages.group.invite.sent", source.getDisplayName().getString(), target.getDisplayName().getString()));
+        source.sendMessage(successMessage, Util.NIL_UUID);
 
         return Command.SINGLE_SUCCESS;
     }

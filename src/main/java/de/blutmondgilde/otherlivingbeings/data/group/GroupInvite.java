@@ -44,7 +44,9 @@ public class GroupInvite {
         if (group.isPresent()) {
             Optional<ServerPlayer> target = Optional.ofNullable(ServerLifecycleHooks.getCurrentServer().getPlayerList().getPlayer(getTarget()));
             if (target.isPresent()) {
+                //Add Player to Group
                 GroupProvider.addPlayerToGroup(target.get(), group.get());
+                //Update Members
                 group.get().getMembers().forEach(uuid -> {
                     Optional<ServerPlayer> messageTarget = Optional.ofNullable(ServerLifecycleHooks.getCurrentServer().getPlayerList().getPlayer(uuid));
                     MutableComponent joinMessage = new TextComponent("");
