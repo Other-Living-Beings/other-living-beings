@@ -182,7 +182,9 @@ task makeChangelog(type: GitChangelogTask) {
 }
 
 afterEvaluate {
-    tasks.curseforge519914.dependsOn makeChangelog
+    if (project.hasProperty("curseforge_apikey")) {
+        tasks.curseforge519914.dependsOn makeChangelog
+    }
 }
 
 def replaceResources = tasks.register("replaceResources", Copy) {
