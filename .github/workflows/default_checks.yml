@@ -19,22 +19,6 @@ on:
     branches: [ main ]
 
 jobs:
-  build:
-    name: Build Mod
-    runs-on: ubuntu-latest
-
-    steps:
-    - uses: actions/checkout@v2
-    - name: Set up JDK 16
-      uses: actions/setup-java@v2
-      with:
-        java-version: '16'
-        distribution: 'adopt'
-    - name: Build with Gradle
-      uses: gradle/gradle-build-action@4137be6a8bf7d7133955359dbd952c0ca73b1021
-      with:
-        arguments: build
-
   analyze:
     name: Analyze Code Quality
     runs-on: ubuntu-latest
@@ -66,8 +50,8 @@ jobs:
 
     # Autobuild attempts to build any compiled languages  (C/C++, C#, or Java).
     # If this step fails, then you should remove it and run the build manually (see below)
-    - name: Autobuild
-      uses: github/codeql-action/autobuild@v1
+    - name: Build Mod
+      run: ./gradlew build
 
     # ℹ️ Command-line programs to run using the OS shell.
     # 📚 https://git.io/JvXDl
