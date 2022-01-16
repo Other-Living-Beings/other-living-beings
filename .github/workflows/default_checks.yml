@@ -46,6 +46,7 @@ jobs:
         mkdir -p ~/.gradle/
         echo "GRADLE_USER_HOME=${HOME/.gradle}" >> $GITHUB_ENV
         echo "${GRADLE_PROPERTIES}" > ~/.gradle/gradle.properties
+        chmod +rwx gradlew
 
     # Autobuild attempts to build any compiled languages  (C/C++, C#, or Java).
     # If this step fails, then you should remove it and run the build manually (see below)
