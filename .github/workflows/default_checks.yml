@@ -33,7 +33,7 @@ jobs:
     - name: Minecraft Forge client startup test
       # You may pin to the exact commit or the version.
       # uses: Charismara/forge-client-startup-action@f46a35c65d1c7abf8d0f248a2765116a6db9f6b9
-      uses: Charismara/forge-client-startup-action@0.3
+      uses: Charismara/forge-client-startup-action@0.4
       with:
         # Url to clone the current repository
         githubCloneUrl: https://github.com/Other-Living-Beings/other-living-beings.git
